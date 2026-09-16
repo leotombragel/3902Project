@@ -1,4 +1,4 @@
-namespace Sprint0_2.Game.Input;
+namespace CSE3902Project.Game.Input;
 
 public enum MouseButton
 {

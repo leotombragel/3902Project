@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
-using Sprint0_2.Game.Command;
+using CSE3902Project.Game.Command;
 
-namespace Sprint0_2.Game.Input;
+namespace CSE3902Project.Game.Input;
 
 public class KeyboardController : IController
 {

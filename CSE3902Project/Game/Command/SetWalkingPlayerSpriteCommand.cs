@@ -1,9 +1,9 @@
 using System.Net.Mime;
 using Microsoft.Xna.Framework;
-using Sprint0_2.Game.Entity;
-using Sprint0_2.Game.Graphics;
+using CSE3902Project.Game.Entity;
+using CSE3902Project.Game.Graphics;
 
-namespace Sprint0_2.Game.Command;
+namespace CSE3902Project.Game.Command;
 
 public class SetWalkingPlayerSpriteCommand(Player player) : ICommand
 {

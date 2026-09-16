@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sprint0_2", "Sprint0_2\Sprint0_2.csproj", "{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSE3902Project", "CSE3902Project\CSE3902Project.csproj", "{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,12 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Sprint0_2.Game.Command;
-using Sprint0_2.Game.Entity;
-using Sprint0_2.Game.Graphics;
-using Sprint0_2.Game.Input;
+using CSE3902Project.Game.Command;
+using CSE3902Project.Game.Entity;
+using CSE3902Project.Game.Graphics;
+using CSE3902Project.Game.Input;
 
-namespace Sprint0_2;
+namespace CSE3902Project;
 
 public class Game1 : Microsoft.Xna.Framework.Game
 {

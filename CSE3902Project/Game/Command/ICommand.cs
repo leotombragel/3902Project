@@ -1,4 +1,4 @@
-namespace Sprint0_2.Game.Command;
+namespace CSE3902Project.Game.Command;
 
 public interface ICommand
 {

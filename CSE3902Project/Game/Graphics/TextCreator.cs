@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Sprint0_2.Game.Graphics;
+namespace CSE3902Project.Game.Graphics;
 
 public class TextCreator
 {

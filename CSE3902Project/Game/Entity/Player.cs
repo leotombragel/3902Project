@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Sprint0_2.Game.Graphics;
+using CSE3902Project.Game.Graphics;
 
-namespace Sprint0_2.Game.Entity;
+namespace CSE3902Project.Game.Entity;
 
 public class Player
 {
