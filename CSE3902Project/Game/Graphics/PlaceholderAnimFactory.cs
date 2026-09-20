@@ -1,0 +1,43 @@
+using System.Collections.Generic;
+
+namespace CSE3902Project.Game.Graphics;
+
+/// <summary>
+/// This is a basic class that just stores player animations in a dictionary until a better factory is implemented.
+/// </summary>
+public class PlaceholderAnimFactory : IAnimationSource
+{
+    private readonly Dictionary<string, SpriteAnimation> _animations;
+    
+    public PlaceholderAnimFactory()
+    {
+        _animations = new Dictionary<string, SpriteAnimation>
+        {
+            // Initialize with some default animations
+            
+            // Original Funky Kong animations
+            ["FunkyWalk"] = new SpriteAnimation(SpriteFactory.Instance.CreateWalkingPlayerSprite(),
+                39,
+                44,
+                16,
+                0.08f),
+            ["FunkyRock"] = new SpriteAnimation(SpriteFactory.Instance.CreateRockingPlayerSprite(),
+                52,
+                56,
+                40,
+                0.08f),
+            ["FunkyIdle"] = new SpriteAnimation(SpriteFactory.Instance.CreateIdlePlayerSprite(),
+                52,
+                56,
+                1,
+                0.08f)
+            
+            // Link animations will go below
+        };
+    }
+
+    public ISprite Create(string animationName)
+    {
+        return _animations[animationName];
+    }
+}

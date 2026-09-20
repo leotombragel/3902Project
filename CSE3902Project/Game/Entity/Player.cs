@@ -1,11 +1,12 @@
 using System;
+using CSE3902Project.Game.Entity.State;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CSE3902Project.Game.Graphics;
 
 namespace CSE3902Project.Game.Entity;
 
-public class Player
+public class Player : IAnimatable
 {
     // Animation data
     public Sprite Sprite { get; set; }
@@ -13,12 +14,15 @@ public class Player
     public bool IsWalking { get; set; }
     public bool IsJumping { get; set; }
     
+    private readonly AnimationController _animationController;
+    
     // Motion
     private const float MaxSpeed = 3.0f;
     private const float MoveSpeed = 0.15f; // This should be greater than deceleration.
     private const float Deceleration = 0.1f;
     private float _speed = 0.0f;
     private Vector2 Position { get; set; }
+    private Vector2 Velocity { get; set; }
     private bool _previouslyFacingRight = true;
     private bool _isFlippedHorizontally;
     private float _previousSpeed = 0.0f;
@@ -36,12 +40,16 @@ public class Player
     {
         Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = Vector2.Zero;
+        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
     }
     
     public Player(Sprite sprite)
     {
         Sprite = sprite;
+        Velocity = Vector2.Zero;
         Position = new Vector2(StartingPosX, StartingPosY);
+        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
     }
     
     public void MoveHorizontal(bool isToTheRight)
@@ -85,7 +93,9 @@ public class Player
     {
         if (_speed > 0.0f)
         {
-            _speed = (float)Math.Max(0.0, _speed - Deceleration);
+            // _speed = (float)Math.Max(0.0, _speed - Deceleration);
+            Velocity = Velocity with { X = Velocity.X - Deceleration };
+
         }
         else if (_speed < 0.0f)
         {
@@ -126,6 +136,14 @@ public class Player
         Position = new Vector2(Position.X, Position.Y + _verticalSpeed);
     }
 
+    /// <summary>
+    /// Uses the velocity to update the player's position.
+    /// </summary>
+    private void UpdatePosition()
+    {
+        Position += Velocity;
+    }
+
     public virtual void Update(GameTime gameTime)
     {
         Animation?.Update(gameTime);
@@ -139,4 +157,7 @@ public class Player
     {
         Sprite.Draw(spriteBatch, Position, _isFlippedHorizontally);
     }
+
+    public Direction Facing { get; }
+    public IState CurrentState { get; }
 }

@@ -1,4 +1,4 @@
-namespace CSE3902Project.Game.Entity;
+namespace CSE3902Project.Game.Graphics;
 
 public enum Direction
 {
