@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework;
+
 namespace CSE3902Project.Game.Entity.State;
 
 public class PlayerWalkingState : IState
@@ -9,14 +11,14 @@ public class PlayerWalkingState : IState
         _player = player;
     }
 
-    public string AnimationName => "PlayerWalking";
+    public string AnimationName => "PlayerWalk";
     
     public void Enter()
     {
         
     }
 
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         if (_player.Velocity.X > 0)
         {

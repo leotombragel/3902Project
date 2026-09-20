@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework;
+
 namespace CSE3902Project.Game.Entity.State;
 
 public class PlayerIdleState : IState
@@ -16,7 +18,7 @@ public class PlayerIdleState : IState
         
     }
     
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         if (_player.Velocity.X != 0)
         {
