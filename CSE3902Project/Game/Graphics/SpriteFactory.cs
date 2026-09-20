@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -42,6 +43,8 @@ public class SpriteFactory
 
     public Sprite CreateLinkSprite()
     {
-        return new Sprite(_linkSheet);
+        var sprite = new Sprite(_linkSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
     }
 }
