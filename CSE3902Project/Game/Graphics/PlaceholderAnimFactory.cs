@@ -48,7 +48,7 @@ public class PlaceholderAnimFactory : IAnimationSource
                 32 * 5,
                 0),
             ["PlayerJump"] = new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
-                32,
+                32 - 3, // I think I messed up the sprite sheet here
                 32,
                 1,
                 0.08f,
@@ -59,7 +59,7 @@ public class PlaceholderAnimFactory : IAnimationSource
                 32,
                 1,
                 0.08f,
-                32 * 6,
+                32 * 6 - 3, // Same with this one
                 32 * 1),
         };
     }
