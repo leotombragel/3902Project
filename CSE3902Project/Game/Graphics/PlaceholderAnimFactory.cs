@@ -30,9 +30,23 @@ public class PlaceholderAnimFactory : IAnimationSource
                 52,
                 56,
                 1,
-                0.08f)
+                0.08f),
             
             // Link animations will go below
+            ["PlayerIdle"] = new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+                32,
+                32,
+                1,
+                0.08f,
+                96,
+                0),
+            ["PlayerWalk"] = new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+                32,
+                32,
+                3,
+                0.08f,
+                160,
+                0),
         };
     }
 
