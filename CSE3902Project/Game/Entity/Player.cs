@@ -23,7 +23,6 @@ public class Player : IAnimatable
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
     private bool _previouslyFacingRight = true;
-    private bool _isFlippedHorizontally;
     private float _previousSpeed = 0.0f;
     
     // Vertical motion
@@ -75,7 +74,7 @@ public class Player : IAnimatable
         // Flip the sprite if the direction changes
         if (isToTheRight != _previouslyFacingRight)
         {
-            _isFlippedHorizontally = !_isFlippedHorizontally;
+            IsFacingLeft = !IsFacingLeft;
         }
         
         _previouslyFacingRight = isToTheRight;
@@ -134,7 +133,7 @@ public class Player : IAnimatable
 
     public virtual void Update(GameTime gameTime)
     {
-        _animationController.Update();
+        _animationController.Update(gameTime);
         Animation?.Update(gameTime);
 
         // Decelerate the player when not walking
@@ -145,9 +144,9 @@ public class Player : IAnimatable
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        Sprite.Draw(spriteBatch, Position, _isFlippedHorizontally);
+        _animationController.Draw(spriteBatch, Position, IsFacingLeft);
     }
 
-    public Direction Facing { get; }
+    public bool IsFacingLeft { get; private set; }
     public IState CurrentState { get; set;  }
 }

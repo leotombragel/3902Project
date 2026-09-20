@@ -5,6 +5,6 @@ namespace CSE3902Project.Game.Graphics;
 
 public interface IAnimatable
 {
-    Direction Facing { get; }
+    bool IsFacingLeft { get; }
     IState CurrentState { get; }
 }

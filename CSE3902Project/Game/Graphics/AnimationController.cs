@@ -1,3 +1,7 @@
+using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 namespace CSE3902Project.Game.Graphics;
 
 public class AnimationController
@@ -16,12 +20,19 @@ public class AnimationController
         _currentAnimationName = null;
     }
 
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         if (_entity.CurrentState.AnimationName != _currentAnimationName)
         {
             _currentAnimationName = _entity.CurrentState.AnimationName;
             _currentSprite = _animationSource.Create(_currentAnimationName);
         }
+        
+        _currentSprite?.Update(gameTime);
+    }
+
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, bool isFacingLeft)
+    {
+        _currentSprite?.Draw(spriteBatch, position, isFacingLeft);
     }
 }

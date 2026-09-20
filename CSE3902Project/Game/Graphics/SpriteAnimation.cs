@@ -11,6 +11,8 @@ public class SpriteAnimation : ISprite
     private readonly int _frameWidth;
     private readonly int _frameHeight;
     private readonly float _frameDuration;
+    private readonly int _startingX;
+    private readonly int _startingY;
     
     // Current animation data
     private int _currentFrame;
@@ -25,8 +27,27 @@ public class SpriteAnimation : ISprite
         _frameWidth = frameWidth;
         _frameHeight = frameHeight;
         _frameDuration = frameDuration;
+        _startingX = 0;
+        _startingY = 0;
         
-        // Initialize the source rectangle to the first frame
+        InitializeSourceRectangle();
+    }
+    
+    public SpriteAnimation(Sprite sprite, int frameWidth, int frameHeight, int frameCount, float frameDuration, int startingX, int startingY)
+    {
+        _sprite = sprite;
+        _frameCount = frameCount;
+        _frameWidth = frameWidth;
+        _frameHeight = frameHeight;
+        _frameDuration = frameDuration;
+        _startingX = startingX;
+        _startingY = startingY;
+        
+        InitializeSourceRectangle();
+    }
+    
+    private void InitializeSourceRectangle()
+    {
         _currentFrame = 0;
         _timer = 0.0f;
         UpdateSourceRectangle();
@@ -52,13 +73,18 @@ public class SpriteAnimation : ISprite
         _sprite.Draw(spriteBatch, position);
     }
     
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, bool isFacingLeft)
+    {
+        _sprite.Draw(spriteBatch, position, isFacingLeft);
+    }
+    
     /// <summary>
     /// Updates the source rectangle of the sprite to the current frame of the animation.
     /// </summary>
     private void UpdateSourceRectangle()
     {
-        var x = _currentFrame * _frameWidth;
-        var y = 0;
+        var x = _startingX + _currentFrame * _frameWidth;
+        var y = _startingY;
         _sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
     }
 

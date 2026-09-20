@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,13 +15,16 @@ public class SpriteFactory
     private Texture2D _walkingPlayerSprite;
     private Texture2D _rockingPlayerSprite;
 
+    private Texture2D _linkSheet;
+
     public void LoadAllAssets(ContentManager content)
     {
         _idlePlayerSprite = content.Load<Texture2D>("images/idle");
         _walkingPlayerSprite = content.Load<Texture2D>("images/spritesheet");
         _rockingPlayerSprite = content.Load<Texture2D>("images/spritesheet_rocking");
+        _linkSheet = content.Load<Texture2D>("images/player");
     }
-    
+
     public Sprite CreateIdlePlayerSprite()
     {
         return new Sprite(_idlePlayerSprite);
@@ -34,5 +38,10 @@ public class SpriteFactory
     public Sprite CreateRockingPlayerSprite()
     {
         return new Sprite(_rockingPlayerSprite);
+    }
+
+    public Sprite CreateLinkSprite()
+    {
+        return new Sprite(_linkSheet);
     }
 }
