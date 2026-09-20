@@ -85,13 +85,14 @@ public class Player : IAnimatable
     {
         if (Velocity.X > 0.0f)
         {
-            // _speed = (float)Math.Max(0.0, _speed - Deceleration);
-            Velocity = Velocity with { X = Velocity.X - Deceleration };
+            var newSpeed = (float) Math.Max(0.0, Velocity.X - Deceleration);
+            Velocity = Velocity with { X = newSpeed };
 
         }
         else if (Velocity.X < 0.0f)
         {
-            Velocity = Velocity with { X = Velocity.X + Deceleration };
+            var newSpeed = (float) Math.Min(1.0, Velocity.X + Deceleration);
+            Velocity = Velocity with { X = newSpeed };
         }
     }
     
@@ -135,6 +136,7 @@ public class Player : IAnimatable
     {
         _animationController.Update(gameTime);
         Animation?.Update(gameTime);
+        CurrentState.Update(gameTime);
 
         // Decelerate the player when not walking
         Decelerate();
