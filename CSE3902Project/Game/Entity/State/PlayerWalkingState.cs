@@ -20,6 +20,6 @@ public class PlayerWalkingState : StateBase
             return;
         }
         
-        _player.CurrentState = new PlayerIdleState(_player);
+        _player.ChangeState(new PlayerIdleState(_player));
     }
 }

@@ -13,7 +13,8 @@ public class Player : IAnimatable
     public SpriteAnimation Animation { get; set; }
     public bool IsWalking { get; set; }
     public bool IsJumping { get; set; }
-    
+    public bool IsFacingLeft { get; private set; }
+    public IState CurrentState { get; private set;  }    
     private readonly AnimationController _animationController;
     
     // Motion
@@ -49,6 +50,13 @@ public class Player : IAnimatable
         Position = new Vector2(StartingPosX, StartingPosY);
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new PlayerIdleState(this);
+    }
+
+    public void ChangeState(IState newState)
+    {
+        CurrentState?.Exit();
+        CurrentState = newState;
+        CurrentState?.Enter();
     }
     
     public void MoveHorizontal(bool isToTheRight)
@@ -104,6 +112,7 @@ public class Player : IAnimatable
         }
 
         IsJumping = true;
+        ChangeState(new PlayerJumpingState(this));
 
         // _verticalSpeed = -VerticalMoveSpeed; // Negative makes the player move up (towards the top of the screen where y = 0)
         Velocity = Velocity with { Y = -VerticalMoveSpeed };
@@ -112,8 +121,12 @@ public class Player : IAnimatable
     private void ApplyGravity()
     {
         if (!IsJumping) return;
-        // _verticalSpeed += Gravity;
         Velocity = Velocity with { Y = Velocity.Y + Gravity };
+
+        if (Velocity.Y > 0.0f)
+        {
+            ChangeState(new PlayerFallingState(this));
+        }
 
         // Check if the player has landed
         if (Position.Y > StartingPosY)
@@ -121,6 +134,7 @@ public class Player : IAnimatable
             Position = new Vector2(Position.X, StartingPosY);
             IsJumping = false;
             Velocity = Velocity with { Y = 0.0f };
+            ChangeState(new PlayerIdleState(this));
         }
     }
 
@@ -149,6 +163,5 @@ public class Player : IAnimatable
         _animationController.Draw(spriteBatch, Position, IsFacingLeft);
     }
 
-    public bool IsFacingLeft { get; private set; }
-    public IState CurrentState { get; set;  }
+    
 }

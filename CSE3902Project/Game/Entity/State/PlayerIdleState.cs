@@ -17,7 +17,7 @@ public class PlayerIdleState : StateBase
     {
         if (_player.Velocity.X != 0)
         {
-            _player.CurrentState = new PlayerWalkingState(_player);
+            _player.ChangeState(new PlayerWalkingState(_player));
         }
     }
 }
