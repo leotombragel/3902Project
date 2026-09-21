@@ -27,6 +27,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void Initialize()
     {
+        base.Initialize();
+    }
+
+    protected override void LoadContent()
+    {
+        _spriteBatch = new SpriteBatch(GraphicsDevice); // Texture rendering
+        
+        SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
+        TextCreator.Initialize(Content);
+
         var keyboardController = new KeyboardController();
         var mouseController = new MouseController();
         
@@ -41,17 +51,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
         
         _controllers = new List<IController> { keyboardController, mouseController };
-        base.Initialize();
-    }
-
-    protected override void LoadContent()
-    {
-        _spriteBatch = new SpriteBatch(GraphicsDevice); // Texture rendering
-        
-        SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
-        TextCreator.Initialize(Content);
-
-        _player.Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
     }
 
     protected override void Update(GameTime gameTime)
