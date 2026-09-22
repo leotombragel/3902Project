@@ -61,6 +61,29 @@ public class PlaceholderAnimFactory : IAnimationSource
                 0.08f,
                 32 * 6 - 3, // Same with this one
                 32 * 1),
+
+            //Keese animations
+            ["KeeseFlying"] = new SpriteAnimation(SpriteFactory.Instance.CreateKeeseSprite(),
+                33,
+                13,
+                2,
+                0.08f,
+                183, 
+                13),
+            ["KeeseStopped"] = new SpriteAnimation(SpriteFactory.Instance.CreateKeeseSprite(),
+                16,
+                13,
+                1,
+                0.08f,
+                183, 
+                13),
+            ["KeeseDead"] = new SpriteAnimation(SpriteFactory.Instance.CreateKeeseSprite(),
+                16,
+                13,
+                1,
+                0.08f,
+                183, 
+                30),
         };
     }
 

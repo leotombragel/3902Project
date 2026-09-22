@@ -15,6 +15,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private SpriteBatch _spriteBatch;
     
     private Player _player;
+    private KeeseEnemy _keeseEnemy;
 
     private List<IController> _controllers;
 
