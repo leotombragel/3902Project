@@ -34,7 +34,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice); // Texture rendering
         
-        SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
+        PlayerSpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
         TextCreator.Initialize(Content);
 
         var keyboardController = new KeyboardController();
