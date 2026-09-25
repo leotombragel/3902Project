@@ -64,12 +64,13 @@ public class PlaceholderAnimFactory : IAnimationSource
 
             //Keese animations
             ["KeeseFlying"] = new SpriteAnimation(SpriteFactory.Instance.CreateKeeseSprite(),
-                33,
+                16,
                 13,
                 2,
                 0.08f,
-                183, 
-                13),
+                184, 
+                13, 
+                1),//bufferWidth
             ["KeeseStopped"] = new SpriteAnimation(SpriteFactory.Instance.CreateKeeseSprite(),
                 16,
                 13,
@@ -84,6 +85,28 @@ public class PlaceholderAnimFactory : IAnimationSource
                 0.08f,
                 183, 
                 30),
+            //Stalfo animations
+            ["StalfoLeft"] = new SpriteAnimation(SpriteFactory.Instance.CreateStalfoSprite(),
+                16,
+                16,
+                1,
+                0.08f,
+                2, 
+                59),
+            ["StalfoRight"] = new SpriteAnimation(SpriteFactory.Instance.CreateStalfoSprite(),
+                16,
+                16,
+                1,
+                0.08f,
+                2, 
+                59),
+            ["StalfoDead"] = new SpriteAnimation(SpriteFactory.Instance.CreateStalfoSprite(),
+                16,
+                16,
+                2,
+                0.08f,
+                2, 
+                59),
         };
     }
 

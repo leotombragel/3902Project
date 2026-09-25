@@ -7,7 +7,7 @@ using CSE3902Project.Game.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-/// Interface for enemy objects
+/// keese enemy class, implements IAnimatable
 /// </summary>
 public class KeeseEnemy : IAnimatable
 {
@@ -25,6 +25,26 @@ public class KeeseEnemy : IAnimatable
     public Vector2 Velocity { get; private set; }
     private const float VerticalMoveSpeed = 4.0f;
     private const float MaxSpeed = 3.0f;
+    private const int StartingPosX = 400; //figure out how to set these through constructor late
+    private const int StartingPosY = 100; 
+
+        public KeeseEnemy()
+    {
+        Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
+        Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = Vector2.Zero;
+        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        CurrentState = new KeeseFlyingState(this);
+    }
+    
+    public KeeseEnemy(Sprite sprite)
+    {
+        Sprite = sprite;
+        Velocity = Vector2.Zero;
+        Position = new Vector2(StartingPosX, StartingPosY);
+        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        CurrentState = new KeeseStoppedState(this);
+    }
 
     //sprite sheet from https://www.spriters-resource.com/nes/legendofzelda/asset/31806/
     public void Draw(SpriteBatch spriteBatch)
