@@ -6,6 +6,7 @@ using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
+using CSE3902Project.Game.Tiles;
 
 namespace CSE3902Project;
 
@@ -15,6 +16,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private SpriteBatch _spriteBatch;
     
     private Player _player;
+    private TileCycler _tiles;
+    private GroundRow _ground;
 
     private List<IController> _controllers;
 
@@ -35,18 +38,25 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _spriteBatch = new SpriteBatch(GraphicsDevice); // Texture rendering
         
         SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
+        TileSpriteFactory.Instance.LoadAllAssets(Content); // Tile sprites
         TextCreator.Initialize(Content);
 
         var keyboardController = new KeyboardController();
         var mouseController = new MouseController();
         
         _player = new Player();
+
+        var viewport = GraphicsDevice.Viewport;
+        _ground = new GroundRow(viewport.Width, viewport.Height);
+        _tiles = new TileCycler(new Vector2((viewport.Width - Tile.Size) / 2f, (viewport.Height - Tile.Size) / 2f));
         
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
         keyboardController.RegisterCommand(Keys.A, new PlayerMoveLeftCommand(_player));
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
         keyboardController.RegisterCommand(Keys.Escape, new ExitCommand(this));
+        keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
+        keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
         
         mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
         
@@ -56,6 +66,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         _player.Update(gameTime);
+        _ground.Update(gameTime);
+        _tiles.Update(gameTime);
         
         foreach (var controller in _controllers)
         {
@@ -71,6 +83,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         
         _spriteBatch.Begin();
         TextCreator.CreateSprint0Text(Window, _spriteBatch);
+        _ground.Draw(_spriteBatch);
+        _tiles.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
         _spriteBatch.End();
 

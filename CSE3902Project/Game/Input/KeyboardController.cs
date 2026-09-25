@@ -7,10 +7,18 @@ namespace CSE3902Project.Game.Input;
 public class KeyboardController : IController
 {
     private Dictionary<Keys, ICommand> _keyBindings = new();
+    private Dictionary<Keys, ICommand> _pressBindings = new();
+    private KeyboardState _previousState;
     
     public void RegisterCommand(Keys key, ICommand command)
     {
         _keyBindings[key] = command;
+    }
+
+    /// Registers a command that runs once each time the key goes down, instead of every frame while held.
+    public void RegisterPressCommand(Keys key, ICommand command)
+    {
+        _pressBindings[key] = command;
     }
 
     public void RemoveCommand(Keys key)
@@ -29,5 +37,15 @@ public class KeyboardController : IController
                 binding.Value.Execute();
             }
         }
+
+        foreach (var binding in _pressBindings)
+        {
+            if (state.IsKeyDown(binding.Key) && _previousState.IsKeyUp(binding.Key))
+            {
+                binding.Value.Execute();
+            }
+        }
+
+        _previousState = state;
     }
 }
