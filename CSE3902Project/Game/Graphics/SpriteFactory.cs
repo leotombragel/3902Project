@@ -8,15 +8,17 @@ namespace CSE3902Project.Game.Graphics;
 /// <summary>
 /// Loads sprites for the game.
 /// </summary>
-public class PlayerSpriteFactory
+public class SpriteFactory
 {
-    public static PlayerSpriteFactory Instance { get; } = new PlayerSpriteFactory();
+    public static SpriteFactory Instance { get; } = new SpriteFactory();
 
     private Texture2D _idlePlayerSprite;
     private Texture2D _walkingPlayerSprite;
     private Texture2D _rockingPlayerSprite;
 
     private Texture2D _linkSheet;
+    private Texture2D _keeseSheet;
+    private Texture2D _stalfoSheet;
 
     public void LoadAllAssets(ContentManager content)
     {
@@ -24,6 +26,9 @@ public class PlayerSpriteFactory
         _walkingPlayerSprite = content.Load<Texture2D>("images/spritesheet");
         _rockingPlayerSprite = content.Load<Texture2D>("images/spritesheet_rocking");
         _linkSheet = content.Load<Texture2D>("images/player");
+        _keeseSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
+        _stalfoSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
+
     }
 
     public Sprite CreateIdlePlayerSprite()
@@ -44,6 +49,20 @@ public class PlayerSpriteFactory
     public Sprite CreateLinkSprite()
     {
         var sprite = new Sprite(_linkSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateKeeseSprite()
+    {
+        var sprite = new Sprite(_keeseSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateStalfoSprite()
+    {
+        var sprite = new Sprite(_stalfoSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);
         return sprite;
     }
