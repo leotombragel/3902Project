@@ -36,7 +36,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice); // Texture rendering
         
-        PlayerSpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
+        SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
         TextCreator.Initialize(Content);
 
         var keyboardController = new KeyboardController();
@@ -62,7 +62,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _player.Update(gameTime);
         _keeseEnemy.Update(gameTime);
         _stalfoEnemy.Update(gameTime);
-        
+
         foreach (var controller in _controllers)
         {
             controller.Update();

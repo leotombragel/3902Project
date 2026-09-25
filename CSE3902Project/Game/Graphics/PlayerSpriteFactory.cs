@@ -8,9 +8,9 @@ namespace CSE3902Project.Game.Graphics;
 /// <summary>
 /// Loads sprites for the game.
 /// </summary>
-public class PlayerSpriteFactory
+public class SpriteFactory
 {
-    public static PlayerSpriteFactory Instance { get; } = new PlayerSpriteFactory();
+    public static SpriteFactory Instance { get; } = new SpriteFactory();
 
     private Texture2D _idlePlayerSprite;
     private Texture2D _walkingPlayerSprite;
