@@ -5,13 +5,13 @@ namespace CSE3902Project.Game.Graphics;
 
 public class SpriteAnimation : ISprite
 {
+    private readonly int _bufferWidth; //some sprite sheets have a buffer between frames
     private readonly int _frameCount;
     private readonly float _frameDuration;
     private readonly int _frameHeight;
 
     private readonly int _frameWidth;
-    private readonly int _bufferWidth; //some sprite sheets have a buffer between frames
-    private readonly bool _hasBufferWidth = false; //initailzed to false
+    private readonly bool _hasBufferWidth; //initailzed to false
 
     // Sprite animation properties
     private readonly Sprite _sprite;
@@ -47,7 +47,7 @@ public class SpriteAnimation : ISprite
     }
 
     /// <summary>
-    /// Sets the required parameters for a sprite animation.
+    ///     Sets the required parameters for a sprite animation.
     /// </summary>
     /// <param name="sprite">The sprite to be animated.</param>
     /// <param name="frameWidth">The width of the rectangle representing a single frame.</param>
@@ -72,8 +72,8 @@ public class SpriteAnimation : ISprite
         InitializeSourceRectangle();
     }
 
-        /// <summary>
-    /// Sets the required parameters for a sprite animation. this includes bufferWidth
+    /// <summary>
+    ///     Sets the required parameters for a sprite animation. this includes bufferWidth
     /// </summary>
     /// <param name="sprite">The sprite to be animated.</param>
     /// <param name="frameWidth">The width of the rectangle representing a single frame.</param>
@@ -100,6 +100,8 @@ public class SpriteAnimation : ISprite
         InitializeSourceRectangle();
     }
 
+    public int LoopCount { get; private set; } = 0;
+
     public bool IsPlaying { get; } = true;
 
     public void Update(GameTime gameTime)
@@ -110,6 +112,8 @@ public class SpriteAnimation : ISprite
 
         if (_timer >= _frameDuration)
         {
+            if (_currentFrame == _frameCount - 1) LoopCount++;
+
             // Switch frames
             _timer -= _frameDuration;
             _currentFrame = (_currentFrame + 1) % _frameCount;
@@ -142,14 +146,10 @@ public class SpriteAnimation : ISprite
         var x = _startingX + _currentFrame * _frameWidth;
         var y = _startingY;
         if (_hasBufferWidth)
-        {
-            _sprite.SourceRectangle = new Rectangle(x + (_bufferWidth * (_currentFrame-1)), y, _frameWidth, _frameHeight);
-        }
+            _sprite.SourceRectangle =
+                new Rectangle(x + _bufferWidth * (_currentFrame - 1), y, _frameWidth, _frameHeight);
         else
-        {
             _sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
-        }
-        
     }
 
     /// <summary>
