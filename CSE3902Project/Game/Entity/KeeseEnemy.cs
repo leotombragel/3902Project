@@ -18,30 +18,40 @@ public class KeeseEnemy : IAnimatable
 
     //state
     public bool IsFacingLeft { get; private set; }
+    public bool IsGoingUp { get; private set; }
     public IState CurrentState { get; private set;}
 
     //movement
+    private static readonly Random _rng = new Random();
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
+    public Vector2 BoxContainer { get; private set; } //constricting values so keese doesn't fly off the screen
     private const float VerticalMoveSpeed = 4.0f;
     private const float MaxSpeed = 3.0f;
     private const int StartingPosX = 400; //figure out how to set these through constructor late
     private const int StartingPosY = 100; 
+    
 
         public KeeseEnemy()
     {
         Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
-        Velocity = Vector2.Zero;
-        _animationController = new AnimationController(this, new KeeseAnimationFactory());
+        Velocity = new Vector2(-1, 1);
+        BoxContainer = new Vector2(100, 50);
+        IsGoingUp = false;
+        IsFacingLeft = true;
+            _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseFlyingState(this);
     }
     
     public KeeseEnemy(Sprite sprite)
     {
         Sprite = sprite;
-        Velocity = Vector2.Zero;
         Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = new Vector2(-1, 1);
+        BoxContainer = new Vector2(100, 50);
+        IsGoingUp = false;
+        IsFacingLeft = true;
         _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseStoppedState(this);
     }
@@ -65,19 +75,118 @@ public class KeeseEnemy : IAnimatable
         _animationController.Update(gameTime);
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
+
+        IsGoingUp = MoveVertical(IsGoingUp);
+        IsFacingLeft = MoveHorizontal(IsFacingLeft);
         
+        Console.WriteLine("Keese velo: " + Velocity);
         UpdatePosition();
     }
 
-    public void MoveVertical()
+    public bool CheckVerticalBoundary(bool IsGoingUp)
     {
-        // _verticalSpeed = -VerticalMoveSpeed; 
-        Velocity = Velocity with { Y = -VerticalMoveSpeed };
+        if(Position.Y  < StartingPosY - BoxContainer.Y)
+        {
+            IsGoingUp = false;
+            Velocity = Velocity with {Y = -Velocity.Y};
+        }
+        else if(Position.Y  > StartingPosY + BoxContainer.Y)
+        {
+            IsGoingUp = true;
+            Velocity = Velocity with {Y = -Velocity.Y};
+        }
+        return IsGoingUp;
     }
 
-    public void MoveHorizontal(bool isToTheRight)
+    public bool FlipVertical(bool IsGoingUp)
     {
+        if (IsGoingUp)
+        {
+            IsGoingUp = false;
+            if (Velocity.Y < 0)
+            {
+                Velocity = Velocity with {Y = -Velocity.Y};
+            }
+        }
+        else
+        {
+            IsGoingUp = true;
+            if (Velocity.Y > 0)
+            {
+                Velocity = Velocity with {Y = -Velocity.Y};
+            }
+        }
+        return IsGoingUp;
+    }
+    public bool MoveVertical(bool IsGoingUp)
+    {
+        var temp = Velocity.Y;
+        IsGoingUp = CheckVerticalBoundary(IsGoingUp);
+        if(temp != Velocity.Y)
+        {
+            return IsGoingUp;
+        }
 
+
+        int n = _rng.Next(60);
+        if(n == 0)
+        {
+            IsGoingUp = FlipVertical(IsGoingUp);
+        }
+        return IsGoingUp;
+    }
+    
+    public bool CheckHorizontalBoundary(bool IsFacingLeft)
+    {
+        if(Position.X  < StartingPosX - BoxContainer.X)
+        {
+            IsFacingLeft= false;
+            Velocity = Velocity with {X = -Velocity.X};
+        }
+        else if(Position.X  > StartingPosX + BoxContainer.X)
+        {
+            IsFacingLeft = true;
+            Velocity = Velocity with {X = -Velocity.X};
+        }
+        return IsFacingLeft;
+    }
+
+    public bool FlipHorizontal(bool IsFacingLeft)
+    {
+        if (IsFacingLeft)
+        {
+            IsFacingLeft = false;
+            if(Velocity.X < 0 )
+            {
+                Velocity = Velocity with {X = -Velocity.X};
+            }
+        }
+        else
+        {
+            IsFacingLeft = true;
+            if(Velocity.X > 0 )
+            {
+                Velocity = Velocity with {X = -Velocity.X};
+            }
+        }
+        return IsFacingLeft;
+    }
+
+    public bool MoveHorizontal(bool IsFacingLeft)
+    {
+        var temp = Velocity.X;
+        IsFacingLeft = CheckHorizontalBoundary(IsFacingLeft);
+        if(temp != Velocity.X)
+        {
+            return IsFacingLeft;
+        }
+
+        int n = _rng.Next(60);
+        if(n == 0)
+        {
+            IsFacingLeft = FlipHorizontal(IsFacingLeft);
+        }
+        return IsFacingLeft;
     }
 
     public void ChangeState(IState newState)

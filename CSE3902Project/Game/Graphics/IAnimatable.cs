@@ -16,9 +16,5 @@ public interface IAnimatable
 
     public void Update(GameTime gameTime);
 
-    public void MoveVertical();
-
-    public void MoveHorizontal(bool isToTheRight);
-
     public void ChangeState(IState newState);
 }
