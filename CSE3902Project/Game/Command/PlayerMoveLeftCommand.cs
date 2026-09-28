@@ -15,7 +15,5 @@ public class PlayerMoveLeftCommand : ICommand
     public void Execute()
     {
         _player.MoveHorizontal(false);
-        var walkingEvent = new SetWalkingPlayerSpriteCommand(_player);
-        walkingEvent.Execute();
     }
 }

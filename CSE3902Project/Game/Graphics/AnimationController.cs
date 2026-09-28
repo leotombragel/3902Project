@@ -32,7 +32,12 @@ public class AnimationController
         if (_entity.CurrentState.AnimationName != _currentAnimationName)
         {
             _currentAnimationName = _entity.CurrentState.AnimationName;
+            
+            // Get the correct sprite from the sprite factory
             _currentSprite = _animationSource.Create(_currentAnimationName);
+            
+            // Update the entity's animation reference so external classes can access it
+            _entity.Animation = _currentSprite as SpriteAnimation;
         }
         
         _currentSprite?.Update(gameTime);

@@ -12,6 +12,7 @@ namespace CSE3902Project;
 
 public class Game1 : Microsoft.Xna.Framework.Game
 {
+    private List<IController> _controllers;
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
@@ -19,9 +20,10 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private TileCycler _tiles;
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
-    private StalfoEnemy _stalfoEnemy;
 
-    private List<IController> _controllers;
+    private Player _player;
+    private SpriteBatch _spriteBatch;
+    private StalfoEnemy _stalfoEnemy;
 
     public Game1()
     {
@@ -57,6 +59,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
         keyboardController.RegisterCommand(Keys.A, new PlayerMoveLeftCommand(_player));
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
+        keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
+        keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
         keyboardController.RegisterCommand(Keys.Escape, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
@@ -74,10 +78,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _keeseEnemy.Update(gameTime);
         _stalfoEnemy.Update(gameTime);
 
-        foreach (var controller in _controllers)
-        {
-            controller.Update();
-        }
+        foreach (var controller in _controllers) controller.Update();
 
         base.Update(gameTime);
     }
