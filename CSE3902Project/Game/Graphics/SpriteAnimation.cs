@@ -10,6 +10,8 @@ public class SpriteAnimation : ISprite
     private readonly int _frameHeight;
 
     private readonly int _frameWidth;
+    private readonly int _bufferWidth; //some sprite sheets have a buffer between frames
+    private readonly bool _hasBufferWidth = false; //initailzed to false
 
     // Sprite animation properties
     private readonly Sprite _sprite;
@@ -39,6 +41,8 @@ public class SpriteAnimation : ISprite
         _startingX = 0;
         _startingY = 0;
 
+        _hasBufferWidth = false;
+
         InitializeSourceRectangle();
     }
 
@@ -62,6 +66,36 @@ public class SpriteAnimation : ISprite
         _frameDuration = frameDuration;
         _startingX = startingX;
         _startingY = startingY;
+
+        _hasBufferWidth = false;
+
+        InitializeSourceRectangle();
+    }
+
+        /// <summary>
+    /// Sets the required parameters for a sprite animation. this includes bufferWidth
+    /// </summary>
+    /// <param name="sprite">The sprite to be animated.</param>
+    /// <param name="frameWidth">The width of the rectangle representing a single frame.</param>
+    /// <param name="frameHeight">The height of the rectangle representing a single frame.</param>
+    /// <param name="frameCount">The number of frames.</param>
+    /// <param name="frameDuration">The duration of a single frame, in seconds.</param>
+    /// <param name="startingX">The x-coordinate of the starting position of the first frame.</param>
+    /// <param name="startingY">The y-coordinate of the starting position of the first frame.</param>
+    /// <param name="bufferWidth">The width of the buffer between frames.</param>
+    public SpriteAnimation(Sprite sprite, int frameWidth, int frameHeight, int frameCount, float frameDuration,
+        int startingX, int startingY, int bufferWidth)
+    {
+        _sprite = sprite;
+        _frameCount = frameCount;
+        _frameWidth = frameWidth;
+        _frameHeight = frameHeight;
+        _frameDuration = frameDuration;
+        _startingX = startingX;
+        _startingY = startingY;
+        _bufferWidth = bufferWidth;
+
+        _hasBufferWidth = true;
 
         InitializeSourceRectangle();
     }
@@ -107,7 +141,15 @@ public class SpriteAnimation : ISprite
     {
         var x = _startingX + _currentFrame * _frameWidth;
         var y = _startingY;
-        _sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
+        if (_hasBufferWidth)
+        {
+            _sprite.SourceRectangle = new Rectangle(x + (_bufferWidth * (_currentFrame-1)), y, _frameWidth, _frameHeight);
+        }
+        else
+        {
+            _sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
+        }
+        
     }
 
     /// <summary>
