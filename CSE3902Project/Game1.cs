@@ -37,7 +37,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _spriteBatch = new SpriteBatch(GraphicsDevice); // Texture rendering
         
         SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
-        TextCreator.Initialize(Content);
+        
 
         var keyboardController = new KeyboardController();
         var mouseController = new MouseController();
@@ -76,7 +76,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
         
         _spriteBatch.Begin();
-        TextCreator.CreateSprint0Text(Window, _spriteBatch);
         _player.Draw(_spriteBatch);
         _keeseEnemy.Draw(_spriteBatch);
         _stalfoEnemy.Draw(_spriteBatch);

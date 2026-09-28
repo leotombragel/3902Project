@@ -33,7 +33,7 @@ public class StalfoEnemy : IAnimatable
     {
         Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
-        Velocity = Vector2.Zero;
+        Velocity = new Vector2(-1, 0);
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new StalfoLeftState(this);
@@ -42,7 +42,7 @@ public class StalfoEnemy : IAnimatable
     public StalfoEnemy(Sprite sprite)
     {
         Sprite = sprite;
-        Velocity = Vector2.Zero;
+        Velocity = new Vector2(-1, 0);
         Position = new Vector2(StartingPosX, StartingPosY);
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
