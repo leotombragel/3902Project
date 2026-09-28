@@ -35,7 +35,7 @@ public class StalfoEnemy : IAnimatable
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
         IsFacingLeft = true;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);
     }
     
@@ -45,7 +45,7 @@ public class StalfoEnemy : IAnimatable
         Velocity = Vector2.Zero;
         Position = new Vector2(StartingPosX, StartingPosY);
         IsFacingLeft = true;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);
     }
 

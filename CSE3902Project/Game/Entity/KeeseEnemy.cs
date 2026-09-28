@@ -33,7 +33,7 @@ public class KeeseEnemy : IAnimatable
         Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseFlyingState(this);
     }
     
@@ -42,7 +42,7 @@ public class KeeseEnemy : IAnimatable
         Sprite = sprite;
         Velocity = Vector2.Zero;
         Position = new Vector2(StartingPosX, StartingPosY);
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseStoppedState(this);
     }
 

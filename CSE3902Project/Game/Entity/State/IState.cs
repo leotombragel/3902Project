@@ -8,7 +8,7 @@ namespace CSE3902Project.Game.Entity.State;
 public interface IState
 {
     /// <summary>
-    /// The name of the current animation. This should match a key in a corresponding IAnimationSource.
+    /// The name of the current animation. This should match a key in the entity's animation factory.
     /// </summary>
     string AnimationName { get; }
     void Enter();
