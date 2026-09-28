@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -109,7 +110,7 @@ public class SpriteAnimation : ISprite
         if (!IsPlaying) return;
 
         _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+        
         if (_timer >= _frameDuration)
         {
             if (_currentFrame == _frameCount - 1) LoopCount++;
