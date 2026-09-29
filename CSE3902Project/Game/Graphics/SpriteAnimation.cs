@@ -10,7 +10,7 @@ public class SpriteAnimation : ISprite
     private readonly int _frameCount;
     private readonly float _frameDuration;
     private readonly int _frameHeight;
-    private readonly bool _loops;
+    private readonly bool _loops = true;
 
     private readonly int _frameWidth;
     private readonly bool _hasBufferWidth; //initailzed to false
@@ -40,7 +40,6 @@ public class SpriteAnimation : ISprite
         _frameWidth = frameWidth;
         _frameHeight = frameHeight;
         _frameDuration = frameDuration;
-        _loops = true;
         _startingX = 0;
         _startingY = 0;
 
@@ -95,7 +94,6 @@ public class SpriteAnimation : ISprite
         _frameWidth = frameWidth;
         _frameHeight = frameHeight;
         _frameDuration = frameDuration;
-        _loops = true;
         _startingX = startingX;
         _startingY = startingY;
         _bufferWidth = bufferWidth;
@@ -123,11 +121,12 @@ public class SpriteAnimation : ISprite
             if (isLastFrame)
             {
                 LoopCount++;
-                if (_loops) _currentFrame = 0;
+                if (!_loops) return;
+                _currentFrame = 0;
             }
             else
             {
-                _currentFrame = (_currentFrame + 1) % _frameCount;
+                _currentFrame++;
             }
 
             UpdateSourceRectangle();
