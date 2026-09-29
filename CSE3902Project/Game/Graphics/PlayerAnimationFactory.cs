@@ -43,6 +43,15 @@ public class PlayerAnimationFactory : IAnimationFactory
             0,
             32 * 3
             ),
+        ["PlayerThrow"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+            32,
+            32,
+            2,
+            0.15f,
+            32 * 5,
+            32 * 4,
+            loops: false
+            ),
     };
 
     private readonly Dictionary<string, SpriteAnimation> _animations = new();
