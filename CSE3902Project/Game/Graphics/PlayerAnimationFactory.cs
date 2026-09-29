@@ -35,6 +35,14 @@ public class PlayerAnimationFactory : IAnimationFactory
             0.08f,
             32 * 6 - 3,
             32),
+        ["PlayerStab"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+            32,
+            32,
+            4,
+            0.15f,
+            0,
+            32 * 3
+            ),
     };
 
     private readonly Dictionary<string, SpriteAnimation> _animations = new();
