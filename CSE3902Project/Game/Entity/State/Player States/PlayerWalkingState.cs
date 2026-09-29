@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 
 namespace CSE3902Project.Game.Entity.State;
@@ -15,7 +16,7 @@ public class PlayerWalkingState : StateBase
 
     public override void Update(GameTime gameTime)
     {
-        if (_player.Velocity.X > 0)
+        if (Math.Abs(_player.Velocity.X) > 0)
         {
             return;
         }

@@ -54,6 +54,9 @@ public class Player : IAnimatable
 
     public void ChangeState(IState newState)
     {
+        // Ignore state change if re-entering the current state
+        if (newState.GetType() == CurrentState.GetType()) return;
+        
         CurrentState?.Exit();
         CurrentState = newState;
         CurrentState?.Enter();
@@ -162,6 +165,4 @@ public class Player : IAnimatable
     {
         _animationController.Draw(spriteBatch, Position, IsFacingLeft);
     }
-
-    
 }

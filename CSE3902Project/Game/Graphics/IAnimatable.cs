@@ -11,6 +11,7 @@ public interface IAnimatable
 {
     bool IsFacingLeft { get; }
     IState CurrentState { get; }
+    SpriteAnimation Animation { get; set;  }
 
     public void Draw(SpriteBatch s);
 

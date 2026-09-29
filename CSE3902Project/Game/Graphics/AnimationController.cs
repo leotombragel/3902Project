@@ -12,7 +12,7 @@ public class AnimationController
 {
     private readonly IAnimatable _entity;
     /// <summary>
-    /// The animation source (factory) for the entity
+    /// The animation factory for the entity.
     /// </summary>
     private readonly IAnimationFactory _animationFactory;
 
@@ -33,6 +33,7 @@ public class AnimationController
         {
             _currentAnimationName = _entity.CurrentState.AnimationName;
             _currentSprite = _animationFactory.Create(_currentAnimationName);
+            _entity.Animation = _currentSprite as SpriteAnimation;
         }
         
         _currentSprite?.Update(gameTime);
