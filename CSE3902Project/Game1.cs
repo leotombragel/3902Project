@@ -21,8 +21,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
 
-    private Player _player;
-    private SpriteBatch _spriteBatch;
     private StalfoEnemy _stalfoEnemy;
 
     public Game1()
