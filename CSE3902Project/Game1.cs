@@ -63,6 +63,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _keeseEnemy.Update(gameTime);
         _stalfoEnemy.Update(gameTime);
 
+        _player.HandleKeeseCollision(_keeseEnemy);
+
         foreach (var controller in _controllers)
         {
             controller.Update();

@@ -14,9 +14,9 @@ public class Player : IAnimatable
     public bool IsWalking { get; set; }
     public bool IsJumping { get; set; }
     public bool IsFacingLeft { get; private set; }
-    public IState CurrentState { get; private set;  }    
+    public IState CurrentState { get; private set; }
     private readonly AnimationController _animationController;
-    
+
     // Motion
     private const float MaxSpeed = 3.0f;
     private const float MoveSpeed = 0.15f; // This should be greater than deceleration.
@@ -25,11 +25,11 @@ public class Player : IAnimatable
     public Vector2 Velocity { get; private set; }
     private bool _previouslyFacingRight = true;
     private float _previousSpeed = 0.0f;
-    
+
     // Vertical motion
     private const float VerticalMoveSpeed = 4.0f;
     private const float Gravity = 0.1f;
-    
+
     // Etc
     private const int StartingPosX = 200;
     private const int StartingPosY = 100;
@@ -42,7 +42,7 @@ public class Player : IAnimatable
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new PlayerIdleState(this);
     }
-    
+
     public Player(Sprite sprite)
     {
         Sprite = sprite;
@@ -58,7 +58,7 @@ public class Player : IAnimatable
         CurrentState = newState;
         CurrentState?.Enter();
     }
-    
+
     public void MoveHorizontal(bool isToTheRight)
     {
         // Update speed
@@ -68,7 +68,7 @@ public class Player : IAnimatable
             {
                 Velocity = Velocity with { X = 0.0f };
             }
-            
+
             if (isToTheRight)
             {
                 Velocity = Velocity with { X = Velocity.X + MoveSpeed };
@@ -78,36 +78,66 @@ public class Player : IAnimatable
                 Velocity = Velocity with { X = Velocity.X - MoveSpeed };
             }
         }
-        
+
         // Flip the sprite if the direction changes
         if (isToTheRight != _previouslyFacingRight)
         {
             IsFacingLeft = !IsFacingLeft;
         }
-        
+
         _previouslyFacingRight = isToTheRight;
         _previousSpeed = Velocity.X;
     }
 
-    private void CheckHorizontalCollision(bool isToTheRight)
+    public void HandleKeeseCollision(KeeseEnemy k)
     {
-        //test
-        //iterate over each object that collision is checked for
-        //for (int i = 0; i < Rectangles.Length; i++)
+
+        if (IsInBoundingBox(k.Hitbox))
+            Velocity = Velocity with { X = 0, Y = 0 };
         //{
-        //    if (IsInBoundingBox(Rectangles[i]))
+        //    if (Velocity.X > 0)
+
         //    {
-        //        if (isToTheRight)
-        //        {
-        //            Position = new Vector2(Rectangles[i].x1, Position.Y);
-        //        }
-        //        else
-        //        {
-        //            Position = new Vector2(Rectangles[i].x2, Position.Y);
-        //        }
+        //        Velocity = Velocity with { X = 0 };
+        //        Position = Position with { X = k.Hitbox.x1 };
+        //    }
+
+        //    if (Velocity.X < 0)
+        //    {
+        //        Velocity = Velocity with { X = 0 };
+        //        Position = Position with { X = k.Hitbox.x2 };
+        //    }
+
+        //    if (Velocity.Y > 0)
+        //    {
+
+        //        Velocity = Velocity with { Y = 0 };
+        //        Position = Position with { Y = k.Hitbox.y2 };
+
+        //    }
+
+        //    if (Velocity.Y < 0)
+        //    {
+
+        //        Velocity = Velocity with { Y = 0 };
+        //        Position = Position with { Y = k.Hitbox.y1 };
         //    }
         //}
     }
+
+
+    private bool IsInBoundingBox(Rect r)
+    {
+        if(r == null)
+        {
+            return false;
+        }
+        else if (r.x1 < Position.X && Position.X < r.x2 && r.y1 < Position.Y && Position.Y < r.y2)
+            return true;
+        else
+            return false;
+    }
+
 
     private void Decelerate()
     {
@@ -162,7 +192,7 @@ public class Player : IAnimatable
     /// Uses the velocity to update the player's position.
     /// </summary>
     private void UpdatePosition()
-    { }
+    { 
         Position += Velocity;
     }
 

@@ -23,7 +23,7 @@ public class KeeseEnemy : IAnimatable
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    public Rect Hitbox;
+    public Rect Hitbox = new Rect(400,100,460,160);
     private const float VerticalMoveSpeed = 4.0f;
     private const float MaxSpeed = 3.0f;
     private const int StartingPosX = 400; //figure out how to set these through constructor late
