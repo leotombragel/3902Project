@@ -114,7 +114,29 @@ public class PlaceholderAnimFactory : IAnimationSource
                 2,
                 0.08f,
                 2,
-                59)
+                59),
+            ["WizzrobeVisible"] = new(SpriteFactory.Instance.CreateWizzrobeSprite(),
+                14,
+                16,
+                2,
+                0.08f,
+                127,
+                90,
+                3),
+            ["WizzrobeInvisible"] = new(SpriteFactory.Instance.CreateWizzrobeSprite(),//blank sprite
+                5,
+                5,
+                1,
+                0.08f,
+                107,
+                94),
+            ["WizzrobeDead"] = new(SpriteFactory.Instance.CreateWizzrobeSprite(),
+                15,
+                19,
+                1,
+                0.08f,
+                126,
+                107)
         };
     }
 
