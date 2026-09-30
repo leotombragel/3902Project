@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,9 +12,6 @@ public class SpriteAnimation : ISprite
 
     private readonly int _frameWidth;
     private readonly bool _hasBufferWidth; //initailzed to false
-
-    // Sprite animation properties
-    private readonly Sprite _sprite;
     private readonly int _startingX;
     private readonly int _startingY;
 
@@ -34,7 +30,7 @@ public class SpriteAnimation : ISprite
     /// <param name="frameDuration">The duration of a single frame, in seconds.</param>
     public SpriteAnimation(Sprite sprite, int frameWidth, int frameHeight, int frameCount, float frameDuration)
     {
-        _sprite = sprite;
+        Sprite = sprite;
         _frameCount = frameCount;
         _frameWidth = frameWidth;
         _frameHeight = frameHeight;
@@ -60,7 +56,7 @@ public class SpriteAnimation : ISprite
     public SpriteAnimation(Sprite sprite, int frameWidth, int frameHeight, int frameCount, float frameDuration,
         int startingX, int startingY)
     {
-        _sprite = sprite;
+        Sprite = sprite;
         _frameCount = frameCount;
         _frameWidth = frameWidth;
         _frameHeight = frameHeight;
@@ -87,7 +83,7 @@ public class SpriteAnimation : ISprite
     public SpriteAnimation(Sprite sprite, int frameWidth, int frameHeight, int frameCount, float frameDuration,
         int startingX, int startingY, int bufferWidth)
     {
-        _sprite = sprite;
+        Sprite = sprite;
         _frameCount = frameCount;
         _frameWidth = frameWidth;
         _frameHeight = frameHeight;
@@ -101,7 +97,10 @@ public class SpriteAnimation : ISprite
         InitializeSourceRectangle();
     }
 
-    public int LoopCount { get; private set; } = 0;
+    // Sprite animation properties
+    public Sprite Sprite { get; set; }
+
+    public int LoopCount { get; private set; }
 
     public bool IsPlaying { get; } = true;
 
@@ -110,7 +109,7 @@ public class SpriteAnimation : ISprite
         if (!IsPlaying) return;
 
         _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-        
+
         if (_timer >= _frameDuration)
         {
             if (_currentFrame == _frameCount - 1) LoopCount++;
@@ -124,12 +123,12 @@ public class SpriteAnimation : ISprite
 
     public void Draw(SpriteBatch spriteBatch, Vector2 position)
     {
-        _sprite.Draw(spriteBatch, position);
+        Sprite.Draw(spriteBatch, position);
     }
 
     public void Draw(SpriteBatch spriteBatch, Vector2 position, bool isFacingLeft)
     {
-        _sprite.Draw(spriteBatch, position, isFacingLeft);
+        Sprite.Draw(spriteBatch, position, isFacingLeft);
     }
 
     private void InitializeSourceRectangle()
@@ -147,10 +146,10 @@ public class SpriteAnimation : ISprite
         var x = _startingX + _currentFrame * _frameWidth;
         var y = _startingY;
         if (_hasBufferWidth)
-            _sprite.SourceRectangle =
+            Sprite.SourceRectangle =
                 new Rectangle(x + _bufferWidth * (_currentFrame - 1), y, _frameWidth, _frameHeight);
         else
-            _sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
+            Sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
     }
 
     /// <summary>

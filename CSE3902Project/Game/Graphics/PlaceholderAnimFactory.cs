@@ -69,6 +69,14 @@ public class PlaceholderAnimFactory : IAnimationSource
                 0,
                 32 * 3
             ),
+            ["PlayerDead"] = new(SpriteFactory.Instance.CreateLinkSprite(),
+                32,
+                32,
+                1,
+                0.08f,
+                32 * 6,
+                32 * 2
+            ),
 
             //Keese animations
             ["KeeseFlying"] = new(SpriteFactory.Instance.CreateKeeseSprite(),

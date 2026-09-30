@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
 using CSE3902Project.Game.Tiles;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace CSE3902Project;
 
@@ -14,14 +14,14 @@ public class Game1 : Microsoft.Xna.Framework.Game
 {
     private List<IController> _controllers;
     private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-
-    private Player _player;
-    private TileCycler _tiles;
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
 
+    private Player _player;
+    private SpriteBatch _spriteBatch;
+
     private StalfoEnemy _stalfoEnemy;
+    private TileCycler _tiles;
 
     public Game1()
     {
@@ -59,6 +59,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
         keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
         keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
+        keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
         keyboardController.RegisterCommand(Keys.Escape, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
