@@ -12,17 +12,17 @@ public class AnimationController
 {
     private readonly IAnimatable _entity;
     /// <summary>
-    /// The animation source (factory) for the entity
+    /// The animation factory for the entity.
     /// </summary>
-    private readonly IAnimationSource _animationSource;
+    private readonly IAnimationFactory _animationFactory;
 
     private ISprite _currentSprite;
     private string _currentAnimationName;
 
-    public AnimationController(IAnimatable entity, IAnimationSource source)
+    public AnimationController(IAnimatable entity, IAnimationFactory animationFactory)
     {
         _entity = entity;
-        _animationSource = source;
+        _animationFactory = animationFactory;
         _currentSprite = null;
         _currentAnimationName = null;
     }
@@ -32,11 +32,7 @@ public class AnimationController
         if (_entity.CurrentState.AnimationName != _currentAnimationName)
         {
             _currentAnimationName = _entity.CurrentState.AnimationName;
-            
-            // Get the correct sprite from the sprite factory
-            _currentSprite = _animationSource.Create(_currentAnimationName);
-            
-            // Update the entity's animation reference so external classes can access it
+            _currentSprite = _animationFactory.Create(_currentAnimationName);
             _entity.Animation = _currentSprite as SpriteAnimation;
         }
         

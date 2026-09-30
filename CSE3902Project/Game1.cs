@@ -21,6 +21,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
     private StalfoEnemy _stalfoEnemy;
+    private readonly List<IProjectile> _projectiles = new();
     private WizzrobeEnemy _wizzrobeEnemy;
 
     public Game1()
@@ -60,6 +61,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
         keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
         keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
+        keyboardController.RegisterPressCommand(Keys.W,
+            new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile)));
         keyboardController.RegisterCommand(Keys.Escape, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
@@ -76,6 +79,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _tiles.Update(gameTime);
         _keeseEnemy.Update(gameTime);
         _stalfoEnemy.Update(gameTime);
+        foreach (var projectile in _projectiles) projectile.Update(gameTime);
         _wizzrobeEnemy.setPlayerPos(_player.Position); //give link's position to wizzrobe
         _wizzrobeEnemy.Update(gameTime);
 
@@ -92,6 +96,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _ground.Draw(_spriteBatch);
         _tiles.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
+        foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         _keeseEnemy.Draw(_spriteBatch);
         _stalfoEnemy.Draw(_spriteBatch);
         _wizzrobeEnemy.Draw(_spriteBatch);

@@ -40,7 +40,7 @@ public class KeeseEnemy : IAnimatable
         BoxContainer = new Vector2(100, 50);
         IsGoingUp = false;
         IsFacingLeft = true;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+            _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseFlyingState(this);
     }
     
@@ -52,7 +52,7 @@ public class KeeseEnemy : IAnimatable
         BoxContainer = new Vector2(100, 50);
         IsGoingUp = false;
         IsFacingLeft = true;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseStoppedState(this);
     }
 

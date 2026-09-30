@@ -30,7 +30,7 @@ public class WizzrobeEnemy : IAnimatable
     {
         Sprite = SpriteFactory.Instance.CreateWizzrobeSprite();
         IsFacingLeft = true;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new WizzrobeAnimationFactory());
         CurrentState = new WizzrobeInvisibleState(this);
     }
     
@@ -38,7 +38,7 @@ public class WizzrobeEnemy : IAnimatable
     {
         Sprite = sprite;
         IsFacingLeft = true;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new WizzrobeAnimationFactory());
         CurrentState = new WizzrobeInvisibleState(this);
     }
 

@@ -39,7 +39,7 @@ public class Player : IAnimatable
         Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
     }
     
@@ -48,7 +48,7 @@ public class Player : IAnimatable
         Sprite = sprite;
         Velocity = Vector2.Zero;
         Position = new Vector2(StartingPosX, StartingPosY);
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
     }
 

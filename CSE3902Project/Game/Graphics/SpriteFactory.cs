@@ -21,6 +21,8 @@ public class SpriteFactory
     private Texture2D _stalfoSheet;
     private Texture2D _wizzrobeSheet;
 
+    private Texture2D _itemsSheet;
+
     public void LoadAllAssets(ContentManager content)
     {
         _idlePlayerSprite = content.Load<Texture2D>("images/idle");
@@ -29,8 +31,8 @@ public class SpriteFactory
         _linkSheet = content.Load<Texture2D>("images/player");
         _keeseSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
         _stalfoSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
+        _itemsSheet = content.Load<Texture2D>("images/link_items_spritesheet");
         _wizzrobeSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
-
     }
 
     public Sprite CreateIdlePlayerSprite()
@@ -51,6 +53,13 @@ public class SpriteFactory
     public Sprite CreateLinkSprite()
     {
         var sprite = new Sprite(_linkSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateItemsSheet()
+    {
+        var sprite = new Sprite(_itemsSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);
         return sprite;
     }
