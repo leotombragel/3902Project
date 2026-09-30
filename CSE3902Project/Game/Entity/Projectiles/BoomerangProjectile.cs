@@ -60,18 +60,15 @@ public class BoomerangProjectile : IProjectile
 
     private void MoveInBound()
     {
-        if (IsReturning) return;
+        if (!IsReturning) return;
 
-        var distanceTravelled = Math.Abs(XDisplacement);
-        var distanceToMove = Math.Min((int)Math.Abs(Velocity.X), MaxOutboundDistance - distanceTravelled);
         var direction = Math.Sign(Velocity.X);
 
-        XPosition += direction * distanceToMove;
-        XDisplacement += direction * distanceToMove;
 
         if (Math.Abs(XDisplacement) >= MaxOutboundDistance)
         {
-            IsReturning = true;
+            IsReturning = false;
+            
         }
     }
 

@@ -34,7 +34,7 @@ public class KeeseEnemy : IAnimatable
 
         public KeeseEnemy()
     {
-        Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
+        Sprite = SpriteFactory.Instance.CreateKeeseSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 1);
         BoxContainer = new Vector2(100, 50);
@@ -79,7 +79,6 @@ public class KeeseEnemy : IAnimatable
         IsGoingUp = MoveVertical(IsGoingUp);
         IsFacingLeft = MoveHorizontal(IsFacingLeft);
         
-        Console.WriteLine("Keese velo: " + Velocity);
         UpdatePosition();
     }
 
