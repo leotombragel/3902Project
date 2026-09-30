@@ -21,6 +21,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
     private StalfoEnemy _stalfoEnemy;
+    private WizzrobeEnemy _wizzrobeEnemy;
 
     public Game1()
     {
@@ -51,6 +52,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _tiles = new TileCycler(new Vector2((viewport.Width - Tile.Size) / 2f, (viewport.Height - Tile.Size) / 2f));
         _keeseEnemy = new KeeseEnemy();
         _stalfoEnemy = new StalfoEnemy();
+        _wizzrobeEnemy = new WizzrobeEnemy();
 
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
@@ -74,6 +76,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _tiles.Update(gameTime);
         _keeseEnemy.Update(gameTime);
         _stalfoEnemy.Update(gameTime);
+        _wizzrobeEnemy.setPlayerPos(_player.Position); //give link's position to wizzrobe
+        _wizzrobeEnemy.Update(gameTime);
 
         foreach (var controller in _controllers) controller.Update();
 
@@ -82,7 +86,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        GraphicsDevice.Clear(Color.Gray);
 
         _spriteBatch.Begin();
         _ground.Draw(_spriteBatch);
@@ -90,6 +94,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _player.Draw(_spriteBatch);
         _keeseEnemy.Draw(_spriteBatch);
         _stalfoEnemy.Draw(_spriteBatch);
+        _wizzrobeEnemy.Draw(_spriteBatch);
 
         _spriteBatch.End();
 

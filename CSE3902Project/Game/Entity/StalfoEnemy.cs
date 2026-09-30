@@ -25,13 +25,12 @@ public class StalfoEnemy : IAnimatable
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
     private const float VerticalMoveSpeed = 4.0f;
-    private const float MaxSpeed = 3.0f;
     private const int StartingPosX = 600; //figure out how to set these through constructor late
     private const int StartingPosY = 100; 
 
         public StalfoEnemy()
     {
-        Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
+        Sprite = SpriteFactory.Instance.CreateStalfoSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 0);
         IsFacingLeft = true;
