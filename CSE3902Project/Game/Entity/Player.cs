@@ -91,6 +91,7 @@ public class Player : IAnimatable
 
     private void CheckHorizontalCollision(bool isToTheRight)
     {
+        //test
         //iterate over each object that collision is checked for
         //for (int i = 0; i < Rectangles.Length; i++)
         //{
@@ -161,7 +162,7 @@ public class Player : IAnimatable
     /// Uses the velocity to update the player's position.
     /// </summary>
     private void UpdatePosition()
-    {
+    { }
         Position += Velocity;
     }
 
