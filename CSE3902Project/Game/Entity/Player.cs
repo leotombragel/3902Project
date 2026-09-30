@@ -32,11 +32,17 @@ public class Player : IAnimatable
         CurrentState = new PlayerIdleState(this);
     }
 
+    /// <summary>
+    ///     If true, the player will automatically use its velocity to update its position with gravity and horizontal
+    ///     deceleration. Make this false to override the player's position and control it externally.
+    /// </summary>
+    public bool ShouldManagePosition { get; set; } = true;
+
     public bool IsWalking { get; set; }
     public bool IsJumping { get; set; }
-    public Vector2 Position { get; private set; }
+    public Vector2 Position { get; set; }
 
-    public Vector2 Velocity { get; private set; }
+    public Vector2 Velocity { get; set; }
 
     // Animation data
     /// <summary>
@@ -46,7 +52,7 @@ public class Player : IAnimatable
     public SpriteAnimation Animation { get; set; }
 
     public bool IsFacingLeft { get; private set; }
-    
+
     public IState CurrentState { get; private set; }
 
     /// <summary>
@@ -70,9 +76,13 @@ public class Player : IAnimatable
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
 
-        // Decelerate the player when not walking
-        Decelerate();
-        ApplyGravity();
+        if (ShouldManagePosition)
+        {
+            // Decelerate the player when not walking
+            Decelerate();
+            ApplyGravity();
+        }
+
         UpdatePosition();
     }
 
