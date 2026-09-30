@@ -156,13 +156,10 @@ public class SpriteAnimation : ISprite
     /// </summary>
     private void UpdateSourceRectangle()
     {
-        var x = _startingX + _currentFrame * _frameWidth;
+        var frameStride = _frameWidth + (_hasBufferWidth ? _bufferWidth : 0);
+        var x = _startingX + _currentFrame * frameStride;
         var y = _startingY;
-        if (_hasBufferWidth)
-            _sprite.SourceRectangle =
-                new Rectangle(x + _bufferWidth * (_currentFrame - 1), y, _frameWidth, _frameHeight);
-        else
-            _sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
+        _sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
     }
 
     /// <summary>
