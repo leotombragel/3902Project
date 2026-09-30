@@ -53,7 +53,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _tiles = new TileCycler(new Vector2((viewport.Width - Tile.Size) / 2f, (viewport.Height - Tile.Size) / 2f));
         _keeseEnemy = new KeeseEnemy();
         _stalfoEnemy = new StalfoEnemy();
-        _wizzrobeEnemy = new WizzrobeEnemy();
+        _wizzrobeEnemy = new WizzrobeEnemy(_player.Position, _projectiles);
 
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));

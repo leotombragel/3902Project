@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using CSE3902Project.Game.Entity.State;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,14 +25,23 @@ public class WizzrobeEnemy : IAnimatable
     private static readonly Random _rng = new Random();
     public Vector2 Position { get; private set; }
     public Vector2 PlayerPos;
-    public int VisibilityBuffer = 0;
+    private int VisibilityBuffer = 0;
 
-    public WizzrobeEnemy()
+    //fireball
+    public WizzrobeProjectile fireball;
+    private int FireballBuffer = 0;//timer to allow him to become visible AND THEN throw fireball
+    public List<IProjectile> _projectiles;
+
+    public WizzrobeEnemy(Vector2 playerPos, List<IProjectile> projectiles)
     {
         Sprite = SpriteFactory.Instance.CreateWizzrobeSprite();
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new WizzrobeAnimationFactory());
         CurrentState = new WizzrobeInvisibleState(this);
+
+        PlayerPos = playerPos;
+        _projectiles = projectiles;
+
     }
     
     public WizzrobeEnemy(Sprite sprite)
@@ -50,7 +60,7 @@ public class WizzrobeEnemy : IAnimatable
     
     public void setPlayerPos(Vector2 pos)
     {
-        PlayerPos = pos;
+        
     }
 
     public virtual void Update(GameTime gameTime)
@@ -59,19 +69,24 @@ public class WizzrobeEnemy : IAnimatable
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
 
-        if(checkVisibilityBuffer())
+        if(CheckVisibilityBuffer())
         {
             UpdatePosition();
+        }
+
+        if(CheckFireballBuffer())
+        {
+            Console.WriteLine("thrown");
+            ThrowFireball();
         }
     
     }
 
-    public bool checkVisibilityBuffer()
+    public bool CheckVisibilityBuffer()
     {
-        Console.WriteLine("wizzrobe state is " + CurrentState);
         if (CurrentState is WizzrobeInvisibleState)
         {
-            if (VisibilityBuffer < 240)
+            if (VisibilityBuffer < 24)//was 240
             {
                 VisibilityBuffer += 1;
             }
@@ -118,6 +133,29 @@ public class WizzrobeEnemy : IAnimatable
                 IsFacingLeft = false;
             }
         }
+    }
+
+    private bool CheckFireballBuffer()
+    {
+        if(CurrentState is WizzrobeVisibleState)
+        {
+            if (FireballBuffer < 20)
+            {
+                FireballBuffer += 1;
+            }
+            else
+            {
+                FireballBuffer = 0;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void ThrowFireball()
+    {
+        fireball = new WizzrobeProjectile(Position.X, Position.Y, IsFacingLeft);
+        _projectiles.Add(fireball);
     }
 
     public void ChangeState(IState newState)
