@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using CSE3902Project.Game.Tiles;
 
 namespace CSE3902Project;
 
@@ -13,6 +14,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
 {
     private List<IController> _controllers;
     private GraphicsDeviceManager _graphics;
+    private SpriteBatch _spriteBatch;
+
+    private Player _player;
+    private TileCycler _tiles;
+    private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
 
     private Player _player;
@@ -36,12 +42,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _spriteBatch = new SpriteBatch(GraphicsDevice); // Texture rendering
 
         SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
-        
+        TileSpriteFactory.Instance.LoadAllAssets(Content); // Tile sprites
 
         var keyboardController = new KeyboardController();
         var mouseController = new MouseController();
 
         _player = new Player();
+
+        var viewport = GraphicsDevice.Viewport;
+        _ground = new GroundRow(viewport.Width, viewport.Height);
+        _tiles = new TileCycler(new Vector2((viewport.Width - Tile.Size) / 2f, (viewport.Height - Tile.Size) / 2f));
         _keeseEnemy = new KeeseEnemy();
         _stalfoEnemy = new StalfoEnemy();
 
@@ -52,6 +62,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
         keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
         keyboardController.RegisterCommand(Keys.Escape, new ExitCommand(this));
+        keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
+        keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
 
         mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
 
@@ -61,6 +73,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         _player.Update(gameTime);
+        _ground.Update(gameTime);
+        _tiles.Update(gameTime);
         _keeseEnemy.Update(gameTime);
         _stalfoEnemy.Update(gameTime);
 
@@ -74,6 +88,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
+        _ground.Draw(_spriteBatch);
+        _tiles.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
         _keeseEnemy.Draw(_spriteBatch);
         _stalfoEnemy.Draw(_spriteBatch);
