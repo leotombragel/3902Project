@@ -89,6 +89,25 @@ public class Player : IAnimatable
         _previousSpeed = Velocity.X;
     }
 
+    private void CheckHorizontalCollision(bool isToTheRight)
+    {
+        //iterate over each object that collision is checked for
+        //for (int i = 0; i < Rectangles.Length; i++)
+        //{
+        //    if (IsInBoundingBox(Rectangles[i]))
+        //    {
+        //        if (isToTheRight)
+        //        {
+        //            Position = new Vector2(Rectangles[i].x1, Position.Y);
+        //        }
+        //        else
+        //        {
+        //            Position = new Vector2(Rectangles[i].x2, Position.Y);
+        //        }
+        //    }
+        //}
+    }
+
     private void Decelerate()
     {
         if (Velocity.X > 0.0f)
