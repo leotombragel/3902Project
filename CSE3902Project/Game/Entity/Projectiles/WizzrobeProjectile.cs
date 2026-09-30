@@ -9,7 +9,7 @@ namespace CSE3902Project.Game.Entity;
 
 public class WizzrobeProjectile : IProjectile
 {
-    private const int ThrowSpeed = 5;
+    private const int ThrowSpeed = 2;
     private const int MaxOutboundDistance = 3000;
 
     public Sprite Sprite { get; set; }
@@ -58,7 +58,7 @@ public class WizzrobeProjectile : IProjectile
         Animation?.Update(gameTime);
         MoveOutBound();
 
-        if (Math.Abs(XDisplacement) > 200)
+        if (Math.Abs(XDisplacement) > 400)
         {
             IsFinished = true;
         }

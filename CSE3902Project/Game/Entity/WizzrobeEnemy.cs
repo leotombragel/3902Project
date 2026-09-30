@@ -8,9 +8,9 @@ using CSE3902Project.Game.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-/// Wizzrobe enemy class, implements IAnimatable
+/// Wizzrobe enemy class, implements IMortal
 /// </summary>
-public class WizzrobeEnemy : IAnimatable
+public class WizzrobeEnemy : IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -20,47 +20,50 @@ public class WizzrobeEnemy : IAnimatable
     //state
     public bool IsFacingLeft { get; private set; }
     public IState CurrentState { get; private set;}
+    public bool IsDead { get; set; }
 
     //movement
     private static readonly Random _rng = new Random();
     public Vector2 Position { get; private set; }
-    public Vector2 PlayerPos;
+    public Player _player;
     private int VisibilityBuffer = 0;
 
     //fireball
     public WizzrobeProjectile fireball;
     private int FireballBuffer = 0;//timer to allow him to become visible AND THEN throw fireball
     public List<IProjectile> _projectiles;
+    private bool fireballThrown;
 
-    public WizzrobeEnemy(Vector2 playerPos, List<IProjectile> projectiles)
+    public WizzrobeEnemy(Player player, List<IProjectile> projectiles)
     {
         Sprite = SpriteFactory.Instance.CreateWizzrobeSprite();
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new WizzrobeAnimationFactory());
         CurrentState = new WizzrobeInvisibleState(this);
+        fireballThrown = false;
 
-        PlayerPos = playerPos;
+        _player = player;
         _projectiles = projectiles;
 
     }
     
-    public WizzrobeEnemy(Sprite sprite)
+    public WizzrobeEnemy(Sprite sprite, Player player, List<IProjectile> projectiles)
     {
         Sprite = sprite;
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new WizzrobeAnimationFactory());
         CurrentState = new WizzrobeInvisibleState(this);
+        fireballThrown = false;
+
+        _player = player;
+        _projectiles = projectiles;
+
     }
 
     //sprite sheet from https://www.spriters-resource.com/nes/legendofzelda/asset/31806/
     public void Draw(SpriteBatch spriteBatch)
     {
         _animationController.Draw(spriteBatch, Position, IsFacingLeft);
-    }
-    
-    public void setPlayerPos(Vector2 pos)
-    {
-        
     }
 
     public virtual void Update(GameTime gameTime)
@@ -76,9 +79,10 @@ public class WizzrobeEnemy : IAnimatable
 
         if(CheckFireballBuffer())
         {
-            Console.WriteLine("thrown");
             ThrowFireball();
         }
+
+        Console.WriteLine(_player.Position);
     
     }
 
@@ -86,7 +90,8 @@ public class WizzrobeEnemy : IAnimatable
     {
         if (CurrentState is WizzrobeInvisibleState)
         {
-            if (VisibilityBuffer < 24)//was 240
+            fireballThrown = false;
+            if (VisibilityBuffer < 60)//was 240
             {
                 VisibilityBuffer += 1;
             }
@@ -124,13 +129,13 @@ public class WizzrobeEnemy : IAnimatable
             int n = _rng.Next(2);// randomize either to the left or right of player
             if (n == 1)
             {
-                Position = new Vector2(PlayerPos.X -= 200, PlayerPos.Y + 24);
-                IsFacingLeft = true;
+                Position = new Vector2(_player.Position.X - 200, _player.Position.Y + 24);
+                IsFacingLeft = false;
             }
             else
             {
-                Position = new Vector2(PlayerPos.X += 200, PlayerPos.Y + 24);
-                IsFacingLeft = false;
+                Position = new Vector2(_player.Position.X + 200, _player.Position.Y + 24);
+                IsFacingLeft = true;
             }
         }
     }
@@ -154,8 +159,12 @@ public class WizzrobeEnemy : IAnimatable
 
     private void ThrowFireball()
     {
-        fireball = new WizzrobeProjectile(Position.X, Position.Y, IsFacingLeft);
-        _projectiles.Add(fireball);
+        if (!fireballThrown)
+        {
+            fireball = new WizzrobeProjectile(Position.X, Position.Y, IsFacingLeft);
+            _projectiles.Add(fireball);
+            fireballThrown = true;
+        }
     }
 
     public void ChangeState(IState newState)
