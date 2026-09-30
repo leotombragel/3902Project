@@ -10,6 +10,8 @@ namespace CSE3902Project.Game.Graphics;
 public interface IProjectile
 {
 
+    bool IsFinished { get; }
+
     SpriteAnimation Animation { get; set;  }
 
     Vector2 Velocity { get; }

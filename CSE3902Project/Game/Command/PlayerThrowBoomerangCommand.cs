@@ -22,6 +22,7 @@ public class PlayerThrowBoomerangCommand : ICommand
 
         _player.ChangeState(new PlayerThrowState(_player));
         _spawnProjectile(new BoomerangProjectile(
+            _player,
             (int)_player.Position.X,
             (int)_player.Position.Y,
             _player.IsFacingLeft));

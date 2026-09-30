@@ -80,6 +80,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _keeseEnemy.Update(gameTime);
         _stalfoEnemy.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
+        _projectiles.RemoveAll(projectile => projectile.IsFinished);
         _wizzrobeEnemy.setPlayerPos(_player.Position); //give link's position to wizzrobe
         _wizzrobeEnemy.Update(gameTime);
 
