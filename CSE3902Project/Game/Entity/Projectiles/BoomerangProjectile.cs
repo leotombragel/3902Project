@@ -11,19 +11,24 @@ public class BoomerangProjectile : IProjectile
 {
     private const int ThrowSpeed = 5;
     private const int MaxOutboundDistance = 300;
+    private Vector2 PlayerCenterCorrection = new Vector2(32, 16);
 
     public Sprite Sprite { get; set; }
     public SpriteAnimation Animation { get; set; }
 
+    public Player _player { get; }
+    
     public bool IsReturning = false;
+    public bool IsFinished { get; private set; }
     public bool IsFacingLeft { get; private set; }
     public int XPosition { get; private set; }
     public int XDisplacement {get; private set; }
     public int YPosition { get; private set; }
     public Vector2 Velocity { get; private set; }
 
-    public BoomerangProjectile(int startingX, int startingY, bool isFacingLeft)
+    public BoomerangProjectile(Player player, int startingX, int startingY, bool isFacingLeft)
     {
+        _player = player;
         XPosition = isFacingLeft ? startingX : startingX + 32;
         YPosition = startingY + 32;
         IsFacingLeft = isFacingLeft;
@@ -62,14 +67,23 @@ public class BoomerangProjectile : IProjectile
     {
         if (!IsReturning) return;
 
-        var direction = Math.Sign(Velocity.X);
+        Vector2 playerPos = _player.Position;
+        float xDisplacement = playerPos.X + 16 - XPosition;
+        float yDisplacement = playerPos.Y + 32 - YPosition;
+        float totalDisplacement = MathF.Sqrt(
+            xDisplacement * xDisplacement + yDisplacement * yDisplacement);
 
-
-        if (Math.Abs(XDisplacement) >= MaxOutboundDistance)
+        if (totalDisplacement <= ThrowSpeed)
         {
-            IsReturning = false;
-            
+            XPosition = (int)MathF.Round(playerPos.X + 16);
+            YPosition = (int)MathF.Round(playerPos.Y + 32);
+            IsFinished = true;
+            return;
         }
+
+        float angle = MathF.Atan2(yDisplacement, xDisplacement);
+        XPosition += (int)MathF.Round(MathF.Cos(angle) * ThrowSpeed);
+        YPosition += (int)MathF.Round(MathF.Sin(angle) * ThrowSpeed);
     }
 
     public void Update(GameTime gameTime)

@@ -7,9 +7,9 @@ using CSE3902Project.Game.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-/// stalfo enemy class, implements IAnimatable
+/// stalfo enemy class, implements IMortal
 /// </summary>
-public class StalfoEnemy : IAnimatable
+public class StalfoEnemy : IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -20,13 +20,14 @@ public class StalfoEnemy : IAnimatable
     //state
     public bool IsFacingLeft { get; private set; }
     public IState CurrentState { get; private set;}
+    public bool IsDead { get; set; }
 
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    private const float VerticalMoveSpeed = 4.0f;
     private const int StartingPosX = 600; //figure out how to set these through constructor late
     private const int StartingPosY = 100; 
+    public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
         public StalfoEnemy()
     {
@@ -83,19 +84,31 @@ public class StalfoEnemy : IAnimatable
         _animationController.Update(gameTime);
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
-        
+
+        IsFacingLeft = MoveHorizontal(IsFacingLeft);
         UpdatePosition();
     }
 
     public void MoveVertical()
     {
-        // _verticalSpeed = -VerticalMoveSpeed; 
-        Velocity = Velocity with { Y = -VerticalMoveSpeed };
+    //wait to implement when we get collision
     }
 
-    public void MoveHorizontal(bool isToTheRight)
+    public bool MoveHorizontal(bool IsFacingLeft)
     {
+    //wait to implement further when we get proper collision
+    if (LeftRightBuffer < 400)
+    {
+        LeftRightBuffer += 1;
+    }
+    else
+    {
+           LeftRightBuffer = 0;
+           IsFacingLeft = !IsFacingLeft;
+           Velocity = new Vector2(Velocity.X * -1, Velocity.Y);
 
+    }
+    return IsFacingLeft;
     }
 
     public void ChangeState(IState newState)

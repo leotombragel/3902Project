@@ -7,17 +7,17 @@ namespace CSE3902Project.Game.Graphics;
 /// <summary>
 /// Interface for objects and entities that can be animated.
 /// </summary>
-public interface IProjectile
+public interface IMortal : IAnimatable
 {
+    bool IsFacingLeft { get; }
 
-    bool IsFinished { get; }
-
+    bool IsDead { get; set;  }
+    IState CurrentState { get; }
     SpriteAnimation Animation { get; set;  }
-
-    Vector2 Velocity { get; }
 
     public void Draw(SpriteBatch s);
 
     public void Update(GameTime gameTime);
 
+    public void ChangeState(IState newState);
 }

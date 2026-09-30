@@ -7,9 +7,9 @@ using CSE3902Project.Game.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-/// keese enemy class, implements IAnimatable
+/// keese enemy class, implements IMortal
 /// </summary>
-public class KeeseEnemy : IAnimatable
+public class KeeseEnemy : IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -20,6 +20,8 @@ public class KeeseEnemy : IAnimatable
     public bool IsFacingLeft { get; private set; }
     public bool IsGoingUp { get; private set; }
     public IState CurrentState { get; private set;}
+    public bool IsDead { get; set; }
+
 
     //movement
     private static readonly Random _rng = new Random();

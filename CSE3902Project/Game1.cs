@@ -18,10 +18,12 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     private Player _player;
     private TileCycler _tiles;
+    private EnemyCycler _enemyCycler;
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
     private StalfoEnemy _stalfoEnemy;
     private readonly List<IProjectile> _projectiles = new();
+    private readonly List<IMortal> _enemies = new();
     private WizzrobeEnemy _wizzrobeEnemy;
 
     public Game1()
@@ -51,9 +53,15 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var viewport = GraphicsDevice.Viewport;
         _ground = new GroundRow(viewport.Width, viewport.Height);
         _tiles = new TileCycler(new Vector2((viewport.Width - Tile.Size) / 2f, (viewport.Height - Tile.Size) / 2f));
+
         _keeseEnemy = new KeeseEnemy();
         _stalfoEnemy = new StalfoEnemy();
-        _wizzrobeEnemy = new WizzrobeEnemy();
+        _wizzrobeEnemy = new WizzrobeEnemy(_player, _projectiles);
+        _enemies.Add(_keeseEnemy);
+        _enemies.Add(_stalfoEnemy);
+        _enemies.Add(_wizzrobeEnemy);
+
+        _enemyCycler = new EnemyCycler(_enemies);
 
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
@@ -66,6 +74,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.Escape, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
+        keyboardController.RegisterPressCommand(Keys.O, new PreviousEnemyCommand(_enemyCycler));
+        keyboardController.RegisterPressCommand(Keys.P, new NextEnemyCommand(_enemyCycler));
 
         mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
 
@@ -77,11 +87,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _player.Update(gameTime);
         _ground.Update(gameTime);
         _tiles.Update(gameTime);
-        _keeseEnemy.Update(gameTime);
-        _stalfoEnemy.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
-        _wizzrobeEnemy.setPlayerPos(_player.Position); //give link's position to wizzrobe
-        _wizzrobeEnemy.Update(gameTime);
+        _projectiles.RemoveAll(projectile => projectile.IsFinished);
+        //foreach (var enemy in _enemies) enemy.Update(gameTime);    DONT REMOVE
+        //_enemies.RemoveAll(enemy => enemy.IsDead);     DONT REMOVE
+        _enemyCycler.Update(gameTime);
 
         foreach (var controller in _controllers) controller.Update();
 
@@ -97,9 +107,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _tiles.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
-        _keeseEnemy.Draw(_spriteBatch);
-        _stalfoEnemy.Draw(_spriteBatch);
-        _wizzrobeEnemy.Draw(_spriteBatch);
+        //foreach (var enemy in _enemies) enemy.Update(gameTime);  DONT REMOVE
+        _enemyCycler.Draw(_spriteBatch);
 
         _spriteBatch.End();
 
