@@ -120,11 +120,7 @@ public class WizzrobeEnemy : IMortal
 
     private void UpdatePosition()
     {
-        if(CurrentState is WizzrobeInvisibleState)
-        {
-            Position = new Vector2(0, -20);//put him off screen
-        }
-        else if(CurrentState is WizzrobeVisibleState)
+        if(CurrentState is WizzrobeVisibleState)
         {
             int n = _rng.Next(2);// randomize either to the left or right of player
             if (n == 1)
