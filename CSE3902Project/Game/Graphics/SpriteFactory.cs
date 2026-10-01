@@ -90,6 +90,13 @@ public class SpriteFactory
     public Sprite CreateWizzrobeSprite()
     {
         var sprite = new Sprite(_wizzrobeSheet);
+        sprite.Scale = new Vector2(2.5f, 2.5f);
+        return sprite;
+    }
+
+    public Sprite CreateWizzrobeProjectileSprite()
+    {
+        var sprite = new Sprite(_wizzrobeSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);
         return sprite;
     }
