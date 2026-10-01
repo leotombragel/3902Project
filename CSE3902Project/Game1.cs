@@ -61,8 +61,12 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
         keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
         keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
-        keyboardController.RegisterPressCommand(Keys.W,
+        keyboardController.RegisterPressCommand(Keys.D1,
             new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile)));
+        keyboardController.RegisterPressCommand(Keys.D2,
+            new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile)));
+        keyboardController.RegisterPressCommand(Keys.D3,
+            new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile)));
         keyboardController.RegisterCommand(Keys.Escape, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));

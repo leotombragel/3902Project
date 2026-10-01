@@ -11,6 +11,7 @@ public class SpriteAnimation : ISprite
     private readonly float _frameDuration;
     private readonly int _frameHeight;
     private readonly bool _loops = true;
+    private readonly int[] _frameOrder;
 
     private readonly int _frameWidth;
     private readonly bool _hasBufferWidth; //initailzed to false
@@ -103,6 +104,30 @@ public class SpriteAnimation : ISprite
         InitializeSourceRectangle();
     }
 
+    public SpriteAnimation(Sprite sprite, int frameWidth, int frameHeight, int[] frameOrder,
+        float frameDuration, int startingX, int startingY, int bufferWidth = 0, bool loops = true)
+    {
+        ArgumentNullException.ThrowIfNull(frameOrder);
+        if (frameOrder.Length == 0)
+        {
+            throw new ArgumentException("Animation frame order cannot be empty.", nameof(frameOrder));
+        }
+
+        _sprite = sprite;
+        _frameWidth = frameWidth;
+        _frameHeight = frameHeight;
+        _frameCount = frameOrder.Length;
+        _frameDuration = frameDuration;
+        _frameOrder = (int[])frameOrder.Clone();
+        _startingX = startingX;
+        _startingY = startingY;
+        _bufferWidth = bufferWidth;
+        _hasBufferWidth = bufferWidth > 0;
+        _loops = loops;
+
+        InitializeSourceRectangle();
+    }
+
     public int LoopCount { get; private set; } = 0;
 
     public bool IsPlaying { get; } = true;
@@ -157,7 +182,8 @@ public class SpriteAnimation : ISprite
     private void UpdateSourceRectangle()
     {
         var frameStride = _frameWidth + (_hasBufferWidth ? _bufferWidth : 0);
-        var x = _startingX + _currentFrame * frameStride;
+        var frameIndex = _frameOrder is null ? _currentFrame : _frameOrder[_currentFrame];
+        var x = _startingX + frameIndex * frameStride;
         var y = _startingY;
         _sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
     }
