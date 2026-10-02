@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
 using CSE3902Project.Game.Tiles;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace CSE3902Project;
 
@@ -72,6 +72,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
         keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
         keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
+        keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
         keyboardController.RegisterPressCommand(Keys.D1,
             new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile)));
         keyboardController.RegisterPressCommand(Keys.D2,
