@@ -9,7 +9,7 @@ namespace CSE3902Project.Game.Entity;
 /// <summary>
 /// stalfo enemy class, implements IMortal
 /// </summary>
-public class StalfoEnemy : IMortal
+public class StalfoEnemy : StatefulEntityBase, IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -19,7 +19,6 @@ public class StalfoEnemy : IMortal
 
     //state
     public bool IsFacingLeft { get; private set; }
-    public IState CurrentState { get; private set;}
     public bool IsDead { get; set; }
 
     //movement
@@ -109,12 +108,5 @@ public class StalfoEnemy : IMortal
 
     }
     return IsFacingLeft;
-    }
-
-    public void ChangeState(IState newState)
-    {
-        CurrentState?.Exit();
-        CurrentState = newState;
-        CurrentState?.Enter();
     }
 }
