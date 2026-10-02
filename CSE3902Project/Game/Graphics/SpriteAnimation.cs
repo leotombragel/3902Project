@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,9 +10,13 @@ public class SpriteAnimation : ISprite
     private readonly int _frameCount;
     private readonly float _frameDuration;
     private readonly int _frameHeight;
+    private readonly bool _loops = true;
+    private readonly int[] _frameOrder;
 
     private readonly int _frameWidth;
     private readonly bool _hasBufferWidth; //initailzed to false
+
+    // Sprite animation properties
     private readonly int _startingX;
     private readonly int _startingY;
 
@@ -54,13 +59,14 @@ public class SpriteAnimation : ISprite
     /// <param name="startingX">The x-coordinate of the starting position of the first frame.</param>
     /// <param name="startingY">The y-coordinate of the starting position of the first frame.</param>
     public SpriteAnimation(Sprite sprite, int frameWidth, int frameHeight, int frameCount, float frameDuration,
-        int startingX, int startingY)
+        int startingX, int startingY, bool loops = true)
     {
         Sprite = sprite;
         _frameCount = frameCount;
         _frameWidth = frameWidth;
         _frameHeight = frameHeight;
         _frameDuration = frameDuration;
+        _loops = loops;
         _startingX = startingX;
         _startingY = startingY;
 
@@ -97,6 +103,30 @@ public class SpriteAnimation : ISprite
         InitializeSourceRectangle();
     }
 
+    public SpriteAnimation(Sprite sprite, int frameWidth, int frameHeight, int[] frameOrder,
+        float frameDuration, int startingX, int startingY, int bufferWidth = 0, bool loops = true)
+    {
+        ArgumentNullException.ThrowIfNull(frameOrder);
+        if (frameOrder.Length == 0)
+        {
+            throw new ArgumentException("Animation frame order cannot be empty.", nameof(frameOrder));
+        }
+
+        Sprite = sprite;
+        _frameWidth = frameWidth;
+        _frameHeight = frameHeight;
+        _frameCount = frameOrder.Length;
+        _frameDuration = frameDuration;
+        _frameOrder = (int[])frameOrder.Clone();
+        _startingX = startingX;
+        _startingY = startingY;
+        _bufferWidth = bufferWidth;
+        _hasBufferWidth = bufferWidth > 0;
+        _loops = loops;
+
+        InitializeSourceRectangle();
+    }
+
     // Sprite animation properties
     public Sprite Sprite { get; set; }
 
@@ -106,17 +136,26 @@ public class SpriteAnimation : ISprite
 
     public void Update(GameTime gameTime)
     {
-        if (!IsPlaying) return;
+        if (!IsPlaying || (!_loops && LoopCount > 0)) return;
 
         _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         if (_timer >= _frameDuration)
         {
-            if (_currentFrame == _frameCount - 1) LoopCount++;
-
-            // Switch frames
             _timer -= _frameDuration;
-            _currentFrame = (_currentFrame + 1) % _frameCount;
+
+            var isLastFrame = _currentFrame == _frameCount - 1;
+            if (isLastFrame)
+            {
+                LoopCount++;
+                if (!_loops) return;
+                _currentFrame = 0;
+            }
+            else
+            {
+                _currentFrame++;
+            }
+
             UpdateSourceRectangle();
         }
     }
@@ -135,6 +174,7 @@ public class SpriteAnimation : ISprite
     {
         _currentFrame = 0;
         _timer = 0.0f;
+        LoopCount = 0;
         UpdateSourceRectangle();
     }
 
@@ -143,13 +183,11 @@ public class SpriteAnimation : ISprite
     /// </summary>
     private void UpdateSourceRectangle()
     {
-        var x = _startingX + _currentFrame * _frameWidth;
+        var frameStride = _frameWidth + (_hasBufferWidth ? _bufferWidth : 0);
+        var frameIndex = _frameOrder is null ? _currentFrame : _frameOrder[_currentFrame];
+        var x = _startingX + frameIndex * frameStride;
         var y = _startingY;
-        if (_hasBufferWidth)
-            Sprite.SourceRectangle =
-                new Rectangle(x + _bufferWidth * (_currentFrame - 1), y, _frameWidth, _frameHeight);
-        else
-            Sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
+        Sprite.SourceRectangle = new Rectangle(x, y, _frameWidth, _frameHeight);
     }
 
     /// <summary>
@@ -159,6 +197,7 @@ public class SpriteAnimation : ISprite
     {
         _currentFrame = 0;
         _timer = 0.0f;
+        LoopCount = 0;
         UpdateSourceRectangle();
     }
 }

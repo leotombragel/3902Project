@@ -7,9 +7,9 @@ using CSE3902Project.Game.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-/// keese enemy class, implements IAnimatable
+/// keese enemy class, implements IMortal
 /// </summary>
-public class KeeseEnemy : IAnimatable
+public class KeeseEnemy : IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -20,6 +20,8 @@ public class KeeseEnemy : IAnimatable
     public bool IsFacingLeft { get; private set; }
     public bool IsGoingUp { get; private set; }
     public IState CurrentState { get; private set;}
+    public bool IsDead { get; set; }
+
 
     //movement
     private static readonly Random _rng = new Random();
@@ -34,13 +36,13 @@ public class KeeseEnemy : IAnimatable
 
         public KeeseEnemy()
     {
-        Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
+        Sprite = SpriteFactory.Instance.CreateKeeseSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 1);
         BoxContainer = new Vector2(100, 50);
         IsGoingUp = false;
         IsFacingLeft = true;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+            _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseFlyingState(this);
     }
     
@@ -52,7 +54,7 @@ public class KeeseEnemy : IAnimatable
         BoxContainer = new Vector2(100, 50);
         IsGoingUp = false;
         IsFacingLeft = true;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+        _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseStoppedState(this);
     }
 
@@ -79,7 +81,6 @@ public class KeeseEnemy : IAnimatable
         IsGoingUp = MoveVertical(IsGoingUp);
         IsFacingLeft = MoveHorizontal(IsFacingLeft);
         
-        Console.WriteLine("Keese velo: " + Velocity);
         UpdatePosition();
     }
 

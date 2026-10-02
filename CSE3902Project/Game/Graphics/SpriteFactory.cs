@@ -19,6 +19,10 @@ public class SpriteFactory
     private Texture2D _linkSheet;
     private Texture2D _keeseSheet;
     private Texture2D _stalfoSheet;
+    private Texture2D _wizzrobeSheet;
+    private Texture2D _fireSheet;
+
+    private Texture2D _itemsSheet;
 
     public void LoadAllAssets(ContentManager content)
     {
@@ -28,7 +32,9 @@ public class SpriteFactory
         _linkSheet = content.Load<Texture2D>("images/player");
         _keeseSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
         _stalfoSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
-
+        _itemsSheet = content.Load<Texture2D>("images/link_items_spritesheet");
+        _fireSheet = content.Load<Texture2D>("images/fire_sheet");
+        _wizzrobeSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
     }
 
     public Sprite CreateIdlePlayerSprite()
@@ -53,6 +59,20 @@ public class SpriteFactory
         return sprite;
     }
 
+    public Sprite CreateItemsSheet()
+    {
+        var sprite = new Sprite(_itemsSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateFireSprite()
+    {
+        var sprite = new Sprite(_fireSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
     public Sprite CreateKeeseSprite()
     {
         var sprite = new Sprite(_keeseSheet);
@@ -63,6 +83,20 @@ public class SpriteFactory
     public Sprite CreateStalfoSprite()
     {
         var sprite = new Sprite(_stalfoSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateWizzrobeSprite()
+    {
+        var sprite = new Sprite(_wizzrobeSheet);
+        sprite.Scale = new Vector2(2.5f, 2.5f);
+        return sprite;
+    }
+
+    public Sprite CreateWizzrobeProjectileSprite()
+    {
+        var sprite = new Sprite(_wizzrobeSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);
         return sprite;
     }
