@@ -3,15 +3,16 @@ using Microsoft.Xna.Framework;
 
 namespace CSE3902Project.Game.Entity.State;
 
-public class AquamentusDeadState : IState
+public class AquamentusRightState : IState
 {
     private readonly AquamentusEnemy _aquamentusEnemy;
-    public AquamentusDeadState(AquamentusEnemy enemy)
+    
+    public AquamentusRightState(AquamentusEnemy enemy)
     {
         _aquamentusEnemy = enemy;
     }
 
-    public string AnimationName => "AquaementusDead";
+    public string AnimationName => "AquamentusRight";
 
     public void Enter()
     {

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
 using CSE3902Project.Game.Tiles;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace CSE3902Project;
 
@@ -22,6 +22,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
     private StalfoEnemy _stalfoEnemy;
+    private AquamentusEnemy _aquamentusEnemy;
     private readonly List<IProjectile> _projectiles = new();
     private readonly List<IMortal> _enemies = new();
     private WizzrobeEnemy _wizzrobeEnemy;
@@ -57,9 +58,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _keeseEnemy = new KeeseEnemy();
         _stalfoEnemy = new StalfoEnemy();
         _wizzrobeEnemy = new WizzrobeEnemy(_player, _projectiles);
+        _aquamentusEnemy = new AquamentusEnemy(_player, _projectiles);
         _enemies.Add(_keeseEnemy);
         _enemies.Add(_stalfoEnemy);
         _enemies.Add(_wizzrobeEnemy);
+        _enemies.Add(_aquamentusEnemy);
 
         _enemyCycler = new EnemyCycler(_enemies);
 
@@ -69,6 +72,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
         keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
         keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
+        keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
         keyboardController.RegisterPressCommand(Keys.D1,
             new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile)));
         keyboardController.RegisterPressCommand(Keys.D2,
