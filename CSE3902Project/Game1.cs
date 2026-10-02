@@ -22,6 +22,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
     private StalfoEnemy _stalfoEnemy;
+    private AquamentusEnemy _aquamentusEnemy;
     private readonly List<IProjectile> _projectiles = new();
     private readonly List<IMortal> _enemies = new();
     private WizzrobeEnemy _wizzrobeEnemy;
@@ -57,9 +58,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _keeseEnemy = new KeeseEnemy();
         _stalfoEnemy = new StalfoEnemy();
         _wizzrobeEnemy = new WizzrobeEnemy(_player, _projectiles);
+        _aquamentusEnemy = new AquamentusEnemy(_player, _projectiles);
         _enemies.Add(_keeseEnemy);
         _enemies.Add(_stalfoEnemy);
         _enemies.Add(_wizzrobeEnemy);
+        _enemies.Add(_aquamentusEnemy);
 
         _enemyCycler = new EnemyCycler(_enemies);
 
