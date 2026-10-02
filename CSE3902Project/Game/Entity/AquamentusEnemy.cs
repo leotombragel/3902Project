@@ -16,7 +16,7 @@ public class AquamentusEnemy : IMortal
     private readonly AnimationController _animationController;
     public Sprite Sprite { get; set; }
     public SpriteAnimation Animation { get; set; }
-    public int FrameBuffer = 0;//Stalfo has no animation, just a frame flipped over the y axis
+    public int FrameBuffer = 0;
 
     //state
     public bool IsFacingLeft { get; private set; }
@@ -29,6 +29,12 @@ public class AquamentusEnemy : IMortal
     private const int StartingPosX = 200; //figure out how to set these through constructor late
     private const int StartingPosY = 100; 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
+
+    //projectile
+    public AquamentusProjectile fireball1, fireball2;
+    private int FireballsBuffer = 0;//timer to allow him to become visible AND THEN throw fireball
+    public List<IProjectile> _projectiles;
+    private bool fireballsThrown;
 
         public AquamentusEnemy(Player player, List<IProjectile> projectiles)
     {
@@ -100,6 +106,20 @@ public class AquamentusEnemy : IMortal
 
     }
     return IsFacingLeft;
+    }
+
+    private void ThrowFireball()
+    {
+        if (!fireballsThrown)
+        {
+            fireball1 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft);
+            _projectiles.Add(fireball1);
+
+            fireball2 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft);
+            _projectiles.Add(fireball2);
+
+            fireballsThrown = true;
+        }
     }
 
     public void ChangeState(IState newState)

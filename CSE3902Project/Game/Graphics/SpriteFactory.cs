@@ -116,4 +116,11 @@ public class SpriteFactory
         sprite.Scale = new Vector2(4.0f, 4.0f);
         return sprite;
     }
+
+     public Sprite CreateAquamentusProjectileSprite()
+    {
+        var sprite = new Sprite(_wizzrobeSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
 }
