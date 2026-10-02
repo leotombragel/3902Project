@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902groupproject\\3902project\\cse3902project\\game\\entity\\rect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\rect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902groupproject\\3902project\\cse3902project\\game\\entity\\keeseenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\keeseenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902groupproject\\3902project\\cse3902project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902groupproject\\3902project\\cse3902project\\game\\entity\\rect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\rect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -36,7 +36,7 @@
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\Player.cs",
               "ToolTip": "C:\\Users\\awild\\source\\repos\\3902GroupProject\\3902Project\\CSE3902Project\\Game\\Entity\\Player.cs*",
               "RelativeToolTip": "CSE3902Project\\Game\\Entity\\Player.cs*",
-              "ViewState": "AgIAAFwAAAAAAAAAAAAAwGMAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAswHQAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-28T17:19:33.847Z",
               "IsPinned": true,
@@ -52,33 +52,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "Rect.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902GroupProject\\3902Project\\CSE3902Project\\Game\\Entity\\Rect.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\Rect.cs",
               "ToolTip": "C:\\Users\\awild\\source\\repos\\3902GroupProject\\3902Project\\CSE3902Project\\Game\\Entity\\Rect.cs",
               "RelativeToolTip": "CSE3902Project\\Game\\Entity\\Rect.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAsAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-30T17:09:20.838Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "KeeseEnemy.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902GroupProject\\3902Project\\CSE3902Project\\Game\\Entity\\KeeseEnemy.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\KeeseEnemy.cs",
               "ToolTip": "C:\\Users\\awild\\source\\repos\\3902GroupProject\\3902Project\\CSE3902Project\\Game\\Entity\\KeeseEnemy.cs",
               "RelativeToolTip": "CSE3902Project\\Game\\Entity\\KeeseEnemy.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAAAACAAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAACIAAAAAAAAAAAAYwCMAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-30T16:36:48.777Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Game1.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902GroupProject\\3902Project\\CSE3902Project\\Game1.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game1.cs",

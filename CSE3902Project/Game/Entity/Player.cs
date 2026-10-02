@@ -94,37 +94,62 @@ public class Player : IAnimatable
 
         if (IsInBoundingBox(k.Hitbox))
         {
+
+
+            if (Velocity.X > 0)
+            {
+
+                Velocity = Velocity with { X = 0, Y = 0 };
+                Position = Position with { X = k.Hitbox.x1 };
+
+            }
+
+            else if (Velocity.X < 0)
+            {
+                Velocity = Velocity with { X = 0, Y = 0 };
+                Position = Position with { X = k.Hitbox.x2 };             
+            }
+
+
             if (Velocity.Y > 0)
             {
 
-                Velocity = Velocity with { Y = 0 };
-                Position = Position with { Y = k.Hitbox.y2 };
+                Velocity = Velocity with { X = 0, Y = 0 };
+                Position = Position with { Y = k.Hitbox.y1 };
 
             }
 
             else if (Velocity.Y < 0)
             {
-
                 Velocity = Velocity with { Y = 0 };
-                Position = Position with { Y = k.Hitbox.y1 };
-            }
-            else if (Velocity.X > 0)
-
-            {
-                Velocity = Velocity with { X = 0 };
-                Position = Position with { X = k.Hitbox.x1 };
+                Position = Position with { Y = k.Hitbox.y2 };
+                ChangeState(new PlayerIdleState(this));
             }
 
-            else if (Velocity.X < 0)
-            {
-                Velocity = Velocity with { X = 0 };
-                Position = Position with { X = k.Hitbox.x2 };
-            }
-
-           
         }
     }
 
+    private bool IsInXRange(Rect r)
+    {
+        if (r == null)
+        {
+            return false;
+        }
+        else if (r.x1 < Position.X && Position.X < r.x2)
+            return true;
+        else return false;
+    }
+
+    private bool IsInYRange(Rect r)
+    {
+        if (r == null)
+        {
+            return false;
+        }
+        else if (r.y1 < Position.Y && Position.Y < r.y2)
+            return true;
+        else return false;
+    }
 
     private bool IsInBoundingBox(Rect r)
     {
@@ -132,10 +157,7 @@ public class Player : IAnimatable
         {
             return false;
         }
-        else if (r.x1 < Position.X && Position.X < r.x2 && r.y1 < Position.Y && Position.Y < r.y2)
-            return true;
-        else
-            return false;
+        return IsInXRange(r) && IsInYRange(r);
     }
 
 
