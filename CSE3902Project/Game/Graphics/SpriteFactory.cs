@@ -20,6 +20,7 @@ public class SpriteFactory
     private Texture2D _keeseSheet;
     private Texture2D _stalfoSheet;
     private Texture2D _wizzrobeSheet;
+    private Texture2D _fireSheet;
     private Texture2D _auqamentusSheet;
 
     private Texture2D _itemsSheet;
@@ -33,6 +34,7 @@ public class SpriteFactory
         _keeseSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
         _stalfoSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
         _itemsSheet = content.Load<Texture2D>("images/link_items_spritesheet");
+        _fireSheet = content.Load<Texture2D>("images/fire_sheet");
         _wizzrobeSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
         _auqamentusSheet = content.Load<Texture2D>("images/DungeonBossesCUT");
     }
@@ -62,6 +64,13 @@ public class SpriteFactory
     public Sprite CreateItemsSheet()
     {
         var sprite = new Sprite(_itemsSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateFireSprite()
+    {
+        var sprite = new Sprite(_fireSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);
         return sprite;
     }
