@@ -30,8 +30,14 @@ public class AquamentusEnemy : IMortal
     private const int StartingPosY = 100; 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
+    // references
+    private Player _player;
+    private List<IProjectile> _projectiles;
+
         public AquamentusEnemy(Player player, List<IProjectile> projectiles)
     {
+        _player = player;
+        _projectiles = projectiles;
         Sprite = SpriteFactory.Instance.CreateAquamentusSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 0);
@@ -70,14 +76,26 @@ public class AquamentusEnemy : IMortal
         Position += Velocity;
     }
 
+    private void UpdateDirection()
+    {
+        var playerPostion = _player.Position;
+        if (playerPostion.X < Position.X)
+        {
+            IsFacingLeft = true;
+        }
+        else
+        {
+            IsFacingLeft = false;
+        }
+    }
+
     public virtual void Update(GameTime gameTime)
     {
         _animationController.Update(gameTime);
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
 
-        IsFacingLeft = MoveHorizontal(IsFacingLeft);
-        // UpdatePosition();
+        UpdateDirection();
     }
 
     public void MoveVertical()
