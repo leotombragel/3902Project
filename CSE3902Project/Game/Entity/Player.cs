@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CSE3902Project.Game.Entity;
 
-public class Player : IAnimatable
+public class Player : StatefulEntityBase, IAnimatable
 {
     // Motion
     private const float MaxSpeed = 3.0f;
@@ -52,23 +52,6 @@ public class Player : IAnimatable
     public SpriteAnimation Animation { get; set; }
 
     public bool IsFacingLeft { get; private set; }
-
-    public IState CurrentState { get; private set; }
-
-    /// <summary>
-    ///     Changes the entity's state to the given new state if different, calling the appropriate Exit and Enter methods.
-    ///     Does nothing if the new state is the same as the current state.
-    /// </summary>
-    /// <param name="newState">The next state the entity will have.</param>
-    public void ChangeState(IState newState)
-    {
-        // Ignore state change if re-entering the current state
-        if (newState.GetType() == CurrentState.GetType()) return;
-
-        CurrentState?.Exit();
-        CurrentState = newState;
-        CurrentState?.Enter();
-    }
 
     public virtual void Update(GameTime gameTime)
     {
