@@ -1,93 +1,112 @@
 using System;
 using CSE3902Project.Game.Entity.State;
+using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using CSE3902Project.Game.Graphics;
 
 namespace CSE3902Project.Game.Entity;
 
 public class Player : IAnimatable
 {
-    // Animation data
-    public Sprite Sprite { get; set; }
-    public SpriteAnimation Animation { get; set; }
-    public bool IsWalking { get; set; }
-    public bool IsJumping { get; set; }
-    public bool IsFacingLeft { get; private set; }
-    public IState CurrentState { get; private set;  }    
-    private readonly AnimationController _animationController;
-    
     // Motion
     private const float MaxSpeed = 3.0f;
     private const float MoveSpeed = 0.15f; // This should be greater than deceleration.
     private const float Deceleration = 0.1f;
-    public Vector2 Position { get; private set; }
-    public Vector2 Velocity { get; private set; }
-    private bool _previouslyFacingRight = true;
-    private float _previousSpeed = 0.0f;
-    
+
     // Vertical motion
     private const float VerticalMoveSpeed = 4.0f;
     private const float Gravity = 0.1f;
-    
+
     // Etc
     private const int StartingPosX = 200;
     private const int StartingPosY = 100;
+    private readonly AnimationController _animationController;
+    private bool _previouslyFacingRight = true;
+    private float _previousSpeed;
 
     public Player()
     {
-        Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
-        _animationController = new AnimationController(this, new PlayerAnimationFactory());
-        CurrentState = new PlayerIdleState(this);
-    }
-    
-    public Player(Sprite sprite)
-    {
-        Sprite = sprite;
-        Velocity = Vector2.Zero;
-        Position = new Vector2(StartingPosX, StartingPosY);
         _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
     }
 
+    /// <summary>
+    ///     If true, the player will automatically use its velocity to update its position with gravity and horizontal
+    ///     deceleration. Make this false to override the player's position and control it externally.
+    /// </summary>
+    public bool ShouldManagePosition { get; set; } = true;
+
+    public bool IsWalking { get; set; }
+    public bool IsJumping { get; set; }
+    public Vector2 Position { get; set; }
+
+    public Vector2 Velocity { get; set; }
+
+    // Animation data
+    /// <summary>
+    ///     The player's sprite animation. This is also where the player's sprite itself is publicly stored, use
+    ///     Animation.Sprite to access this.
+    /// </summary>
+    public SpriteAnimation Animation { get; set; }
+
+    public bool IsFacingLeft { get; private set; }
+
+    public IState CurrentState { get; private set; }
+
+    /// <summary>
+    ///     Changes the entity's state to the given new state if different, calling the appropriate Exit and Enter methods.
+    ///     Does nothing if the new state is the same as the current state.
+    /// </summary>
+    /// <param name="newState">The next state the entity will have.</param>
     public void ChangeState(IState newState)
     {
         // Ignore state change if re-entering the current state
         if (newState.GetType() == CurrentState.GetType()) return;
-        
+
         CurrentState?.Exit();
         CurrentState = newState;
         CurrentState?.Enter();
     }
-    
+
+    public virtual void Update(GameTime gameTime)
+    {
+        _animationController.Update(gameTime);
+        Animation?.Update(gameTime);
+        CurrentState.Update(gameTime);
+
+        if (ShouldManagePosition)
+        {
+            // Decelerate the player when not walking
+            Decelerate();
+            ApplyGravity();
+        }
+
+        UpdatePosition();
+    }
+
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        _animationController.Draw(spriteBatch, Position, IsFacingLeft);
+    }
+
     public void MoveHorizontal(bool isToTheRight)
     {
         // Update speed
         if (Math.Abs(Velocity.X) < MaxSpeed)
         {
-            if (isToTheRight != _previouslyFacingRight)
-            {
-                Velocity = Velocity with { X = 0.0f };
-            }
-            
+            if (isToTheRight != _previouslyFacingRight) Velocity = Velocity with { X = 0.0f };
+
             if (isToTheRight)
-            {
                 Velocity = Velocity with { X = Velocity.X + MoveSpeed };
-            }
             else
-            {
                 Velocity = Velocity with { X = Velocity.X - MoveSpeed };
-            }
         }
-        
+
         // Flip the sprite if the direction changes
-        if (isToTheRight != _previouslyFacingRight)
-        {
-            IsFacingLeft = !IsFacingLeft;
-        }
-        
+        if (isToTheRight != _previouslyFacingRight) IsFacingLeft = !IsFacingLeft;
+
         _previouslyFacingRight = isToTheRight;
         _previousSpeed = Velocity.X;
     }
@@ -96,23 +115,19 @@ public class Player : IAnimatable
     {
         if (Velocity.X > 0.0f)
         {
-            var newSpeed = (float) Math.Max(0.0, Velocity.X - Deceleration);
+            var newSpeed = (float)Math.Max(0.0, Velocity.X - Deceleration);
             Velocity = Velocity with { X = newSpeed };
-
         }
         else if (Velocity.X < 0.0f)
         {
-            var newSpeed = (float) Math.Min(1.0, Velocity.X + Deceleration);
+            var newSpeed = (float)Math.Min(1.0, Velocity.X + Deceleration);
             Velocity = Velocity with { X = newSpeed };
         }
     }
-    
+
     public void MoveVertical()
     {
-        if (IsJumping)
-        {
-            return;
-        }
+        if (IsJumping) return;
 
         IsJumping = true;
         ChangeState(new PlayerJumpingState(this));
@@ -120,16 +135,13 @@ public class Player : IAnimatable
         // _verticalSpeed = -VerticalMoveSpeed; // Negative makes the player move up (towards the top of the screen where y = 0)
         Velocity = Velocity with { Y = -VerticalMoveSpeed };
     }
-    
+
     private void ApplyGravity()
     {
         if (!IsJumping) return;
         Velocity = Velocity with { Y = Velocity.Y + Gravity };
 
-        if (Velocity.Y > 0.0f)
-        {
-            ChangeState(new PlayerFallingState(this));
-        }
+        if (Velocity.Y > 0.0f) ChangeState(new PlayerFallingState(this));
 
         // Check if the player has landed
         if (Position.Y > StartingPosY)
@@ -142,27 +154,10 @@ public class Player : IAnimatable
     }
 
     /// <summary>
-    /// Uses the velocity to update the player's position.
+    ///     Uses the velocity to update the player's position.
     /// </summary>
     private void UpdatePosition()
     {
         Position += Velocity;
-    }
-
-    public virtual void Update(GameTime gameTime)
-    {
-        _animationController.Update(gameTime);
-        Animation?.Update(gameTime);
-        CurrentState.Update(gameTime);
-
-        // Decelerate the player when not walking
-        Decelerate();
-        ApplyGravity();
-        UpdatePosition();
-    }
-
-    public void Draw(SpriteBatch spriteBatch)
-    {
-        _animationController.Draw(spriteBatch, Position, IsFacingLeft);
     }
 }

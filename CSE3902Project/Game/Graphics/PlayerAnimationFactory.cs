@@ -52,6 +52,14 @@ public class PlayerAnimationFactory : IAnimationFactory
             32 * 4,
             loops: false
             ),
+        ["PlayerDead"] = () => new(SpriteFactory.Instance.CreateLinkSprite(),
+            32,
+            32,
+            1,
+            0.08f,
+            32 * 6,
+            32 * 2
+        ),
     };
 
     private readonly Dictionary<string, SpriteAnimation> _animations = new();
