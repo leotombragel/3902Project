@@ -110,6 +110,7 @@ public class Player : IAnimatable
                 Position = Position with { X = k.Hitbox.x2 };             
             }
 
+            //test
 
             if (Velocity.Y > 0)
             {
