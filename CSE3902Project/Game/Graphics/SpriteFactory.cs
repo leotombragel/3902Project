@@ -20,6 +20,7 @@ public class SpriteFactory
     private Texture2D _keeseSheet;
     private Texture2D _stalfoSheet;
     private Texture2D _wizzrobeSheet;
+    private Texture2D _auqamentusSheet;
 
     private Texture2D _itemsSheet;
 
@@ -33,6 +34,7 @@ public class SpriteFactory
         _stalfoSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
         _itemsSheet = content.Load<Texture2D>("images/link_items_spritesheet");
         _wizzrobeSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
+        _auqamentusSheet = content.Load<Texture2D>("images/DungeonBossesCUT");
     }
 
     public Sprite CreateIdlePlayerSprite()
@@ -89,6 +91,13 @@ public class SpriteFactory
     {
         var sprite = new Sprite(_wizzrobeSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateAquaementusSprite()
+    {
+        var sprite = new Sprite(_auqamentusSheet);
+        sprite.Scale = new Vector2(4.0f, 4.0f);
         return sprite;
     }
 }
