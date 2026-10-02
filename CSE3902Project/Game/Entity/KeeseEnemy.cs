@@ -23,7 +23,7 @@ public class KeeseEnemy : IAnimatable
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    public Rect Hitbox = new Rect(400,100,460,160);
+    public Rect Hitbox = new Rect(0,0,0,0);
     private const float VerticalMoveSpeed = 4.0f;
     private const float MaxSpeed = 3.0f;
     private const int StartingPosX = 400; //figure out how to set these through constructor late
@@ -33,6 +33,7 @@ public class KeeseEnemy : IAnimatable
     {
         Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
+        Hitbox = new Rect(StartingPosX - 10, StartingPosY - 10, StartingPosX + 10, StartingPosY + 10);
         Velocity = Vector2.Zero;
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new KeeseFlyingState(this);
@@ -43,7 +44,7 @@ public class KeeseEnemy : IAnimatable
         Sprite = sprite;
         Velocity = Vector2.Zero;
         Position = new Vector2(StartingPosX, StartingPosY);
-        Hitbox = new Rect(Position.X, Position.Y, Position.X + 10, Position.Y + 10);
+        Hitbox = new Rect(StartingPosX - 100, StartingPosY - 100, StartingPosX + 100, StartingPosY + 100);
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new KeeseStoppedState(this);
     }

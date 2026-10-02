@@ -93,36 +93,36 @@ public class Player : IAnimatable
     {
 
         if (IsInBoundingBox(k.Hitbox))
-            Velocity = Velocity with { X = 0, Y = 0 };
-        //{
-        //    if (Velocity.X > 0)
+        {
+            if (Velocity.Y > 0)
+            {
 
-        //    {
-        //        Velocity = Velocity with { X = 0 };
-        //        Position = Position with { X = k.Hitbox.x1 };
-        //    }
+                Velocity = Velocity with { Y = 0 };
+                Position = Position with { Y = k.Hitbox.y2 };
 
-        //    if (Velocity.X < 0)
-        //    {
-        //        Velocity = Velocity with { X = 0 };
-        //        Position = Position with { X = k.Hitbox.x2 };
-        //    }
+            }
 
-        //    if (Velocity.Y > 0)
-        //    {
+            else if (Velocity.Y < 0)
+            {
 
-        //        Velocity = Velocity with { Y = 0 };
-        //        Position = Position with { Y = k.Hitbox.y2 };
+                Velocity = Velocity with { Y = 0 };
+                Position = Position with { Y = k.Hitbox.y1 };
+            }
+            else if (Velocity.X > 0)
 
-        //    }
+            {
+                Velocity = Velocity with { X = 0 };
+                Position = Position with { X = k.Hitbox.x1 };
+            }
 
-        //    if (Velocity.Y < 0)
-        //    {
+            else if (Velocity.X < 0)
+            {
+                Velocity = Velocity with { X = 0 };
+                Position = Position with { X = k.Hitbox.x2 };
+            }
 
-        //        Velocity = Velocity with { Y = 0 };
-        //        Position = Position with { Y = k.Hitbox.y1 };
-        //    }
-        //}
+           
+        }
     }
 
 
