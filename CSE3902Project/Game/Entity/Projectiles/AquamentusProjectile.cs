@@ -19,16 +19,19 @@ public class AquamentusProjectile : IProjectile
     public bool IsFinished{  get; private set; }
     public float XPosition { get; private set; }
     public float XDisplacement {get; private set; }
+    public float YDisplacement {get; private set; }
+    public float TotalDisplacement {get; private set; }
     public float YPosition { get; private set; }
     public Vector2 Velocity { get; private set; }
 
-    public AquamentusProjectile(float startingX, float startingY, bool isFacingLeft)
+    public AquamentusProjectile(float startingX, float startingY, bool isFacingLeft, double angle)
     {
-        XPosition = isFacingLeft ? startingX : startingX + 32;
+        XPosition = isFacingLeft ? startingX +40 : startingX + 40;
         YPosition = startingY + 16;
-        IsFacingLeft = isFacingLeft;
-        Velocity = new Vector2(isFacingLeft ? -ThrowSpeed : ThrowSpeed, 0.0f);
+        float dir = isFacingLeft ? 1f : -1f;
+        Velocity = new Vector2(dir * (float)(Math.Cos(angle) * ThrowSpeed), (float)(Math.Sin(angle) * ThrowSpeed));
 
+        System.Console.WriteLine($"Velocity: {Velocity.X}, {Velocity.Y}");
         Sprite = SpriteFactory.Instance.CreateAquamentusProjectileSprite();
         Animation = new SpriteAnimation(
             Sprite,
@@ -44,12 +47,15 @@ public class AquamentusProjectile : IProjectile
     private void MoveOutBound()
     {
 
-        var distanceTravelled = Math.Abs(XDisplacement);
-        var distanceToMove = Math.Min((int)Math.Abs(Velocity.X), MaxOutboundDistance - distanceTravelled);
+        var distanceTravelled = Math.Abs(XDisplacement * XDisplacement + YDisplacement * YDisplacement);
+        var distanceToMoveX = Math.Min((float)Math.Abs(Velocity.X), MaxOutboundDistance - distanceTravelled);
+        var distanceToMoveY = Math.Min((float)Math.Abs(Velocity.Y), MaxOutboundDistance - distanceTravelled);
         var direction = Math.Sign(Velocity.X);
 
-        XPosition += direction * distanceToMove;
-        XDisplacement += direction * distanceToMove;
+        XPosition += Velocity.X;
+        YPosition += Velocity.Y;
+        XDisplacement += Velocity.X;
+        YDisplacement += Velocity.Y;
 
     }
 
@@ -58,7 +64,8 @@ public class AquamentusProjectile : IProjectile
         Animation?.Update(gameTime);
         MoveOutBound();
 
-        if (Math.Abs(XDisplacement) > 400)
+        TotalDisplacement = (float)Math.Sqrt(XDisplacement * XDisplacement + YDisplacement * YDisplacement);
+        if (TotalDisplacement > 400)
         {
             IsFinished = true;
         }

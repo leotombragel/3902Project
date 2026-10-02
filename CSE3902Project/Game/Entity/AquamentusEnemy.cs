@@ -26,7 +26,7 @@ public class AquamentusEnemy : IMortal
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    private const int StartingPosX = 200; //figure out how to set these through constructor late
+    private const int StartingPosX = 500; //figure out how to set these through constructor late
     private const int StartingPosY = 100; 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
@@ -35,9 +35,8 @@ public class AquamentusEnemy : IMortal
     private List<IProjectile> _projectiles;
 
        //projectile
-    public AquamentusProjectile fireball1, fireball2;
+    public AquamentusProjectile fireball1, fireball2, fireball3;
     private int FireballsBuffer = 0;//timer to allow him to become visible AND THEN throw fireball
-    private bool fireballsThrown;
 
         public AquamentusEnemy(Player player, List<IProjectile> projectiles)
     {
@@ -55,22 +54,6 @@ public class AquamentusEnemy : IMortal
     public void Draw(SpriteBatch spriteBatch)
     {
         _animationController.Draw(spriteBatch, Position, IsFacingLeft);
-        if (FrameBuffer < 10)
-        {
-            FrameBuffer += 1;
-        }
-        else
-        {
-            if (IsFacingLeft)
-            {
-                IsFacingLeft = false;
-            }
-            else
-            {
-                IsFacingLeft = true;
-            }
-            FrameBuffer = 0;
-        }
     }
 
     /// <summary>
@@ -81,16 +64,35 @@ public class AquamentusEnemy : IMortal
         Position += Velocity;
     }
 
+        public void MoveHorizontal(bool IsFacingLeft)
+    {
+        if (LeftRightBuffer < 100)
+        {
+            LeftRightBuffer += 1;
+            Velocity = new Vector2(1, 0);
+        }
+        else
+        {
+            LeftRightBuffer += 1;
+            Velocity = new Vector2(-1, 0);
+        }
+
+        if (LeftRightBuffer > 200)
+        {
+            LeftRightBuffer = 0;
+        }
+    }
+
     private void UpdateDirection()
     {
         var playerPostion = _player.Position;
         if (playerPostion.X < Position.X)
         {
-            IsFacingLeft = true;
+            IsFacingLeft = false;
         }
         else
         {
-            IsFacingLeft = false;
+            IsFacingLeft = true;
         }
     }
 
@@ -100,43 +102,42 @@ public class AquamentusEnemy : IMortal
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
 
+        if (CheckFireballBuffer())
+        {
+            ThrowFireball();
+        }
         UpdateDirection();
-    }
 
-    public void MoveVertical()
-    {
-    //wait to implement when we get collision
+        MoveHorizontal(IsFacingLeft);
+        UpdatePosition();
     }
-
-    public bool MoveHorizontal(bool IsFacingLeft)
+    private bool CheckFireballBuffer()
     {
-    //wait to implement further when we get proper collision
-    if (LeftRightBuffer < 400)
+    if(CurrentState is AquamentusLeftState || CurrentState is AquamentusRightState)
     {
-        LeftRightBuffer += 1;
+        if (FireballsBuffer < 150)
+        {
+            FireballsBuffer += 1;
+        }
+        else
+        {
+            FireballsBuffer = 0;
+            return true;
+        }
     }
-    else
-    {
-           LeftRightBuffer = 0;
-           IsFacingLeft = !IsFacingLeft;
-           Velocity = new Vector2(Velocity.X * -1, Velocity.Y);
-
-    }
-    return IsFacingLeft;
+        return false;
     }
 
     private void ThrowFireball()
     {
-        if (!fireballsThrown)
-        {
-            fireball1 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft);
-            _projectiles.Add(fireball1);
+        fireball1 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft,  MathHelper.ToRadians((float)25));
+        _projectiles.Add(fireball1);
 
-            fireball2 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft);
-            _projectiles.Add(fireball2);
+        fireball2 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft, 0);
+        _projectiles.Add(fireball2);
 
-            fireballsThrown = true;
-        }
+        fireball3 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft, MathHelper.ToRadians((float)-25));
+        _projectiles.Add(fireball3);
     }
 
     public void ChangeState(IState newState)

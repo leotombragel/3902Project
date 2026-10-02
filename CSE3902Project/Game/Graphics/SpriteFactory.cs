@@ -89,13 +89,6 @@ public class SpriteFactory
         return sprite;
     }
 
-    public Sprite CreateAquamentusSprite()
-    {
-        var sprite = new Sprite(_fireSheet);
-        sprite.Scale = new Vector2(2.0f, 2.0f);
-        return sprite;
-    }
-
     public Sprite CreateWizzrobeSprite()
     {
         var sprite = new Sprite(_wizzrobeSheet);
@@ -110,7 +103,7 @@ public class SpriteFactory
         return sprite;
     }
 
-    public Sprite CreateAquaementusSprite()
+    public Sprite CreateAquamentusSprite()
     {
         var sprite = new Sprite(_auqamentusSheet);
         sprite.Scale = new Vector2(4.0f, 4.0f);
