@@ -23,6 +23,7 @@ public class Player : IAnimatable
     private const float Deceleration = 0.1f;
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
+    //public Rect Hitbox { get; private set; }
     private bool _previouslyFacingRight = true;
     private float _previousSpeed = 0.0f;
 
@@ -89,45 +90,101 @@ public class Player : IAnimatable
         _previousSpeed = Velocity.X;
     }
 
+
     public void HandleKeeseCollision(KeeseEnemy k)
     {
+        float midX = (k.Hitbox.x1 + k.Hitbox.x2) / 2;
+        float midY = (k.Hitbox.y1 + k.Hitbox.y2) / 2;
+        float slope = (k.Hitbox.y2 - k.Hitbox.y1) / (k.Hitbox.x2 - k.Hitbox.x1);
+        float X1 = k.Hitbox.x1;
+        float X2 = k.Hitbox.x2;
+        float Y1 = k.Hitbox.y1;
+        float Y2 = k.Hitbox.y2;
 
-        if (IsInBoundingBox(k.Hitbox))
+        if(midX < Position.X && Position.X < X2)
         {
-
-
-            if (Velocity.X > 0)
+            if (-slope * (Position.X - X1) + Y2 < Position.Y && Position.Y < slope * (Position.X - X1) + Y1)
             {
+                Velocity = Velocity with { X = 0};
+                Position = Position with { X = k.Hitbox.x2 };
+            }
+        }
 
-                Velocity = Velocity with { X = 0, Y = 0 };
+        if (midX > Position.X && Position.X > X1)
+        {
+            if (-slope * (Position.X - X1) + Y2 > Position.Y && Position.Y > slope * (Position.X - X1) + Y1)
+            {
+                Velocity = Velocity with { X = 0};
                 Position = Position with { X = k.Hitbox.x1 };
-
             }
+        }
 
-            else if (Velocity.X < 0)
+        if (midY < Position.Y && Position.Y < Y2)
+        {
+            if ((Position.Y - Y1)/slope + X1 < Position.X && Position.X < -(Position.Y - Y2)/slope + X1)
             {
-                Velocity = Velocity with { X = 0, Y = 0 };
-                Position = Position with { X = k.Hitbox.x2 };             
-            }
-
-            //test
-
-            if (Velocity.Y > 0)
-            {
-
                 Velocity = Velocity with { X = 0, Y = 0 };
                 Position = Position with { Y = k.Hitbox.y1 };
-
             }
+        }
 
-            else if (Velocity.Y < 0)
+
+        if (midY > Position.Y && Position.Y > Y1)
+        {
+            if ((Position.Y - Y1) / slope + X1 < Position.X && Position.X < -(Position.Y - Y2) / slope + X1)
+            {
+                Velocity = Velocity with { Y = 0 };
+                Position = Position with { Y = k.Hitbox.y1 };
+            }
+        }
+
+        if (midY < Position.Y && Position.Y < Y2)
+        {
+            if ((Position.Y - Y1) / slope + X1 > Position.X && Position.X > -(Position.Y - Y2) / slope + X1)
             {
                 Velocity = Velocity with { Y = 0 };
                 Position = Position with { Y = k.Hitbox.y2 };
-                ChangeState(new PlayerIdleState(this));
             }
-
         }
+
+
+
+        //if (IsInBoundingBox(k.Hitbox))
+        //{
+
+
+        //if (Velocity.X > 0)
+        //{
+
+        //    Velocity = Velocity with { X = 0, Y = 0 };
+        //    Position = Position with { X = k.Hitbox.x1 };
+
+        //}
+
+        //else if (Velocity.X < 0)
+        //{
+        //    Velocity = Velocity with { X = 0, Y = 0 };
+        //    Position = Position with { X = k.Hitbox.x2 };             
+        //}
+
+        ////test
+
+        //if (Velocity.Y > 0)
+        //{
+
+        //    Velocity = Velocity with { X = 0, Y = 0 };
+        //    Position = Position with { Y = k.Hitbox.y1 };
+
+        //}
+
+        //else if (Velocity.Y < 0)
+        //{
+        //    Velocity = Velocity with { Y = 0 };
+        //    Position = Position with { Y = k.Hitbox.y2 };
+        //    ChangeState(new PlayerIdleState(this));
+        //}
+
+        //}
     }
 
     private bool IsInXRange(Rect r)

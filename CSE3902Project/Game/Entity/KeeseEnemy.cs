@@ -33,7 +33,7 @@ public class KeeseEnemy : IAnimatable
     {
         Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
-        Hitbox = new Rect(StartingPosX - 40, StartingPosY - 40, StartingPosX, StartingPosY);
+        Hitbox = new Rect(StartingPosX - 40, StartingPosY - 60, StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new KeeseFlyingState(this);
