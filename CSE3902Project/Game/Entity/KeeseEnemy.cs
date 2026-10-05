@@ -9,7 +9,7 @@ namespace CSE3902Project.Game.Entity;
 /// <summary>
 /// keese enemy class, implements IMortal
 /// </summary>
-public class KeeseEnemy : IMortal
+public class KeeseEnemy : StatefulEntityBase, IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -19,8 +19,8 @@ public class KeeseEnemy : IMortal
     //state
     public bool IsFacingLeft { get; private set; }
     public bool IsGoingUp { get; private set; }
-    public IState CurrentState { get; private set;}
-    public bool IsDead { get; set; } // for list culling later
+    public bool IsDead { get; set; }
+
 
     //movement
     private static readonly Random _rng = new Random();
@@ -184,12 +184,5 @@ public class KeeseEnemy : IMortal
             }
         }
         return IsFacingLeft;
-    }
-
-    public void ChangeState(IState newState)
-    {
-        CurrentState?.Exit();
-        CurrentState = newState;
-        CurrentState?.Enter();
     }
 }

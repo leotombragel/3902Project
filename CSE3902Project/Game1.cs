@@ -3,6 +3,7 @@ using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
+using CSE3902Project.Game.Items;
 using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,6 +18,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private SpriteBatch _spriteBatch;
     private Player _player;
     private TileCycler _tiles;
+    private ItemCycler _items;
+    private Background _background;
     private EnemyCycler _enemyCycler;
     private GroundRow _ground;
     private KeeseEnemy _keeseEnemy;
@@ -44,6 +47,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
         TileSpriteFactory.Instance.LoadAllAssets(Content); // Tile sprites
+        ItemSpriteFactory.Instance.LoadAllAssets(Content); // Item sprites
+        BackgroundSpriteFactory.Instance.LoadAllAssets(Content); // Background image
 
         ResetGame();
     }
@@ -55,8 +60,10 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _player = new Player();
 
         var viewport = GraphicsDevice.Viewport;
+        _background = new Background(viewport.Width, viewport.Height);
         _ground = new GroundRow(viewport.Width, viewport.Height);
-        _tiles = new TileCycler(new Vector2((viewport.Width - Tile.Size) / 2f, (viewport.Height - Tile.Size) / 2f));
+        _items = new ItemCycler(new Vector2(60, 48));
+        _tiles = new TileCycler(new Vector2(92, 32));
 
         _keeseEnemy = new KeeseEnemy();
         _stalfoEnemy = new StalfoEnemy();
@@ -91,6 +98,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
+        keyboardController.RegisterPressCommand(Keys.U, new PreviousItemCommand(_items));
+        keyboardController.RegisterPressCommand(Keys.I, new NextItemCommand(_items));
         keyboardController.RegisterPressCommand(Keys.O, new PreviousEnemyCommand(_enemyCycler));
         keyboardController.RegisterPressCommand(Keys.P, new NextEnemyCommand(_enemyCycler));
 
@@ -104,6 +113,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _player.Update(gameTime);
         _ground.Update(gameTime);
         _tiles.Update(gameTime);
+        _items.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         //foreach (var enemy in _enemies) enemy.Update(gameTime);    DONT REMOVE
@@ -120,8 +130,10 @@ public class Game1 : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.Gray);
 
         _spriteBatch.Begin();
+        _background.Draw(_spriteBatch);
         _ground.Draw(_spriteBatch);
         _tiles.Draw(_spriteBatch);
+        _items.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         //foreach (var enemy in _enemies) enemy.Update(gameTime);  DONT REMOVE

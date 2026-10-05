@@ -7,8 +7,8 @@ namespace CSE3902Project.Game.Tiles;
 /// Shared behavior for all tiles. A tile only stores where it is and delegates how it looks to its sprite.
 public abstract class Tile : ITile
 {
-    /// Width and height of a tile in pixels on screen (16px art scaled 4x, matching Link's 64px frame).
-    public const int Size = 64;
+    /// Width and height of a tile in pixels (16px art scaled 2x, about the same height as the player).
+    public const int Size = 32;
 
     private readonly ISprite _sprite;
 
