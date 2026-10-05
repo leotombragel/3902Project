@@ -12,9 +12,22 @@ public class PlayerIdleState : StateBase
     }
     
     public override string AnimationName => "PlayerIdle";
+
+    public override void Enter()
+    {
+        if (_player.Velocity.Y > 0)
+        {
+            _player.ChangeState(new PlayerFallingState(_player));
+        }
+    }
     
     public override void Update(GameTime gameTime)
     {
+        if (_player.Velocity.Y > 0)
+        {
+            _player.ChangeState(new PlayerFallingState(_player));
+        }
+        
         if (_player.Velocity.X != 0)
         {
             _player.ChangeState(new PlayerWalkingState(_player));

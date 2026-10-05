@@ -10,7 +10,7 @@ namespace CSE3902Project.Game.Entity;
 /// <summary>
 /// Wizzrobe enemy class, implements IMortal
 /// </summary>
-public class WizzrobeEnemy : IMortal
+public class WizzrobeEnemy : StatefulEntityBase, IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -19,7 +19,6 @@ public class WizzrobeEnemy : IMortal
 
     //state
     public bool IsFacingLeft { get; private set; }
-    public IState CurrentState { get; private set;}
     public bool IsDead { get; set; }
 
     //movement
@@ -161,12 +160,5 @@ public class WizzrobeEnemy : IMortal
             _projectiles.Add(fireball);
             fireballThrown = true;
         }
-    }
-
-    public void ChangeState(IState newState)
-    {
-        CurrentState?.Exit();
-        CurrentState = newState;
-        CurrentState?.Enter();
     }
 }
