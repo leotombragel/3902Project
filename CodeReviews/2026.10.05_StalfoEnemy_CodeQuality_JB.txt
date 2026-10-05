@@ -1,0 +1,19 @@
+StalfoEnemy.cs Code Review
+
+Reviewer: Jordan Boogaard
+Date of Review: 10/5/2026
+Sprint: 2
+File: StalfoEnemy.cs
+File Author: Leo Tombragel
+Time Taken: 20 minutes
+
+Code Quality Comments:
+- Good separation: movement is in the class and its states, and animation goes through AnimationController
+- Draw() changes game state. It counts frames and flips IsFacingLeft every 10 draws, so the facing doesn't match the direction it moves
+- FrameBuffer and LeftRightBuffer are public but only used inside the class
+- Three constructors repeat the same lines and only the one taking GroundHeight is used
+- That constructor subtracts a hard coded 32 plus the sprite height, but SourceRectangle isn't set yet so the height is 0
+- Magic numbers (400, 10, 32) and frame counting instead of GameTime
+
+Hypothetical change:
+In Sprint 3, make the Stalfo turn around when it hits a wall instead of every 400 frames.
