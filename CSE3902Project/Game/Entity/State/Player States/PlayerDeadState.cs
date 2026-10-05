@@ -64,7 +64,7 @@ public class PlayerDeadState : IState
 
     public void Exit()
     {
-        _player.Position = new Vector2(200, 100);
+        _player.Position = new Vector2(200, _player.StartingPosY);
         _player.Velocity = new Vector2(0, 0);
     }
 }

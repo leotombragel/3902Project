@@ -19,7 +19,7 @@ public class Player : StatefulEntityBase, IAnimatable
 
     // Etc
     private const int StartingPosX = 200;
-    private int StartingPosY = 100;
+    public int StartingPosY { get; } = 100;
     private readonly AnimationController _animationController;
     private bool _previouslyFacingRight = true;
     private float _previousSpeed;
