@@ -26,9 +26,11 @@ public class AquamentusEnemy : IMortal
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    private const int StartingPosX = 500; 
-    private const int StartingPosY = 100; 
-    public int LeftRightBuffer = 0;
+    private const int StartingPosX = 500; //figure out how to set these through constructor late
+    private int StartingPosY = 100; 
+    private const int SpriteFrameHeight = 32;
+    private const int SpriteScale = 4;
+    public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
     // references
     private Player _player;
@@ -38,11 +40,25 @@ public class AquamentusEnemy : IMortal
     public AquamentusProjectile fireball1, fireball2, fireball3;
     private int FireballsBuffer = 0;//timer to allow him to become visible AND THEN throw fireball
 
-        public AquamentusEnemy(Player player, List<IProjectile> projectiles)
+    public AquamentusEnemy(Player player, List<IProjectile> projectiles)
     {
         _player = player;
         _projectiles = projectiles;
         Sprite = SpriteFactory.Instance.CreateAquamentusSprite();
+        Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = new Vector2(-1, 0);
+        IsFacingLeft = true;
+        _animationController = new AnimationController(this, new AquamentusAnimationFactory());
+        CurrentState = new AquamentusLeftState(this);
+    }
+
+    public AquamentusEnemy(Player player, List<IProjectile> projectiles, int GroundHeight)
+    {
+        _player = player;
+        _projectiles = projectiles;
+        Sprite = SpriteFactory.Instance.CreateAquamentusSprite();
+        var spriteHeight = SpriteFrameHeight * SpriteScale;
+        StartingPosY = (int)(GroundHeight - 32 - spriteHeight); // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 0);
         IsFacingLeft = true;

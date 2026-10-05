@@ -19,13 +19,22 @@ public class Player : StatefulEntityBase, IAnimatable
 
     // Etc
     private const int StartingPosX = 200;
-    private const int StartingPosY = 100;
+    private int StartingPosY = 100;
     private readonly AnimationController _animationController;
     private bool _previouslyFacingRight = true;
     private float _previousSpeed;
 
     public Player()
     {
+        Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = Vector2.Zero;
+        _animationController = new AnimationController(this, new PlayerAnimationFactory());
+        CurrentState = new PlayerIdleState(this);
+    }
+
+    public Player(int groundHeight)
+    {
+        StartingPosY = groundHeight - 32 - 32; // Assuming the player sprite is 32 pixels tall and we want it to be above the ground tile
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
         _animationController = new AnimationController(this, new PlayerAnimationFactory());

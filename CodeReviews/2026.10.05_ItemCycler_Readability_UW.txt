@@ -1,0 +1,10 @@
+Author: Uthman Wood
+Date: Oct. 5, 2026
+Sprint 2
+CS file: Items/ItemCycler.cs
+CS file author: Jordan Boogaard
+Number of minutes taken: 6
+Comments:
+Overall, this class is focused and easy to understand.
+- The class has a documentation comment explaining what it does. This makes it easier to determine the class's purpose.
+- In the Select method, the formula for _index is complicated and could use a comment explaining what the variable represents.

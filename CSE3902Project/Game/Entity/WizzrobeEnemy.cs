@@ -19,12 +19,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IMortal
 
     //state
     public bool IsFacingLeft { get; private set; }
-<<<<<<< HEAD
-    public IState CurrentState { get; private set;}
     public bool IsDead { get; set; } // for list culling later
-=======
-    public bool IsDead { get; set; }
->>>>>>> 33b96147eb0b3905c51c587b10b75689c1bda292
 
     //movement
     private static readonly Random _rng = new Random();

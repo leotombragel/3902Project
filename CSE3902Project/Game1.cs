@@ -57,16 +57,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var keyboardController = new KeyboardController();
         var mouseController = new MouseController();
 
-        _player = new Player();
-
         var viewport = GraphicsDevice.Viewport;
         _background = new Background(viewport.Width, viewport.Height);
         _ground = new GroundRow(viewport.Width, viewport.Height);
         _items = new ItemCycler(new Vector2(60, 48));
         _tiles = new TileCycler(new Vector2(92, 32));
 
-        _keeseEnemy = new KeeseEnemy();
-        _stalfoEnemy = new StalfoEnemy();
+        _player = new Player(_ground.TileHeight);
+
+        _keeseEnemy = new KeeseEnemy(_ground.TileHeight);
+        _stalfoEnemy = new StalfoEnemy(_ground.TileHeight);
         _wizzrobeEnemy = new WizzrobeEnemy(_player, _projectiles);
         _aquamentusEnemy = new AquamentusEnemy(_player, _projectiles);
 
