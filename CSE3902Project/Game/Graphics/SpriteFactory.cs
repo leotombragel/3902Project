@@ -21,6 +21,7 @@ public class SpriteFactory
     private Texture2D _stalfoSheet;
     private Texture2D _wizzrobeSheet;
     private Texture2D _fireSheet;
+    private Texture2D _auqamentusSheet;
 
     private Texture2D _itemsSheet;
 
@@ -35,6 +36,7 @@ public class SpriteFactory
         _itemsSheet = content.Load<Texture2D>("images/link_items_spritesheet");
         _fireSheet = content.Load<Texture2D>("images/fire_sheet");
         _wizzrobeSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
+        _auqamentusSheet = content.Load<Texture2D>("images/DungeonBossesCUT");
     }
 
     public Sprite CreateIdlePlayerSprite()
@@ -87,13 +89,6 @@ public class SpriteFactory
         return sprite;
     }
 
-    public Sprite CreateAquamentusSprite()
-    {
-        var sprite = new Sprite(_fireSheet);
-        sprite.Scale = new Vector2(2.0f, 2.0f);
-        return sprite;
-    }
-
     public Sprite CreateWizzrobeSprite()
     {
         var sprite = new Sprite(_wizzrobeSheet);
@@ -102,6 +97,20 @@ public class SpriteFactory
     }
 
     public Sprite CreateWizzrobeProjectileSprite()
+    {
+        var sprite = new Sprite(_wizzrobeSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateAquamentusSprite()
+    {
+        var sprite = new Sprite(_auqamentusSheet);
+        sprite.Scale = new Vector2(4.0f, 4.0f);
+        return sprite;
+    }
+
+     public Sprite CreateAquamentusProjectileSprite()
     {
         var sprite = new Sprite(_wizzrobeSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);

@@ -27,13 +27,11 @@ public class KeeseEnemy : StatefulEntityBase, IMortal
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
     public Vector2 BoxContainer { get; private set; } //constricting values so keese doesn't fly off the screen
-    private const float VerticalMoveSpeed = 4.0f;
-    private const float MaxSpeed = 3.0f;
     private const int StartingPosX = 400; //figure out how to set these through constructor late
     private const int StartingPosY = 100; 
     
 
-        public KeeseEnemy()
+    public KeeseEnemy()
     {
         Sprite = SpriteFactory.Instance.CreateKeeseSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
