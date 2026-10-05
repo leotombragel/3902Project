@@ -27,7 +27,7 @@ public class KeeseEnemy : StatefulEntityBase, IMortal
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
     public Vector2 BoxContainer { get; private set; } //constricting values so keese doesn't fly off the screen
-    private const int StartingPosX = 400; //figure out how to set these through constructor late
+    private const int StartingPosX = 400; 
     private int StartingPosY = 100; 
     
 
@@ -47,7 +47,7 @@ public class KeeseEnemy : StatefulEntityBase, IMortal
     {
         Sprite = SpriteFactory.Instance.CreateKeeseSprite();
         var spriteHeight = Sprite.SourceRectangle?.Height ?? 32;
-        StartingPosY = (int)(GroundHeight - 32 - spriteHeight); // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
+        StartingPosY = (int)(GroundHeight - 32 - spriteHeight); // Assuming the keese sprite is 32 pixels tall and we want it to be above the ground tile
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 1);
         BoxContainer = new Vector2(100, 50);

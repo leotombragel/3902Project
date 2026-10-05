@@ -26,7 +26,7 @@ public class AquamentusEnemy : IMortal
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    private const int StartingPosX = 500; //figure out how to set these through constructor late
+    private const int StartingPosX = 500; 
     private int StartingPosY = 100; 
     private const int SpriteFrameHeight = 32;
     private const int SpriteScale = 4;

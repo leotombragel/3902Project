@@ -24,7 +24,7 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    private const int StartingPosX = 600; //figure out how to set these through constructor late
+    private const int StartingPosX = 600;
     private int StartingPosY = 100; 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
