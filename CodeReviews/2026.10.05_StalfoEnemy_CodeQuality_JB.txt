@@ -16,4 +16,4 @@ Code Quality Comments:
 - Magic numbers (400, 10, 32) and frame counting instead of GameTime
 
 Hypothetical change:
-In Sprint 3, make the Stalfo turn around when it hits a wall instead of every 400 frames.
+In Sprint 3, make the Stalfo turn around when it hits a wall instead of every 400 frames. The turning would be easy to support since it is already two lines in MoveHorizontal, but Draw() keeps flipping IsFacingLeft and there is no gravity for falling off edges, so those would need fixing first.
