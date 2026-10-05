@@ -124,8 +124,6 @@ public class Player : StatefulEntityBase, IAnimatable
         if (!IsJumping) return;
         Velocity = Velocity with { Y = Velocity.Y + Gravity };
 
-        if (Velocity.Y > 0.0f) ChangeState(new PlayerFallingState(this));
-
         // Check if the player has landed
         if (Position.Y > StartingPosY)
         {
