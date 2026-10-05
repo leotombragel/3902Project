@@ -135,6 +135,25 @@ public class Player : StatefulEntityBase, IAnimatable
     }
 
     /// <summary>
+    ///    Changes the player to the appropriate inactive state depending on whether the player is on the ground, jumping, or falling.
+    /// </summary>
+    public void SwitchToInactiveState()
+    {
+        switch (Velocity.Y)
+        {
+            case > 0:
+                ChangeState(new PlayerFallingState(this));
+                break;
+            case < 0:
+                ChangeState(new PlayerJumpingState(this));
+                break;
+            default:
+                ChangeState(new PlayerIdleState(this));
+                break;
+        }
+    }
+
+    /// <summary>
     ///     Uses the velocity to update the player's position.
     /// </summary>
     private void UpdatePosition()

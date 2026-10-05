@@ -37,7 +37,7 @@ public class PlayerThrowState : IState
         _lastFrameHoldTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
         if (_lastFrameHoldTime >= LastFrameHoldDuration)
         {
-            _player.ChangeState(new PlayerIdleState(_player));
+            _player.SwitchToInactiveState();
         }
     }
 
