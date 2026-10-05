@@ -25,7 +25,7 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
     private const int StartingPosX = 600; //figure out how to set these through constructor late
-    private const int StartingPosY = 100; 
+    private int StartingPosY = 100; 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
         public StalfoEnemy()
@@ -43,6 +43,18 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
         Sprite = sprite;
         Velocity = new Vector2(-1, 0);
         Position = new Vector2(StartingPosX, StartingPosY);
+        IsFacingLeft = true;
+        _animationController = new AnimationController(this, new StalfoAnimationFactory());
+        CurrentState = new StalfoLeftState(this);
+    }
+
+    public StalfoEnemy(int GroundHeight)
+    {
+        Sprite = SpriteFactory.Instance.CreateStalfoSprite();
+        var spriteHeight = Sprite.SourceRectangle?.Height ?? 0;
+        StartingPosY = (int)(GroundHeight - 32 - spriteHeight); // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
+        Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = new Vector2(-1, 0);
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);
@@ -93,20 +105,19 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
     //wait to implement when we get collision
     }
 
-    public bool MoveHorizontal(bool IsFacingLeft)
+    public bool MoveHorizontal(bool isFacingLeft)
     {
-    //wait to implement further when we get proper collision
-    if (LeftRightBuffer < 400)
-    {
-        LeftRightBuffer += 1;
-    }
-    else
-    {
-           LeftRightBuffer = 0;
-           IsFacingLeft = !IsFacingLeft;
-           Velocity = new Vector2(Velocity.X * -1, Velocity.Y);
+        if (LeftRightBuffer < 400)
+        {
+            LeftRightBuffer += 1;
+        }
+        else
+        {
+            LeftRightBuffer = 0;
+            isFacingLeft = !isFacingLeft;
+            Velocity = new Vector2(Velocity.X * -1, Velocity.Y);
+        }
 
-    }
-    return IsFacingLeft;
+        return isFacingLeft;
     }
 }
