@@ -1,0 +1,9 @@
+background.png is built from the "Country Side Platform Tiles" pack.
+
+Artwork created by Luis Zuno (@ansimuz)
+Source: https://opengameart.org/content/country-side-platform-tiles
+License: CC0 (public domain). You can copy, modify, distribute and perform the work, even for commercial purposes,
+all without asking permission.
+
+The sky/mountain layer, forest layer and foreground (tree and grass path) from the pack were lined up side by side and
+scaled up 2x to fill the 800x480 game window.
