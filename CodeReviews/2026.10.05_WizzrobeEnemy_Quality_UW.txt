@@ -1,0 +1,16 @@
+Author: Uthman Wood
+Date: Oct. 5, 2026
+Sprint 2
+CS file: Entity/WizzrobeEnemy.cs
+CS author: Leo Tombragel
+Comments:
+- The class inherits from 1 class and implements 1 interface.
+- Variable names are well written and explain the purposes of the variables.
+- The class makes good use of data structures, opting to store projectiles in a List.
+- There is a log in Update which causes the player's position to be printed every frame, which makes debugging harder when the Wizzrobe is on screen.
+- Some class fields don't have the right naming convention, for instance the private integer field VisibilityBuffer is PascalCase when it should be camelCase.
+- Some methods, fields, and properties are public but are only used within WizzrobeEnemy, so they could be made private.
+
+Hypothetical change:
+If, in the future, we wanted to add different types of Wizzrobes with different attack patterns, we could abstract some of the functionality from this class into an interface called IWizzrobe.
+This would be easy to support with the current implementation since it would only require making WizzrobeEnemy implement IWizzrobe.`

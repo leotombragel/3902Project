@@ -1,0 +1,25 @@
+Leo Tombragel
+10/5/2026
+Sprint 0
+BoomerangProjectile.cs
+Collin white
+15 minutes
+
+-there were two unused imports although this could have been because of a couple merge conflicts that didn’t 
+have their resolutions bubble up to the rest of the file
+using System.Runtime.CompilerServices;
+using CSE3902Project.Game.Entity.State;
+
+-variable PlayerCenterCorrection was also unused
+
+
+-no problems with the constructor, looks good
+
+-In MoveOutBound() displacement should not be modified by direction, displacement is always positive. This is 
+undone a couple lines later when you take the absolute value.
+
+-MoveInBound() should remove its use of magic numbers like 32 and 16 when finding position. Decalre these as 
+variables
+
+-update() and draw() look good, but since the IsReturning check is already being made in update(), we should
+remove this check from MoveInBound/OutBound();
