@@ -20,7 +20,7 @@ public class WizzrobeEnemy : IMortal
     //state
     public bool IsFacingLeft { get; private set; }
     public IState CurrentState { get; private set;}
-    public bool IsDead { get; set; }
+    public bool IsDead { get; set; } // for list culling later
 
     //movement
     private static readonly Random _rng = new Random();
@@ -44,7 +44,6 @@ public class WizzrobeEnemy : IMortal
 
         _player = player;
         _projectiles = projectiles;
-
     }
     
     public WizzrobeEnemy(Sprite sprite, Player player, List<IProjectile> projectiles)
@@ -57,7 +56,6 @@ public class WizzrobeEnemy : IMortal
 
         _player = player;
         _projectiles = projectiles;
-
     }
 
     //sprite sheet from https://www.spriters-resource.com/nes/legendofzelda/asset/31806/
@@ -83,7 +81,6 @@ public class WizzrobeEnemy : IMortal
         }
 
         Console.WriteLine(_player.Position);
-    
     }
 
     public bool CheckVisibilityBuffer()
@@ -91,7 +88,7 @@ public class WizzrobeEnemy : IMortal
         if (CurrentState is WizzrobeInvisibleState)
         {
             fireballThrown = false;
-            if (VisibilityBuffer < 60)//was 240
+            if (VisibilityBuffer < 60)
             {
                 VisibilityBuffer += 1;
             }

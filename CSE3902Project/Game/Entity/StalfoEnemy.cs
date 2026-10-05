@@ -20,16 +20,16 @@ public class StalfoEnemy : IMortal
     //state
     public bool IsFacingLeft { get; private set; }
     public IState CurrentState { get; private set;}
-    public bool IsDead { get; set; }
+    public bool IsDead { get; set; } // for list culling later
 
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    private const int StartingPosX = 600; //figure out how to set these through constructor late
+    private const int StartingPosX = 600; 
     private const int StartingPosY = 100; 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
-        public StalfoEnemy()
+    public StalfoEnemy()
     {
         Sprite = SpriteFactory.Instance.CreateStalfoSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
@@ -72,7 +72,7 @@ public class StalfoEnemy : IMortal
     }
 
     /// <summary>
-    /// Uses the velocity to update the keese's position.
+    /// Uses the velocity to update the stalfo's position.
     /// </summary>
     private void UpdatePosition()
     {
@@ -87,11 +87,6 @@ public class StalfoEnemy : IMortal
 
         IsFacingLeft = MoveHorizontal(IsFacingLeft);
         UpdatePosition();
-    }
-
-    public void MoveVertical()
-    {
-    //wait to implement when we get collision
     }
 
     public bool MoveHorizontal(bool IsFacingLeft)

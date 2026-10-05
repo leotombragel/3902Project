@@ -26,9 +26,9 @@ public class AquamentusEnemy : IMortal
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    private const int StartingPosX = 500; //figure out how to set these through constructor late
+    private const int StartingPosX = 500; 
     private const int StartingPosY = 100; 
-    public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
+    public int LeftRightBuffer = 0;
 
     // references
     private Player _player;
@@ -57,7 +57,7 @@ public class AquamentusEnemy : IMortal
     }
 
     /// <summary>
-    /// Uses the velocity to update the keese's position.
+    /// Uses the velocity to update aquamentus's position.
     /// </summary>
     private void UpdatePosition()
     {
@@ -107,7 +107,6 @@ public class AquamentusEnemy : IMortal
             ThrowFireball();
         }
         UpdateDirection();
-
         MoveHorizontal(IsFacingLeft);
         UpdatePosition();
     }

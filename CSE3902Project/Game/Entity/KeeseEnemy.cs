@@ -20,18 +20,16 @@ public class KeeseEnemy : IMortal
     public bool IsFacingLeft { get; private set; }
     public bool IsGoingUp { get; private set; }
     public IState CurrentState { get; private set;}
-    public bool IsDead { get; set; }
-
+    public bool IsDead { get; set; } // for list culling later
 
     //movement
     private static readonly Random _rng = new Random();
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
     public Vector2 BoxContainer { get; private set; } //constricting values so keese doesn't fly off the screen
-    private const int StartingPosX = 400; //figure out how to set these through constructor late
+    private const int StartingPosX = 400; 
     private const int StartingPosY = 100; 
     
-
     public KeeseEnemy()
     {
         Sprite = SpriteFactory.Instance.CreateKeeseSprite();
@@ -82,6 +80,23 @@ public class KeeseEnemy : IMortal
         UpdatePosition();
     }
 
+    public bool MoveVertical(bool IsGoingUp)
+    {
+        var temp = Velocity.Y;
+        IsGoingUp = CheckVerticalBoundary(IsGoingUp);
+        if(temp != Velocity.Y)
+        {
+            return IsGoingUp;
+        }
+
+        int n = _rng.Next(60);
+        if(n == 0)
+        {
+            IsGoingUp = FlipVertical(IsGoingUp);
+        }
+        return IsGoingUp;
+    }
+
     public bool CheckVerticalBoundary(bool IsGoingUp)
     {
         if(Position.Y  < StartingPosY - BoxContainer.Y)
@@ -117,22 +132,22 @@ public class KeeseEnemy : IMortal
         }
         return IsGoingUp;
     }
-    public bool MoveVertical(bool IsGoingUp)
-    {
-        var temp = Velocity.Y;
-        IsGoingUp = CheckVerticalBoundary(IsGoingUp);
-        if(temp != Velocity.Y)
-        {
-            return IsGoingUp;
-        }
 
+    public bool MoveHorizontal(bool IsFacingLeft)
+    {
+        var temp = Velocity.X;
+        IsFacingLeft = CheckHorizontalBoundary(IsFacingLeft);
+        if(temp != Velocity.X)
+        {
+            return IsFacingLeft;
+        }
 
         int n = _rng.Next(60);
         if(n == 0)
         {
-            IsGoingUp = FlipVertical(IsGoingUp);
+            IsFacingLeft = FlipHorizontal(IsFacingLeft);
         }
-        return IsGoingUp;
+        return IsFacingLeft;
     }
     
     public bool CheckHorizontalBoundary(bool IsFacingLeft)
@@ -167,23 +182,6 @@ public class KeeseEnemy : IMortal
             {
                 Velocity = Velocity with {X = -Velocity.X};
             }
-        }
-        return IsFacingLeft;
-    }
-
-    public bool MoveHorizontal(bool IsFacingLeft)
-    {
-        var temp = Velocity.X;
-        IsFacingLeft = CheckHorizontalBoundary(IsFacingLeft);
-        if(temp != Velocity.X)
-        {
-            return IsFacingLeft;
-        }
-
-        int n = _rng.Next(60);
-        if(n == 0)
-        {
-            IsFacingLeft = FlipHorizontal(IsFacingLeft);
         }
         return IsFacingLeft;
     }
