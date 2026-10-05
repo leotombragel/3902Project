@@ -39,13 +39,12 @@ public class KeeseEnemy : StatefulEntityBase, IMortal
         BoxContainer = new Vector2(100, 50);
         IsGoingUp = false;
         IsFacingLeft = true;
-            _animationController = new AnimationController(this, new KeeseAnimationFactory());
+        _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseFlyingState(this);
     }
 
     public KeeseEnemy(int GroundHeight)
     {
-        StartingPosY = GroundHeight - 32 - 32; // Assuming the keese sprite is 32 pixels tall and we want it to be above the ground tile
         Sprite = SpriteFactory.Instance.CreateKeeseSprite();
         var spriteHeight = Sprite.SourceRectangle?.Height ?? 32;
         StartingPosY = (int)(GroundHeight - 32 - spriteHeight); // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
