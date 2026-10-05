@@ -16,7 +16,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private List<IController> _controllers;
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-
     private Player _player;
     private TileCycler _tiles;
     private ItemCycler _items;
@@ -51,6 +50,10 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ItemSpriteFactory.Instance.LoadAllAssets(Content); // Item sprites
         BackgroundSpriteFactory.Instance.LoadAllAssets(Content); // Background image
 
+        ResetGame();
+    }
+    public void ResetGame()
+    {
         var keyboardController = new KeyboardController();
         var mouseController = new MouseController();
 
@@ -65,13 +68,18 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _keeseEnemy = new KeeseEnemy(_ground.TileHeight);
         _stalfoEnemy = new StalfoEnemy(_ground.TileHeight);
         _wizzrobeEnemy = new WizzrobeEnemy(_player, _projectiles);
-        _aquamentusEnemy = new AquamentusEnemy(_player, _projectiles, _ground.TileHeight);
+        _aquamentusEnemy = new AquamentusEnemy(_player, _projectiles);
+
+        _enemies.Clear();
+        _projectiles.Clear();
+
         _enemies.Add(_keeseEnemy);
         _enemies.Add(_stalfoEnemy);
         _enemies.Add(_wizzrobeEnemy);
         _enemies.Add(_aquamentusEnemy);
 
         _enemyCycler = new EnemyCycler(_enemies);
+        
 
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
@@ -86,7 +94,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
             new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile)));
         keyboardController.RegisterPressCommand(Keys.D3,
             new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile)));
-        keyboardController.RegisterCommand(Keys.Escape, new ExitCommand(this));
+        keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
+        keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.U, new PreviousItemCommand(_items));

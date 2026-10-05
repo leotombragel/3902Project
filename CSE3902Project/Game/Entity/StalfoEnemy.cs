@@ -24,11 +24,11 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    private const int StartingPosX = 600; //figure out how to set these through constructor late
+    private const int StartingPosX = 600;
     private int StartingPosY = 100; 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
-        public StalfoEnemy()
+    public StalfoEnemy()
     {
         Sprite = SpriteFactory.Instance.CreateStalfoSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
@@ -83,7 +83,7 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
     }
 
     /// <summary>
-    /// Uses the velocity to update the keese's position.
+    /// Uses the velocity to update the stalfo's position.
     /// </summary>
     private void UpdatePosition()
     {
@@ -105,7 +105,7 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
     //wait to implement when we get collision
     }
 
-    public bool MoveHorizontal(bool isFacingLeft)
+    public bool MoveHorizontal(bool IsFacingLeft)
     {
         if (LeftRightBuffer < 400)
         {
@@ -114,10 +114,10 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
         else
         {
             LeftRightBuffer = 0;
-            isFacingLeft = !isFacingLeft;
+            IsFacingLeft = !IsFacingLeft;
             Velocity = new Vector2(Velocity.X * -1, Velocity.Y);
         }
 
-        return isFacingLeft;
+        return IsFacingLeft;
     }
 }
