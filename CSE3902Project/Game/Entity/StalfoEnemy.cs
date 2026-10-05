@@ -24,7 +24,8 @@ public class StalfoEnemy : IAnimatable
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
-    public Rect Hitbox;
+
+    public Rect Hitbox = new Rect(0, 0, 0, 0);
     private const float VerticalMoveSpeed = 4.0f;
     private const float MaxSpeed = 3.0f;
     private const int StartingPosX = 600; //figure out how to set these through constructor late
@@ -34,6 +35,7 @@ public class StalfoEnemy : IAnimatable
     {
         Sprite = SpriteFactory.Instance.CreateIdlePlayerSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
+        Hitbox = new Rect(StartingPosX - 40, StartingPosY - 60, StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
@@ -45,7 +47,7 @@ public class StalfoEnemy : IAnimatable
         Sprite = sprite;
         Velocity = Vector2.Zero;
         Position = new Vector2(StartingPosX, StartingPosY);
-        Hitbox = new Rect(Position.X, Position.Y, Position.X + 10, Position.Y + 10);
+        Hitbox = new Rect(StartingPosX - 40, StartingPosY - 60, StartingPosX, StartingPosY);
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new StalfoLeftState(this);

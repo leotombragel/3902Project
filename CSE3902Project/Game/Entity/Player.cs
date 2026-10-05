@@ -123,11 +123,10 @@ public class Player : IAnimatable
         {
             if ((Position.Y - Y1)/slope + X1 < Position.X && Position.X < -(Position.Y - Y2)/slope + X1)
             {
-                Velocity = Velocity with { X = 0, Y = 0 };
+                Velocity = Velocity with { Y = 0 };
                 Position = Position with { Y = k.Hitbox.y1 };
             }
         }
-
 
         if (midY > Position.Y && Position.Y > Y1)
         {
@@ -146,76 +145,62 @@ public class Player : IAnimatable
                 Position = Position with { Y = k.Hitbox.y2 };
             }
         }
-
-
-
-        //if (IsInBoundingBox(k.Hitbox))
-        //{
-
-
-        //if (Velocity.X > 0)
-        //{
-
-        //    Velocity = Velocity with { X = 0, Y = 0 };
-        //    Position = Position with { X = k.Hitbox.x1 };
-
-        //}
-
-        //else if (Velocity.X < 0)
-        //{
-        //    Velocity = Velocity with { X = 0, Y = 0 };
-        //    Position = Position with { X = k.Hitbox.x2 };             
-        //}
-
-        ////test
-
-        //if (Velocity.Y > 0)
-        //{
-
-        //    Velocity = Velocity with { X = 0, Y = 0 };
-        //    Position = Position with { Y = k.Hitbox.y1 };
-
-        //}
-
-        //else if (Velocity.Y < 0)
-        //{
-        //    Velocity = Velocity with { Y = 0 };
-        //    Position = Position with { Y = k.Hitbox.y2 };
-        //    ChangeState(new PlayerIdleState(this));
-        //}
-
-        //}
     }
 
-    private bool IsInXRange(Rect r)
+    public void HandleStalfoCollision(StalfoEnemy k)
     {
-        if (r == null)
-        {
-            return false;
-        }
-        else if (r.x1 < Position.X && Position.X < r.x2)
-            return true;
-        else return false;
-    }
+        float midX = (k.Hitbox.x1 + k.Hitbox.x2) / 2;
+        float midY = (k.Hitbox.y1 + k.Hitbox.y2) / 2;
+        float slope = (k.Hitbox.y2 - k.Hitbox.y1) / (k.Hitbox.x2 - k.Hitbox.x1);
+        float X1 = k.Hitbox.x1;
+        float X2 = k.Hitbox.x2;
+        float Y1 = k.Hitbox.y1;
+        float Y2 = k.Hitbox.y2;
 
-    private bool IsInYRange(Rect r)
-    {
-        if (r == null)
+        if (midX < Position.X && Position.X < X2)
         {
-            return false;
+            if (-slope * (Position.X - X1) + Y2 < Position.Y && Position.Y < slope * (Position.X - X1) + Y1)
+            {
+                Velocity = Velocity with { X = 0 };
+                Position = Position with { X = k.Hitbox.x2 };
+            }
         }
-        else if (r.y1 < Position.Y && Position.Y < r.y2)
-            return true;
-        else return false;
-    }
 
-    private bool IsInBoundingBox(Rect r)
-    {
-        if(r == null)
+        if (midX > Position.X && Position.X > X1)
         {
-            return false;
+            if (-slope * (Position.X - X1) + Y2 > Position.Y && Position.Y > slope * (Position.X - X1) + Y1)
+            {
+                Velocity = Velocity with { X = 0 };
+                Position = Position with { X = k.Hitbox.x1 };
+            }
         }
-        return IsInXRange(r) && IsInYRange(r);
+
+        if (midY < Position.Y && Position.Y < Y2)
+        {
+            if ((Position.Y - Y1) / slope + X1 < Position.X && Position.X < -(Position.Y - Y2) / slope + X1)
+            {
+                Velocity = Velocity with { Y = 0 };
+                Position = Position with { Y = k.Hitbox.y1 };
+            }
+        }
+
+        if (midY > Position.Y && Position.Y > Y1)
+        {
+            if ((Position.Y - Y1) / slope + X1 < Position.X && Position.X < -(Position.Y - Y2) / slope + X1)
+            {
+                Velocity = Velocity with { Y = 0 };
+                Position = Position with { Y = k.Hitbox.y1 };
+            }
+        }
+
+        if (midY < Position.Y && Position.Y < Y2)
+        {
+            if ((Position.Y - Y1) / slope + X1 > Position.X && Position.X > -(Position.Y - Y2) / slope + X1)
+            {
+                Velocity = Velocity with { Y = 0 };
+                Position = Position with { Y = k.Hitbox.y2 };
+            }
+        }
     }
 
 
