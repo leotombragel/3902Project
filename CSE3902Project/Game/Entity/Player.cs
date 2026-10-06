@@ -19,7 +19,7 @@ public class Player : StatefulEntityBase, IAnimatable
 
     // Etc
     private const int StartingPosX = 200;
-    private int StartingPosY = 100;
+    public int StartingPosY { get; } = 100;
     private readonly AnimationController _animationController;
     private bool _previouslyFacingRight = true;
     private float _previousSpeed;
@@ -140,6 +140,25 @@ public class Player : StatefulEntityBase, IAnimatable
             IsJumping = false;
             Velocity = Velocity with { Y = 0.0f };
             ChangeState(new PlayerIdleState(this));
+        }
+    }
+
+    /// <summary>
+    ///    Changes the player to the appropriate inactive state depending on whether the player is on the ground, jumping, or falling.
+    /// </summary>
+    public void SwitchToInactiveState()
+    {
+        switch (Velocity.Y)
+        {
+            case > 0:
+                ChangeState(new PlayerFallingState(this));
+                break;
+            case < 0:
+                ChangeState(new PlayerJumpingState(this));
+                break;
+            default:
+                ChangeState(new PlayerIdleState(this));
+                break;
         }
     }
 
