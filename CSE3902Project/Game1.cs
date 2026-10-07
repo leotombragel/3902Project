@@ -102,6 +102,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _enemyCycler.Update(gameTime);
 
         foreach (var controller in _controllers) controller.Update();
+        _player.HandleKeeseCollision(_keeseEnemy);
 
         base.Update(gameTime);
     }

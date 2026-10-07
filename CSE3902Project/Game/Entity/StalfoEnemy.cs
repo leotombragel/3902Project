@@ -25,6 +25,11 @@ public class StalfoEnemy : IMortal
     //movement
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
+
+    public Rect Hitbox;
+    private const float VerticalMoveSpeed = 4.0f;
+    private const float MaxSpeed = 3.0f;
+
     private const int StartingPosX = 600; //figure out how to set these through constructor late
     private const int StartingPosY = 100; 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
@@ -44,6 +49,7 @@ public class StalfoEnemy : IMortal
         Sprite = sprite;
         Velocity = new Vector2(-1, 0);
         Position = new Vector2(StartingPosX, StartingPosY);
+        Hitbox = new Rect(Position.X, Position.Y, Position.X + 10, Position.Y + 10);
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);

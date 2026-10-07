@@ -8,10 +8,25 @@ namespace CSE3902Project.Game.Entity;
 
 public class Player : IAnimatable
 {
+    // Animation data
+    public Sprite Sprite { get; set; }
+    public SpriteAnimation Animation { get; set; }
+    public bool IsWalking { get; set; }
+    public bool IsJumping { get; set; }
+    public bool IsFacingLeft { get; private set; }
+    public IState CurrentState { get; private set; }
+    private readonly AnimationController _animationController;
+
+
     // Motion
     private const float MaxSpeed = 3.0f;
     private const float MoveSpeed = 0.15f; // This should be greater than deceleration.
     private const float Deceleration = 0.1f;
+
+    public Vector2 Position { get; private set; }
+    public Vector2 Velocity { get; private set; }
+    private bool _previouslyFacingRight = true;
+    private float _previousSpeed = 0.0f;
 
     // Vertical motion
     private const float VerticalMoveSpeed = 4.0f;
@@ -29,6 +44,15 @@ public class Player : IAnimatable
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
         _animationController = new AnimationController(this, new PlayerAnimationFactory());
+        CurrentState = new PlayerIdleState(this);
+    }
+
+    public Player(Sprite sprite)
+    {
+        Sprite = sprite;
+        Velocity = Vector2.Zero;
+        Position = new Vector2(StartingPosX, StartingPosY);
+        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new PlayerIdleState(this);
     }
 
@@ -97,19 +121,110 @@ public class Player : IAnimatable
         if (Math.Abs(Velocity.X) < MaxSpeed)
         {
             if (isToTheRight != _previouslyFacingRight) Velocity = Velocity with { X = 0.0f };
+            if (isToTheRight != _previouslyFacingRight)
+            {
+                Velocity = Velocity with { X = 0.0f };
+            }
 
-            if (isToTheRight)
-                Velocity = Velocity with { X = Velocity.X + MoveSpeed };
-            else
-                Velocity = Velocity with { X = Velocity.X - MoveSpeed };
         }
 
         // Flip the sprite if the direction changes
         if (isToTheRight != _previouslyFacingRight) IsFacingLeft = !IsFacingLeft;
 
+
         _previouslyFacingRight = isToTheRight;
         _previousSpeed = Velocity.X;
     }
+
+
+    public void HandleKeeseCollision(KeeseEnemy k)
+    {
+        float midX = (k.Hitbox.x1 + k.Hitbox.x2) / 2;
+        float midY = (k.Hitbox.y1 + k.Hitbox.y2) / 2;
+        float slope = (k.Hitbox.y2 - k.Hitbox.y1) / (k.Hitbox.x2 - k.Hitbox.x1);
+        float X1 = k.Hitbox.x1;
+        float X2 = k.Hitbox.x2;
+        float Y1 = k.Hitbox.y1;
+        float Y2 = k.Hitbox.y2;
+
+        if(midX < Position.X && Position.X < X2)
+        {
+            if (-slope * (Position.X - X1) + Y2 < Position.Y && Position.Y < slope * (Position.X - X1) + Y1)
+            {
+                Velocity = Velocity with { X = 0};
+                Position = Position with { X = k.Hitbox.x2 };
+            }
+        }
+
+        if (midX > Position.X && Position.X > X1)
+        {
+            if (-slope * (Position.X - X1) + Y2 > Position.Y && Position.Y > slope * (Position.X - X1) + Y1)
+            {
+                Velocity = Velocity with { X = 0};
+                Position = Position with { X = k.Hitbox.x1 };
+            }
+        }
+
+        if (midY < Position.Y && Position.Y < Y2)
+        {
+            if ((Position.Y - Y1)/slope + X1 < Position.X && Position.X < -(Position.Y - Y2)/slope + X1)
+            {
+                Velocity = Velocity with { X = 0, Y = 0 };
+                Position = Position with { Y = k.Hitbox.y1 };
+            }
+        }
+
+
+        if (midY > Position.Y && Position.Y > Y1)
+        {
+            if ((Position.Y - Y1) / slope + X1 < Position.X && Position.X < -(Position.Y - Y2) / slope + X1)
+            {
+                Velocity = Velocity with { Y = 0 };
+                Position = Position with { Y = k.Hitbox.y1 };
+            }
+        }
+
+        if (midY < Position.Y && Position.Y < Y2)
+        {
+            if ((Position.Y - Y1) / slope + X1 > Position.X && Position.X > -(Position.Y - Y2) / slope + X1)
+            {
+                Velocity = Velocity with { Y = 0 };
+                Position = Position with { Y = k.Hitbox.y2 };
+            }
+        }
+    }
+
+    private bool IsInXRange(Rect r)
+    {
+        if (r == null)
+        {
+            return false;
+        }
+        else if (r.x1 < Position.X && Position.X < r.x2)
+            return true;
+        else return false;
+    }
+
+    private bool IsInYRange(Rect r)
+    {
+        if (r == null)
+        {
+            return false;
+        }
+        else if (r.y1 < Position.Y && Position.Y < r.y2)
+            return true;
+        else return false;
+    }
+
+    private bool IsInBoundingBox(Rect r)
+    {
+        if(r == null)
+        {
+            return false;
+        }
+        return IsInXRange(r) && IsInYRange(r);
+    }
+
 
     private void Decelerate()
     {
@@ -157,7 +272,7 @@ public class Player : IAnimatable
     ///     Uses the velocity to update the player's position.
     /// </summary>
     private void UpdatePosition()
-    {
+    { 
         Position += Velocity;
     }
 }
