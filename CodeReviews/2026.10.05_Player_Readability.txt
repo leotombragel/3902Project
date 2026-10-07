@@ -1,0 +1,22 @@
+Leo Tombragel
+10/5/2026
+Sprint 0
+Player.cs
+Uthman Wood
+15 minutes
+
+
+-comments separate the variables at the beginning of the class into movement, vertical movement, and etc.
+ I think these could be redistributed into more comprehensive clumps because vertical motion and motion is
+redundant while etc is too broad.
+
+-personally, I would rather have all variables initialized at the beginning, but some of them were separated
+by the constructor
+
+-all methods have a maximum depth of 2 which is nice
+
+-method names are intuitive and make sense
+
+-summary comments do a good job of explaining methods
+
+-methods are generally very short and readable, a good example is Decelerate()

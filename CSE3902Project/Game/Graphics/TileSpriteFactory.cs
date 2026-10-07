@@ -4,14 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CSE3902Project.Game.Graphics;
 
-/// <summary>
 /// Creates the sprites for tiles from the tile sheet (16x16 cells: ground, brick, step, pipe on row 0,
-/// question block animation on row 1).
-/// </summary>
+/// question block animation on row 1, pipe body on row 2). Each cell has a 1px border around it.
 public class TileSpriteFactory
 {
     private const int CellSize = 16;
-    private const float DrawScale = 4.0f;
+    private const int Border = 1; // extra pixels around each cell in the sheet
+    private const int CellStride = CellSize + 2 * Border;
+    private const float DrawScale = 2.0f;
     private const int QuestionFrames = 4;
     private const float QuestionFrameDuration = 0.2f;
 
@@ -32,16 +32,19 @@ public class TileSpriteFactory
 
     public ISprite CreatePipeSprite() => CreateStaticSprite(3, 0);
 
+    public ISprite CreatePipeBodySprite() => CreateStaticSprite(0, 2);
+
     public ISprite CreateQuestionBlockSprite()
     {
         return new SpriteAnimation(CreateSheetSprite(), CellSize, CellSize, QuestionFrames,
-            QuestionFrameDuration, 0, CellSize);
+            QuestionFrameDuration, Border, CellStride + Border, 2 * Border);
     }
 
     private ISprite CreateStaticSprite(int column, int row)
     {
         var sprite = CreateSheetSprite();
-        sprite.SourceRectangle = new Rectangle(column * CellSize, row * CellSize, CellSize, CellSize);
+        sprite.SourceRectangle = new Rectangle(column * CellStride + Border, row * CellStride + Border, CellSize,
+            CellSize);
         return sprite;
     }
 

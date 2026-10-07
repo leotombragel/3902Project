@@ -9,7 +9,7 @@ namespace CSE3902Project.Game.Entity;
 /// <summary>
 /// keese enemy class, implements IMortal
 /// </summary>
-public class KeeseEnemy : IMortal
+public class KeeseEnemy : StatefulEntityBase, IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -19,7 +19,6 @@ public class KeeseEnemy : IMortal
     //state
     public bool IsFacingLeft { get; private set; }
     public bool IsGoingUp { get; private set; }
-    public IState CurrentState { get; private set;}
     public bool IsDead { get; set; }
 
 
@@ -28,6 +27,7 @@ public class KeeseEnemy : IMortal
     public Vector2 Position { get; private set; }
     public Vector2 Velocity { get; private set; }
     public Vector2 BoxContainer { get; private set; } //constricting values so keese doesn't fly off the screen
+
     public Rect Hitbox = new Rect(0,0,0,0);
     private const float VerticalMoveSpeed = 4.0f;
     private const float MaxSpeed = 3.0f;
@@ -35,9 +35,23 @@ public class KeeseEnemy : IMortal
     private const int StartingPosY = 100; 
     
 
-        public KeeseEnemy()
+    public KeeseEnemy()
     {
         Sprite = SpriteFactory.Instance.CreateKeeseSprite();
+        Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = new Vector2(-1, 1);
+        BoxContainer = new Vector2(100, 50);
+        IsGoingUp = false;
+        IsFacingLeft = true;
+        _animationController = new AnimationController(this, new KeeseAnimationFactory());
+        CurrentState = new KeeseFlyingState(this);
+    }
+
+    public KeeseEnemy(int GroundHeight)
+    {
+        Sprite = SpriteFactory.Instance.CreateKeeseSprite();
+        var spriteHeight = Sprite.SourceRectangle?.Height ?? 32;
+        StartingPosY = (int)(GroundHeight - 32 - spriteHeight); // Assuming the keese sprite is 32 pixels tall and we want it to be above the ground tile
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 1);
         BoxContainer = new Vector2(100, 50);
@@ -90,6 +104,23 @@ public class KeeseEnemy : IMortal
         UpdatePosition();
     }
 
+    public bool MoveVertical(bool IsGoingUp)
+    {
+        var temp = Velocity.Y;
+        IsGoingUp = CheckVerticalBoundary(IsGoingUp);
+        if(temp != Velocity.Y)
+        {
+            return IsGoingUp;
+        }
+
+        int n = _rng.Next(60);
+        if(n == 0)
+        {
+            IsGoingUp = FlipVertical(IsGoingUp);
+        }
+        return IsGoingUp;
+    }
+
     public bool CheckVerticalBoundary(bool IsGoingUp)
     {
         if(Position.Y  < StartingPosY - BoxContainer.Y)
@@ -125,22 +156,22 @@ public class KeeseEnemy : IMortal
         }
         return IsGoingUp;
     }
-    public bool MoveVertical(bool IsGoingUp)
-    {
-        var temp = Velocity.Y;
-        IsGoingUp = CheckVerticalBoundary(IsGoingUp);
-        if(temp != Velocity.Y)
-        {
-            return IsGoingUp;
-        }
 
+    public bool MoveHorizontal(bool IsFacingLeft)
+    {
+        var temp = Velocity.X;
+        IsFacingLeft = CheckHorizontalBoundary(IsFacingLeft);
+        if(temp != Velocity.X)
+        {
+            return IsFacingLeft;
+        }
 
         int n = _rng.Next(60);
         if(n == 0)
         {
-            IsGoingUp = FlipVertical(IsGoingUp);
+            IsFacingLeft = FlipHorizontal(IsFacingLeft);
         }
-        return IsGoingUp;
+        return IsFacingLeft;
     }
     
     public bool CheckHorizontalBoundary(bool IsFacingLeft)
@@ -177,29 +208,5 @@ public class KeeseEnemy : IMortal
             }
         }
         return IsFacingLeft;
-    }
-
-    public bool MoveHorizontal(bool IsFacingLeft)
-    {
-        var temp = Velocity.X;
-        IsFacingLeft = CheckHorizontalBoundary(IsFacingLeft);
-        if(temp != Velocity.X)
-        {
-            return IsFacingLeft;
-        }
-
-        int n = _rng.Next(60);
-        if(n == 0)
-        {
-            IsFacingLeft = FlipHorizontal(IsFacingLeft);
-        }
-        return IsFacingLeft;
-    }
-
-    public void ChangeState(IState newState)
-    {
-        CurrentState?.Exit();
-        CurrentState = newState;
-        CurrentState?.Enter();
     }
 }

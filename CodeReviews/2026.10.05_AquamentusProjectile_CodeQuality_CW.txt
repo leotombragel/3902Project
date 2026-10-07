@@ -1,0 +1,21 @@
+AquamentusProjectile.cs Code Review
+
+Reviewer: Collin White
+Date of Review: 10/5/2026
+Sprint: 2
+File: AquamentusProjectile.cs
+File Author: Leo Tombragel
+
+Code Quality Comments:
+- Constructor is good but magic numbers are confusing to untrained eye
+- Velocity declaration and Vector2 is good
+- Shouldnt have print lines in production
+- Standard sprite animation declaration is good, maybe consider changing from magic numbers
+- MoveOutBound has bugs; the TotalDistanceTravelled using pythagorean forumla without using sqrt
+	- Results in only using x and y to dermine outbound distance
+- Dont need IsFacingLeft for fireball projectile
+
+One Change:
+- If an animation was used for the fireball attack, the current code (becuase of magic numbers) would still spawn
+projecitles from the previous animations height; Could be easily switched, but likely manageaable an optional
+paremters for the "mouth" offset was added.

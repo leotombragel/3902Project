@@ -28,7 +28,7 @@ public class PlayerStabState : IState
         // Use the animation to determine when the attack is finished
         if (_player.Animation?.LoopCount != _animLoopCount)
         {
-            _player.ChangeState(new PlayerIdleState(_player));
+            _player.SwitchToInactiveState();
         }
     }
 

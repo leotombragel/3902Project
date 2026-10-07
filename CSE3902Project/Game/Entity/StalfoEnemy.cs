@@ -9,7 +9,7 @@ namespace CSE3902Project.Game.Entity;
 /// <summary>
 /// stalfo enemy class, implements IMortal
 /// </summary>
-public class StalfoEnemy : IMortal
+public class StalfoEnemy : StatefulEntityBase, IMortal
 {
     //animation
     private readonly AnimationController _animationController;
@@ -19,7 +19,6 @@ public class StalfoEnemy : IMortal
 
     //state
     public bool IsFacingLeft { get; private set; }
-    public IState CurrentState { get; private set;}
     public bool IsDead { get; set; }
 
     //movement
@@ -32,9 +31,10 @@ public class StalfoEnemy : IMortal
 
     private const int StartingPosX = 600; //figure out how to set these through constructor late
     private const int StartingPosY = 100; 
+
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 
-        public StalfoEnemy()
+    public StalfoEnemy()
     {
         Sprite = SpriteFactory.Instance.CreateStalfoSprite();
         Position = new Vector2(StartingPosX, StartingPosY);
@@ -50,6 +50,18 @@ public class StalfoEnemy : IMortal
         Velocity = new Vector2(-1, 0);
         Position = new Vector2(StartingPosX, StartingPosY);
         Hitbox = new Rect(Position.X, Position.Y, Position.X + 10, Position.Y + 10);
+        IsFacingLeft = true;
+        _animationController = new AnimationController(this, new StalfoAnimationFactory());
+        CurrentState = new StalfoLeftState(this);
+    }
+
+    public StalfoEnemy(int GroundHeight)
+    {
+        Sprite = SpriteFactory.Instance.CreateStalfoSprite();
+        var spriteHeight = Sprite.SourceRectangle?.Height ?? 0;
+        StartingPosY = (int)(GroundHeight - 32 - spriteHeight); // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
+        Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = new Vector2(-1, 0);
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);
@@ -78,7 +90,7 @@ public class StalfoEnemy : IMortal
     }
 
     /// <summary>
-    /// Uses the velocity to update the keese's position.
+    /// Uses the velocity to update the stalfo's position.
     /// </summary>
     private void UpdatePosition()
     {
@@ -102,25 +114,17 @@ public class StalfoEnemy : IMortal
 
     public bool MoveHorizontal(bool IsFacingLeft)
     {
-    //wait to implement further when we get proper collision
-    if (LeftRightBuffer < 400)
-    {
-        LeftRightBuffer += 1;
-    }
-    else
-    {
-           LeftRightBuffer = 0;
-           IsFacingLeft = !IsFacingLeft;
-           Velocity = new Vector2(Velocity.X * -1, Velocity.Y);
+        if (LeftRightBuffer < 400)
+        {
+            LeftRightBuffer += 1;
+        }
+        else
+        {
+            LeftRightBuffer = 0;
+            IsFacingLeft = !IsFacingLeft;
+            Velocity = new Vector2(Velocity.X * -1, Velocity.Y);
+        }
 
-    }
-    return IsFacingLeft;
-    }
-
-    public void ChangeState(IState newState)
-    {
-        CurrentState?.Exit();
-        CurrentState = newState;
-        CurrentState?.Enter();
+        return IsFacingLeft;
     }
 }

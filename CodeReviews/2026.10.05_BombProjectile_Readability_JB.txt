@@ -1,0 +1,16 @@
+BombProjectile.cs Code Review
+
+Reviewer: Jordan Boogaard
+Date of Review: 10/5/2026
+Sprint: 2
+File: BombProjectile.cs
+File Author: Collin White
+Time Taken: 15 minutes
+
+Readability Comments:
+- Frame sizes are in named constants and GetFrameRectangle() is short and clear
+- Update() is easy to follow... fuse first, then an early return, then the explosion
+- IsReturning and XDisplacement are never used (they look copied from the boomerang) and I wasted time searching for where they matter
+- Velocity is set from ThrowSpeed but nothing moves the bomb, so the names suggest it travels when it doesn't
+- ExplosionFrameDuration is declared but the animation uses a plain 0.12f
+- Offsets like startingX + 32, startingY + 11 and the frame order {2, 1, 0, 3} have no explanation

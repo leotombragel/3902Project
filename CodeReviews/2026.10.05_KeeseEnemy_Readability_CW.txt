@@ -1,0 +1,18 @@
+KeeseEnemy.cs Code Review
+
+Reviewer: Collin White
+Date of Review: 10/5/2026
+Sprint: 2
+File: KeeseEnemy.cs
+File Author: Leo Tombragel
+Time Taken: 7 minutes
+
+Readability Comments:
+- Like how the variables are organized by use (State // Movement // Animation)
+- Constructor is good; order makes sense and everything is intuitive
+	- Exception is the BoxContainer; not intuitive where is it and what it does.
+- Drawing makes sense
+- Update method make sense - universal updates first then positional (special to keese)
+- Methods are kinda spread out / laid out in a weird order
+- Additionally some conditions are weird to weird (i.e. checking velocities to see direction rather than sign)
+- Other than the pretty readable when traced

@@ -20,7 +20,10 @@ public class PlayerJumpingState : IState
 
     public void Update(GameTime gameTime)
     {
-        
+        if (_player.Velocity.Y > 0)
+        {
+            _player.ChangeState(new PlayerFallingState(_player));
+        }
     }
 
     public void Exit()

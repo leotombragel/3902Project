@@ -8,11 +8,13 @@ namespace CSE3902Project.Game.Tiles;
 public class GroundRow
 {
     public IReadOnlyList<ITile> Tiles { get; }
+    public int TileHeight { get; }
 
     public GroundRow(int screenWidth, int screenHeight)
     {
         var tiles = new List<ITile>();
         var y = screenHeight - Tile.Size;
+        TileHeight = y;
 
         for (var x = 0; x < screenWidth; x += Tile.Size)
         {

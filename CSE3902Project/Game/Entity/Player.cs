@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CSE3902Project.Game.Entity;
 
-public class Player : IAnimatable
+public class Player : StatefulEntityBase, IAnimatable
 {
     // Animation data
     public Sprite Sprite { get; set; }
@@ -34,7 +34,7 @@ public class Player : IAnimatable
 
     // Etc
     private const int StartingPosX = 200;
-    private const int StartingPosY = 100;
+    public int StartingPosY { get; } = 100;
     private readonly AnimationController _animationController;
     private bool _previouslyFacingRight = true;
     private float _previousSpeed;
@@ -53,6 +53,14 @@ public class Player : IAnimatable
         Velocity = Vector2.Zero;
         Position = new Vector2(StartingPosX, StartingPosY);
         _animationController = new AnimationController(this, new PlaceholderAnimFactory());
+    }
+
+    public Player(int groundHeight)
+    {
+        StartingPosY = groundHeight - 32 - 32; // Assuming the player sprite is 32 pixels tall and we want it to be above the ground tile
+        Position = new Vector2(StartingPosX, StartingPosY);
+        Velocity = Vector2.Zero;
+        _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
     }
 
@@ -76,23 +84,6 @@ public class Player : IAnimatable
     public SpriteAnimation Animation { get; set; }
 
     public bool IsFacingLeft { get; private set; }
-
-    public IState CurrentState { get; private set; }
-
-    /// <summary>
-    ///     Changes the entity's state to the given new state if different, calling the appropriate Exit and Enter methods.
-    ///     Does nothing if the new state is the same as the current state.
-    /// </summary>
-    /// <param name="newState">The next state the entity will have.</param>
-    public void ChangeState(IState newState)
-    {
-        // Ignore state change if re-entering the current state
-        if (newState.GetType() == CurrentState.GetType()) return;
-
-        CurrentState?.Exit();
-        CurrentState = newState;
-        CurrentState?.Enter();
-    }
 
     public virtual void Update(GameTime gameTime)
     {
@@ -256,8 +247,6 @@ public class Player : IAnimatable
         if (!IsJumping) return;
         Velocity = Velocity with { Y = Velocity.Y + Gravity };
 
-        if (Velocity.Y > 0.0f) ChangeState(new PlayerFallingState(this));
-
         // Check if the player has landed
         if (Position.Y > StartingPosY)
         {
@@ -265,6 +254,25 @@ public class Player : IAnimatable
             IsJumping = false;
             Velocity = Velocity with { Y = 0.0f };
             ChangeState(new PlayerIdleState(this));
+        }
+    }
+
+    /// <summary>
+    ///    Changes the player to the appropriate inactive state depending on whether the player is on the ground, jumping, or falling.
+    /// </summary>
+    public void SwitchToInactiveState()
+    {
+        switch (Velocity.Y)
+        {
+            case > 0:
+                ChangeState(new PlayerFallingState(this));
+                break;
+            case < 0:
+                ChangeState(new PlayerJumpingState(this));
+                break;
+            default:
+                ChangeState(new PlayerIdleState(this));
+                break;
         }
     }
 
