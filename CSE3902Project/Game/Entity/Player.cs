@@ -106,6 +106,9 @@ public class Player : StatefulEntityBase, IAnimatable
         _animationController.Draw(spriteBatch, Position, IsFacingLeft);
     }
 
+
+    //test
+
     public void MoveHorizontal(bool isToTheRight)
     {
         // Update speed
