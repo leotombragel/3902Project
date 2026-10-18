@@ -74,7 +74,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     public void TakeDamage(DamageInfo damageInfo)
     {
         // TODO
-        Console.WriteLine("Stalfo took damage.");
+        Console.WriteLine($"Stalfo took damage. Source: {damageInfo.Source}");
     }
 
     //movement

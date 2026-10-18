@@ -60,7 +60,7 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
     public void TakeDamage(DamageInfo damageInfo)
     {
         // TODO
-        Console.WriteLine("Keese took damage.");
+        Console.WriteLine($"Keese took damage. Source: {damageInfo.Source}");
     }
 
     public Vector2 Position { get; private set; }

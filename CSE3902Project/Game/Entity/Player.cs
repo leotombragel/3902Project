@@ -93,7 +93,7 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        throw new NotImplementedException();
+        Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
     }
 
     public void MoveHorizontal(bool isToTheRight)

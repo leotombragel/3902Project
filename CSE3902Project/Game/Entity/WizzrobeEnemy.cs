@@ -62,7 +62,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
     public void TakeDamage(DamageInfo damageInfo)
     {
         // TODO
-        Console.WriteLine("Wizzrobe took damage.");
+        Console.WriteLine($"Wizzrobe took damage. Source: {damageInfo.Source}");
     }
 
     public Vector2 Position { get; private set; }
