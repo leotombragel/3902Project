@@ -1,4 +1,5 @@
 using System;
+using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +10,7 @@ namespace CSE3902Project.Game.Entity;
 /// <summary>
 /// stalfo enemy class, implements IMortal
 /// </summary>
-public class StalfoEnemy : StatefulEntityBase, IMortal
+public class StalfoEnemy : StatefulEntityBase, IEnemy
 {
     //animation
     private readonly AnimationController _animationController;
@@ -20,6 +21,10 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
     //state
     public bool IsFacingLeft { get; private set; }
     public bool IsDead { get; set; }
+    public void TakeDamage(DamageInfo damageInfo)
+    {
+        throw new NotImplementedException();
+    }
 
     //movement
     public Vector2 Position { get; private set; }

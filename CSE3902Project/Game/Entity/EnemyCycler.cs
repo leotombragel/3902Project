@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using CSE3902Project.Game.Graphics;
+
+namespace CSE3902Project.Game.Entity;
 
 public class EnemyCycler
 {
-    private readonly List<IMortal> _enemies;
+    private readonly List<IEnemy> _enemies;
     private int _index;
 
-    public EnemyCycler(List<IMortal> enemies)
+    public EnemyCycler(List<IEnemy> enemies)
     {
         _enemies = enemies;
     }

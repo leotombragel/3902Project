@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,7 @@ namespace CSE3902Project.Game.Entity;
 /// <summary>
 /// Wizzrobe enemy class, implements IMortal
 /// </summary>
-public class WizzrobeEnemy : StatefulEntityBase, IMortal
+public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 {
     //animation
     private readonly AnimationController _animationController;
@@ -20,6 +21,10 @@ public class WizzrobeEnemy : StatefulEntityBase, IMortal
     //state
     public bool IsFacingLeft { get; private set; }
     public bool IsDead { get; set; } // for list culling later
+    public void TakeDamage(DamageInfo damageInfo)
+    {
+        throw new NotImplementedException();
+    }
 
     //movement
     private static readonly Random _rng = new Random();

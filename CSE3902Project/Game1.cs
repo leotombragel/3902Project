@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CSE3902Project.Game.Command;
+using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
@@ -26,7 +27,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private StalfoEnemy _stalfoEnemy;
     private AquamentusEnemy _aquamentusEnemy;
     private readonly List<IProjectile> _projectiles = new();
-    private readonly List<IMortal> _enemies = new();
+    private readonly List<IEnemy> _enemies = new();
     private WizzrobeEnemy _wizzrobeEnemy;
 
     public Game1()

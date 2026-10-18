@@ -4,13 +4,14 @@ using CSE3902Project.Game.Entity.State;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CSE3902Project.Game.Graphics;
+using CSE3902Project.Game.Damage;
 
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
 /// aquamentus enemy class, implements IMortal
 /// </summary>
-public class AquamentusEnemy : IMortal
+public class AquamentusEnemy : IEnemy
 {
     //animation
     private readonly AnimationController _animationController;
@@ -22,6 +23,10 @@ public class AquamentusEnemy : IMortal
     public bool IsFacingLeft { get; private set; }
     public IState CurrentState { get; private set;}
     public bool IsDead { get; set; }
+    public void TakeDamage(DamageInfo damageInfo)
+    {
+        _mortalImplementation.TakeDamage(damageInfo);
+    }
 
     //movement
     public Vector2 Position { get; private set; }
@@ -39,6 +44,7 @@ public class AquamentusEnemy : IMortal
        //projectile
     public AquamentusProjectile fireball1, fireball2, fireball3;
     private int FireballsBuffer = 0;//timer to allow him to become visible AND THEN throw fireball
+    private IMortal _mortalImplementation;
 
     public AquamentusEnemy(Player player, List<IProjectile> projectiles)
     {
