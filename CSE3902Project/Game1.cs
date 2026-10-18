@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Command;
+using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
@@ -13,20 +15,25 @@ namespace CSE3902Project;
 
 public class Game1 : Microsoft.Xna.Framework.Game
 {
-    private List<IController> _controllers;
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private Player _player;
-    private TileCycler _tiles;
-    private ItemCycler _items;
-    private Background _background;
-    private EnemyCycler _enemyCycler;
-    private GroundRow _ground;
-    private KeeseEnemy _keeseEnemy;
-    private StalfoEnemy _stalfoEnemy;
-    private AquamentusEnemy _aquamentusEnemy;
+    private readonly List<ICombatActor> _actors = new();
+    private readonly List<IAttack> _attacks = new();
+    private readonly List<IDamageSource> _damageSources = new();
+
+    private readonly List<IEnemy> _enemies = new();
     private readonly List<IProjectile> _projectiles = new();
-    private readonly List<IMortal> _enemies = new();
+    private AquamentusEnemy _aquamentusEnemy;
+    private Background _background;
+    private CollisionSystem _collisionSystem;
+    private List<IController> _controllers;
+    private EnemyCycler _enemyCycler;
+    private GraphicsDeviceManager _graphics;
+    private GroundRow _ground;
+    private ItemCycler _items;
+    private KeeseEnemy _keeseEnemy;
+    private Player _player;
+    private SpriteBatch _spriteBatch;
+    private StalfoEnemy _stalfoEnemy;
+    private TileCycler _tiles;
     private WizzrobeEnemy _wizzrobeEnemy;
 
     public Game1()
@@ -50,8 +57,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ItemSpriteFactory.Instance.LoadAllAssets(Content); // Item sprites
         BackgroundSpriteFactory.Instance.LoadAllAssets(Content); // Background image
 
+        _collisionSystem = new CollisionSystem(GraphicsDevice);
+
         ResetGame();
     }
+
     public void ResetGame()
     {
         var keyboardController = new KeyboardController();
@@ -72,21 +82,25 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         _enemies.Clear();
         _projectiles.Clear();
+        _actors.Clear();
+        _damageSources.Clear();
 
         _enemies.Add(_keeseEnemy);
         _enemies.Add(_stalfoEnemy);
         _enemies.Add(_wizzrobeEnemy);
         _enemies.Add(_aquamentusEnemy);
+        _actors.Add(_player);
+        _actors.AddRange(_enemies);
 
         _enemyCycler = new EnemyCycler(_enemies);
-        
+
 
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
         keyboardController.RegisterCommand(Keys.A, new PlayerMoveLeftCommand(_player));
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
-        keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
-        keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
+        keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
+        keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
         keyboardController.RegisterPressCommand(Keys.D1,
             new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile)));
@@ -110,18 +124,28 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void Update(GameTime gameTime)
     {
+        foreach (var controller in _controllers) controller.Update();
+        foreach (var attack in _attacks) attack.Update(gameTime);
+
         _player.Update(gameTime);
         _ground.Update(gameTime);
         _tiles.Update(gameTime);
         _items.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
-        //foreach (var enemy in _enemies) enemy.Update(gameTime);    DONT REMOVE
+        foreach (var enemy in _enemies) enemy.Update(gameTime);
         //_enemies.RemoveAll(enemy => enemy.IsDead);     DONT REMOVE
         _enemyCycler.Update(gameTime);
 
-        foreach (var controller in _controllers) controller.Update();
-        _player.HandleKeeseCollision(_keeseEnemy);
+        _damageSources.AddRange(_projectiles);
+        _damageSources.AddRange(_attacks);
+
+        _collisionSystem.Update(_actors, _damageSources);
+
+        _projectiles.RemoveAll(projectile => projectile.IsFinished);
+        _attacks.RemoveAll(attack => attack.IsFinished);
+        _enemies.RemoveAll(enemy => enemy.IsDead);
+        _damageSources.RemoveAll(damageSource => damageSource.IsFinished);
 
         base.Update(gameTime);
     }
@@ -139,6 +163,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         //foreach (var enemy in _enemies) enemy.Update(gameTime);  DONT REMOVE
         _enemyCycler.Draw(_spriteBatch);
+        _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
 
         _spriteBatch.End();
 

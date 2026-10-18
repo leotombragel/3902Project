@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using CSE3902Project.Game.Entity.State;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CSE3902Project.Game.Graphics;
 using System.Runtime.CompilerServices;
+using CSE3902Project.Game.Damage;
 
 namespace CSE3902Project.Game.Entity;
 
@@ -11,12 +13,40 @@ public class AquamentusProjectile : IProjectile
 {
     private const int ThrowSpeed = 2;
     private const int MaxOutboundDistance = 3000;
+    private HashSet<ICombatActor> _hitTargets = new();
 
     public Sprite Sprite { get; set; }
     public SpriteAnimation Animation { get; set; }
 
     public bool IsFacingLeft { get; private set; }
+    public ICombatActor Owner { get; }
+    public DamageInfo Damage { get; }
+
+    // TODO
+    public Rectangle Bounds =>
+        new(
+            (int)XPosition,
+            (int)YPosition,
+            16,
+            16);
+
+    public bool IsCollisionEnabled => true;
     public bool IsFinished{  get; private set; }
+    public bool HasHit(ICombatActor victim)
+    {
+        return _hitTargets.Contains(victim);
+    }
+
+    public void RecordHit(ICombatActor victim)
+    {
+        _hitTargets.Add(victim);
+    }
+
+    public void OnHit(ICombatActor victim)
+    {
+        
+    }
+
     public float XPosition { get; private set; }
     public float XDisplacement {get; private set; }
     public float YDisplacement {get; private set; }
@@ -24,14 +54,13 @@ public class AquamentusProjectile : IProjectile
     public float YPosition { get; private set; }
     public Vector2 Velocity { get; private set; }
 
-    public AquamentusProjectile(float startingX, float startingY, bool isFacingLeft, double angle)
+    public AquamentusProjectile(float startingX, float startingY, bool isFacingLeft, double angle, ICombatActor owner)
     {
         XPosition = isFacingLeft ? startingX +40 : startingX + 40;
         YPosition = startingY + 16;
         float dir = isFacingLeft ? 1f : -1f;
         Velocity = new Vector2(dir * (float)(Math.Cos(angle) * ThrowSpeed), (float)(Math.Sin(angle) * ThrowSpeed));
 
-        System.Console.WriteLine($"Velocity: {Velocity.X}, {Velocity.Y}");
         Sprite = SpriteFactory.Instance.CreateAquamentusProjectileSprite();
         Animation = new SpriteAnimation(
             Sprite,
@@ -42,6 +71,10 @@ public class AquamentusProjectile : IProjectile
             231,
             62,
             1);
+        
+        Owner = owner;
+        IsFacingLeft = isFacingLeft;
+        Damage = new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy);
     }
 
     private void MoveOutBound()

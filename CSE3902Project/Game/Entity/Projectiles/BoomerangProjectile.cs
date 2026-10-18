@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using CSE3902Project.Game.Entity.State;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CSE3902Project.Game.Graphics;
 using System.Runtime.CompilerServices;
+using CSE3902Project.Game.Damage;
 
 namespace CSE3902Project.Game.Entity;
 
@@ -17,14 +19,34 @@ public class BoomerangProjectile : IProjectile
     public SpriteAnimation Animation { get; set; }
 
     public Player _player { get; }
+    private readonly HashSet<ICombatActor> _hitTargets = new();
     
     public bool IsReturning = false;
     public bool IsFinished { get; private set; }
     public bool IsFacingLeft { get; private set; }
+    public ICombatActor Owner => _player;
+    public DamageInfo Damage { get; }
+    public Rectangle Bounds => new(XPosition, YPosition, 12, 12);
+    public bool IsCollisionEnabled => !IsFinished;
     public int XPosition { get; private set; }
     public int XDisplacement {get; private set; }
     public int YPosition { get; private set; }
     public Vector2 Velocity { get; private set; }
+
+    public bool HasHit(ICombatActor victim)
+    {
+        return _hitTargets.Contains(victim);
+    }
+
+    public void RecordHit(ICombatActor victim)
+    {
+        _hitTargets.Add(victim);
+    }
+
+    public void OnHit(ICombatActor victim)
+    {
+        // The boomerang continues moving after a hit.
+    }
 
     public BoomerangProjectile(Player player, int startingX, int startingY, bool isFacingLeft)
     {
@@ -33,6 +55,7 @@ public class BoomerangProjectile : IProjectile
         YPosition = startingY + 32;
         IsFacingLeft = isFacingLeft;
         Velocity = new Vector2(isFacingLeft ? -ThrowSpeed : ThrowSpeed, 0.0f);
+        Damage = new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Player);
 
         Sprite = SpriteFactory.Instance.CreateItemsSheet();
         Animation = new SpriteAnimation(

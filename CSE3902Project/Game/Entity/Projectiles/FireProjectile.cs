@@ -4,11 +4,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CSE3902Project.Game.Graphics;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using CSE3902Project.Game.Damage;
 
 namespace CSE3902Project.Game.Entity;
 
 public class FireProjectile : IProjectile
 {
+    private readonly HashSet<ICombatActor> _hitTargets = new();
+    private readonly ICombatActor _owner;
 
     public Sprite Sprite { get; set; }
     public SpriteAnimation Animation { get; set; }
@@ -18,18 +22,43 @@ public class FireProjectile : IProjectile
 
     public bool IsFinished { get; private set; }
     public bool IsFacingLeft { get; private set; }
+    public ICombatActor Owner => _owner!;
+    public DamageInfo Damage { get; }
+    public Rectangle Bounds => new(XPosition, YPosition, 16, 24);
+    public bool IsCollisionEnabled => !IsFinished;
     public int XPosition { get; private set; }
     public int XDisplacement {get; private set; }
     public int YPosition { get; private set; }
     public Vector2 Velocity { get; private set; }
 
-    public FireProjectile(int startingX, int startingY, bool isFacingLeft)
+    public bool HasHit(ICombatActor victim)
+    {
+        return _hitTargets.Contains(victim);
+    }
+
+    public void RecordHit(ICombatActor victim)
+    {
+        _hitTargets.Add(victim);
+    }
+
+    public void OnHit(ICombatActor victim)
+    {
+        IsFinished = true;
+    }
+
+    public FireProjectile(
+        int startingX,
+        int startingY,
+        bool isFacingLeft,
+        ICombatActor owner)
     {
 
         XPosition = isFacingLeft ? startingX : startingX + 32;
         YPosition = startingY + 16;
         IsFacingLeft = isFacingLeft;
         Velocity = new Vector2(isFacingLeft ? -ThrowSpeed : ThrowSpeed, 0.0f);
+        _owner = owner;
+        Damage = new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Player);
 
         Sprite = SpriteFactory.Instance.CreateFireSprite();
         Animation = new SpriteAnimation(
