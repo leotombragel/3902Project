@@ -11,22 +11,24 @@ public class Player : StatefulEntityBase, IAnimatable
     // Animation data
     public Sprite Sprite { get; set; }
     public SpriteAnimation Animation { get; set; }
-    public bool IsWalking { get; set; }
-    public bool IsJumping { get; set; }
     public bool IsFacingLeft { get; private set; }
-    public IState CurrentState { get; private set; }
     private readonly AnimationController _animationController;
-
 
     // Motion
     private const float MaxSpeed = 3.0f;
     private const float MoveSpeed = 0.15f; // This should be greater than deceleration.
     private const float Deceleration = 0.1f;
-
-    public Vector2 Position { get; private set; }
-    public Vector2 Velocity { get; private set; }
     private bool _previouslyFacingRight = true;
     private float _previousSpeed = 0.0f;
+    /// <summary>
+    ///     If true, the player will automatically use its velocity to update its position with gravity and horizontal
+    ///     deceleration. Make this false to override the player's position and control it externally.
+    /// </summary>
+    public bool ShouldManagePosition { get; set; } = true;
+    public bool IsWalking { get; set; }
+    public bool IsJumping { get; set; }
+    public Vector2 Position { get; set; }
+    public Vector2 Velocity { get; set; }
 
     // Vertical motion
     private const float VerticalMoveSpeed = 4.0f;
@@ -35,25 +37,6 @@ public class Player : StatefulEntityBase, IAnimatable
     // Etc
     private const int StartingPosX = 200;
     public int StartingPosY { get; } = 100;
-    private readonly AnimationController _animationController;
-    private bool _previouslyFacingRight = true;
-    private float _previousSpeed;
-
-    public Player()
-    {
-        Position = new Vector2(StartingPosX, StartingPosY);
-        Velocity = Vector2.Zero;
-        _animationController = new AnimationController(this, new PlayerAnimationFactory());
-        CurrentState = new PlayerIdleState(this);
-    }
-
-    public Player(Sprite sprite)
-    {
-        Sprite = sprite;
-        Velocity = Vector2.Zero;
-        Position = new Vector2(StartingPosX, StartingPosY);
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
-    }
 
     public Player(int groundHeight)
     {
@@ -63,27 +46,6 @@ public class Player : StatefulEntityBase, IAnimatable
         _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
     }
-
-    /// <summary>
-    ///     If true, the player will automatically use its velocity to update its position with gravity and horizontal
-    ///     deceleration. Make this false to override the player's position and control it externally.
-    /// </summary>
-    public bool ShouldManagePosition { get; set; } = true;
-
-    public bool IsWalking { get; set; }
-    public bool IsJumping { get; set; }
-    public Vector2 Position { get; set; }
-
-    public Vector2 Velocity { get; set; }
-
-    // Animation data
-    /// <summary>
-    ///     The player's sprite animation. This is also where the player's sprite itself is publicly stored, use
-    ///     Animation.Sprite to access this.
-    /// </summary>
-    public SpriteAnimation Animation { get; set; }
-
-    public bool IsFacingLeft { get; private set; }
 
     public virtual void Update(GameTime gameTime)
     {
@@ -112,16 +74,15 @@ public class Player : StatefulEntityBase, IAnimatable
         if (Math.Abs(Velocity.X) < MaxSpeed)
         {
             if (isToTheRight != _previouslyFacingRight) Velocity = Velocity with { X = 0.0f };
-            if (isToTheRight != _previouslyFacingRight)
-            {
-                Velocity = Velocity with { X = 0.0f };
-            }
-
+            
+            if (isToTheRight)
+                Velocity = Velocity with { X = Velocity.X + MoveSpeed };
+            else
+                Velocity = Velocity with { X = Velocity.X - MoveSpeed };
         }
 
         // Flip the sprite if the direction changes
         if (isToTheRight != _previouslyFacingRight) IsFacingLeft = !IsFacingLeft;
-
 
         _previouslyFacingRight = isToTheRight;
         _previousSpeed = Velocity.X;

@@ -30,7 +30,7 @@ public class StalfoEnemy : StatefulEntityBase, IMortal
     private const float MaxSpeed = 3.0f;
 
     private const int StartingPosX = 600; //figure out how to set these through constructor late
-    private const int StartingPosY = 100; 
+    private int StartingPosY = 100; 
 
     public int LeftRightBuffer = 0;//use this until we get collision to switch direction like a goomba
 

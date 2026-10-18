@@ -32,7 +32,7 @@ public class KeeseEnemy : StatefulEntityBase, IMortal
     private const float VerticalMoveSpeed = 4.0f;
     private const float MaxSpeed = 3.0f;
     private const int StartingPosX = 400; //figure out how to set these through constructor late
-    private const int StartingPosY = 100; 
+    private int StartingPosY = 100; 
     
 
     public KeeseEnemy()
@@ -60,7 +60,6 @@ public class KeeseEnemy : StatefulEntityBase, IMortal
             _animationController = new AnimationController(this, new KeeseAnimationFactory());
         Hitbox = new Rect(StartingPosX - 40, StartingPosY - 60, StartingPosX, StartingPosY);
         Velocity = Vector2.Zero;
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new KeeseFlyingState(this);
     }
     
@@ -74,7 +73,6 @@ public class KeeseEnemy : StatefulEntityBase, IMortal
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new KeeseAnimationFactory());
         Hitbox = new Rect(StartingPosX - 100, StartingPosY - 100, StartingPosX + 100, StartingPosY + 100);
-        _animationController = new AnimationController(this, new PlaceholderAnimFactory());
         CurrentState = new KeeseStoppedState(this);
     }
 
