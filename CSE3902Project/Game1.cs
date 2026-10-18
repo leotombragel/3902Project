@@ -98,8 +98,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
         keyboardController.RegisterCommand(Keys.A, new PlayerMoveLeftCommand(_player));
         keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
-        keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player));
-        keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player));
+        keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
+        keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
         keyboardController.RegisterPressCommand(Keys.D1,
             new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile)));
@@ -123,6 +123,9 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void Update(GameTime gameTime)
     {
+        foreach (var controller in _controllers) controller.Update();
+        foreach (var attack in _attacks) attack.Update(gameTime);
+        
         _player.Update(gameTime);
         _ground.Update(gameTime);
         _tiles.Update(gameTime);
@@ -132,9 +135,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var enemy in _enemies) enemy.Update(gameTime);
         //_enemies.RemoveAll(enemy => enemy.IsDead);     DONT REMOVE
         _enemyCycler.Update(gameTime);
-
-        foreach (var controller in _controllers) controller.Update();
-        foreach (var attack in _attacks) attack.Update(gameTime);
 
         var damageSources = new List<IDamageSource>();
         damageSources.AddRange(_projectiles);

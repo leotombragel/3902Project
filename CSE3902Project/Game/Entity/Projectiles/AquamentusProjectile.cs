@@ -61,7 +61,6 @@ public class AquamentusProjectile : IProjectile
         float dir = isFacingLeft ? 1f : -1f;
         Velocity = new Vector2(dir * (float)(Math.Cos(angle) * ThrowSpeed), (float)(Math.Sin(angle) * ThrowSpeed));
 
-        System.Console.WriteLine($"Velocity: {Velocity.X}, {Velocity.Y}");
         Sprite = SpriteFactory.Instance.CreateAquamentusProjectileSprite();
         Animation = new SpriteAnimation(
             Sprite,

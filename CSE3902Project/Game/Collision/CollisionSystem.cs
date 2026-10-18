@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CSE3902Project.Game.Damage;
@@ -25,6 +26,7 @@ public sealed class CollisionSystem
             foreach (var target in actors)
             {
                 if (!CanDamage(source, target)) continue;
+                if (target.Hurtboxes == null) continue; // Temporary until all entities have hurtboxes
 
                 if (target.Hurtboxes.Where(hurtbox => hurtbox.IsEnabled)
                     .Any(hurtbox => source.Bounds.Intersects(hurtbox.Bounds)))

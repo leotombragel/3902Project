@@ -84,8 +84,6 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
         if (CheckVisibilityBuffer()) UpdatePosition();
 
         if (CheckFireballBuffer()) ThrowFireball();
-
-        Console.WriteLine(_player.Position);
     }
 
     public IEnumerable<IHurtbox> Hurtboxes { get; }
