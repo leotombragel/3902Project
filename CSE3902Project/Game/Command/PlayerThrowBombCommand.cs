@@ -24,6 +24,7 @@ public class PlayerThrowBombCommand : ICommand
         _spawnProjectile(new BombProjectile(
             (int)_player.Position.X,
             (int)_player.Position.Y,
-            _player.IsFacingLeft));
+            _player.IsFacingLeft,
+            _player));
     }
 }

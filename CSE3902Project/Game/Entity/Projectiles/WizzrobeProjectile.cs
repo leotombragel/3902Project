@@ -4,11 +4,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CSE3902Project.Game.Graphics;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using CSE3902Project.Game.Damage;
 
 namespace CSE3902Project.Game.Entity;
 
 public class WizzrobeProjectile : IProjectile
 {
+    private readonly HashSet<ICombatActor> _hitTargets = new();
+    private readonly ICombatActor _owner;
     private const int ThrowSpeed = 2;
     private const int MaxOutboundDistance = 3000;
 
@@ -16,18 +20,43 @@ public class WizzrobeProjectile : IProjectile
     public SpriteAnimation Animation { get; set; }
 
     public bool IsFacingLeft { get; private set; }
+    public ICombatActor Owner => _owner!;
+    public DamageInfo Damage { get; }
+    public Rectangle Bounds => new((int)XPosition, (int)YPosition, 8, 10);
+    public bool IsCollisionEnabled => !IsFinished;
     public bool IsFinished{  get; private set; }
     public float XPosition { get; private set; }
     public float XDisplacement {get; private set; }
     public float YPosition { get; private set; }
     public Vector2 Velocity { get; private set; }
 
-    public WizzrobeProjectile(float startingX, float startingY, bool isFacingLeft)
+    public bool HasHit(ICombatActor victim)
+    {
+        return _hitTargets.Contains(victim);
+    }
+
+    public void RecordHit(ICombatActor victim)
+    {
+        _hitTargets.Add(victim);
+    }
+
+    public void OnHit(ICombatActor victim)
+    {
+        IsFinished = true;
+    }
+
+    public WizzrobeProjectile(
+        float startingX,
+        float startingY,
+        bool isFacingLeft,
+        ICombatActor owner)
     {
         XPosition = isFacingLeft ? startingX : startingX + 32;
         YPosition = startingY + 16;
         IsFacingLeft = isFacingLeft;
         Velocity = new Vector2(isFacingLeft ? -ThrowSpeed : ThrowSpeed, 0.0f);
+        _owner = owner;
+        Damage = new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy);
 
         Sprite = SpriteFactory.Instance.CreateWizzrobeProjectileSprite();
         Animation = new SpriteAnimation(
