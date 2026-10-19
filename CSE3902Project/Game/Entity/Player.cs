@@ -57,7 +57,7 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
         Velocity = Vector2.Zero;
         _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
-        _bodyHurtbox = new BodyHurtbox(this, new Point(8, 8), new Point(32, 32)); // TODO
+        _bodyHurtbox = new BodyHurtbox(this, new Point(8, 31), new Point(32, 32)); 
     }
 
     // Animation data

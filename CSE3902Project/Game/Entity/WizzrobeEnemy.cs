@@ -21,6 +21,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
     private readonly AnimationController _animationController;
     public Player _player;
     public List<IProjectile> _projectiles;
+    private IHurtbox _bodyHurtbox;
 
     //fireball
     public WizzrobeProjectile fireball;
@@ -38,6 +39,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 
         _player = player;
         _projectiles = projectiles;
+        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
     }
 
     public WizzrobeEnemy(Sprite sprite, Player player, List<IProjectile> projectiles)
@@ -50,6 +52,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 
         _player = player;
         _projectiles = projectiles;
+        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
     }
 
     public Sprite Sprite { get; set; }
@@ -58,11 +61,11 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
     //state
     public bool IsFacingLeft { get; private set; }
     public bool IsDead { get; set; } // for list culling later
+    private int deadAnimationBuffer = 0;
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        // TODO
-        Console.WriteLine($"Wizzrobe took damage. Source: {damageInfo.Source}");
+        ChangeState(new WizzrobeDeadState(this));
     }
 
     public Vector2 Position { get; private set; }
@@ -77,21 +80,40 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 
     public virtual void Update(GameTime gameTime)
     {
-        _animationController.Update(gameTime);
-        Animation?.Update(gameTime);
-        CurrentState.Update(gameTime);
+        if (CurrentState is not WizzrobeDeadState){
+            _animationController.Update(gameTime);
+            Animation?.Update(gameTime);
+            CurrentState.Update(gameTime);
 
-        if (CheckVisibilityBuffer()) UpdatePosition();
+            if (CheckVisibilityBuffer()) UpdatePosition();
 
-        if (CheckFireballBuffer()) ThrowFireball();
+            if (CheckFireballBuffer()) ThrowFireball();
+        }
+        else{
+            if (deadAnimationBuffer < 8)
+            {
+                deadAnimationBuffer++;
+                _animationController.Update(gameTime);
+                Animation?.Update(gameTime);
+                CurrentState.Update(gameTime);
+            }
+            else{
+                IsDead = true;
+                //play pop animation
+            }
+        }
     }
 
-    public IEnumerable<IHurtbox> Hurtboxes { get; }
+    public IEnumerable<IHurtbox> Hurtboxes
+    {
+         get { yield return _bodyHurtbox; }
+    }
 
     public bool CheckVisibilityBuffer()
     {
         if (CurrentState is WizzrobeInvisibleState)
         {
+            _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(0,0));
             fireballThrown = false;
             if (VisibilityBuffer < 60)
             {
@@ -106,6 +128,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
         }
         else if (CurrentState is WizzrobeVisibleState)
         {
+            _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
             if (VisibilityBuffer < 300)
             {
                 VisibilityBuffer += 1;

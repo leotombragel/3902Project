@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-///     stalfo enemy class, implements IMortal
+///     stalfo enemy class, implements StatefulEntityBase, IEnemy
 /// </summary>
 public class StalfoEnemy : StatefulEntityBase, IEnemy
 {
@@ -23,6 +23,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     private readonly AnimationController _animationController;
     private readonly int StartingPosY = 100;
     public int FrameBuffer; //Stalfo has no animation, just a frame flipped over the y axis
+    private readonly IHurtbox _bodyHurtbox;
 
     public Rect Hitbox;
 
@@ -36,6 +37,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);
+        _bodyHurtbox = new BodyHurtbox(this, new Point(-7, 0), new Point(46, 32));
     }
 
     public StalfoEnemy(Sprite sprite)
@@ -47,6 +49,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);
+        _bodyHurtbox = new BodyHurtbox(this, new Point(-7, 0), new Point(46, 32));
     }
 
     public StalfoEnemy(int GroundHeight)
@@ -61,6 +64,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);
+        _bodyHurtbox = new BodyHurtbox(this, new Point(-7, 0), new Point(46, 32));
     }
 
     public Sprite Sprite { get; set; }
@@ -69,12 +73,13 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
 
     //state
     public bool IsFacingLeft { get; private set; }
+    private int deadAnimationBuffer = 0;
     public bool IsDead { get; set; }
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        // TODO
-        Console.WriteLine($"Stalfo took damage. Source: {damageInfo.Source}");
+        ChangeState(new StalfoDeadState(this));
+        //Console.WriteLine($"Stalfo took damage. Source: {damageInfo.Source}");
     }
 
     //movement
@@ -102,15 +107,33 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
 
     public virtual void Update(GameTime gameTime)
     {
-        _animationController.Update(gameTime);
-        Animation?.Update(gameTime);
-        CurrentState.Update(gameTime);
+        if (CurrentState is not StalfoDeadState){
+            _animationController.Update(gameTime);
+            Animation?.Update(gameTime);
+            CurrentState.Update(gameTime);
 
-        IsFacingLeft = MoveHorizontal(IsFacingLeft);
-        UpdatePosition();
+            IsFacingLeft = MoveHorizontal(IsFacingLeft);
+            UpdatePosition();
+        }
+        else{
+            if (deadAnimationBuffer < 8)
+            {
+                deadAnimationBuffer++;
+                _animationController.Update(gameTime);
+                Animation?.Update(gameTime);
+                CurrentState.Update(gameTime);
+            }
+            else{
+                IsDead = true;
+                //play pop animation
+            }
+        }
     }
 
-    public IEnumerable<IHurtbox> Hurtboxes { get; }
+    public IEnumerable<IHurtbox> Hurtboxes
+    {
+        get { yield return _bodyHurtbox; }
+    }
 
     /// <summary>
     ///     Uses the velocity to update the stalfo's position.

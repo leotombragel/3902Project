@@ -11,7 +11,7 @@ namespace CSE3902Project.Game.Graphics;
 public interface IProjectile : IDamageSource
 {
 
-    bool IsFinished { get; }
+    //bool IsFinished { get; }
 
     SpriteAnimation Animation { get; set;  }
 

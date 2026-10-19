@@ -28,7 +28,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private CameraFollowPlayer _cameraFollowPlayer;
     private CollisionSystem _collisionSystem;
     private List<IController> _controllers;
-    private EnemyCycler _enemyCycler;
     private GraphicsDeviceManager _graphics;
     private Stage _stage;
     private ItemCycler _items;
@@ -99,7 +98,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _actors.Add(_player);
         _actors.AddRange(_enemies);
 
-        _enemyCycler = new EnemyCycler(_enemies);
 
 
         // Bind commands to button presses
@@ -121,8 +119,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.U, new PreviousItemCommand(_items));
         keyboardController.RegisterPressCommand(Keys.I, new NextItemCommand(_items));
-        keyboardController.RegisterPressCommand(Keys.O, new PreviousEnemyCommand(_enemyCycler));
-        keyboardController.RegisterPressCommand(Keys.P, new NextEnemyCommand(_enemyCycler));
 
         mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
 
@@ -142,11 +138,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         foreach (var enemy in _enemies) enemy.Update(gameTime);
-        //_enemies.RemoveAll(enemy => enemy.IsDead);     DONT REMOVE
-        _enemyCycler.Update(gameTime);
+        _enemies.RemoveAll(enemy => enemy.IsDead);
 
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
+        _damageSources.AddRange(_enemies);
 
         _collisionSystem.Update(_actors, _damageSources);
 
@@ -172,8 +168,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _stage.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
-        //foreach (var enemy in _enemies) enemy.Update(gameTime);  DONT REMOVE
-        _enemyCycler.Draw(_spriteBatch);
+        foreach (var enemy in _enemies) enemy.Draw(_spriteBatch);
         _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
         _spriteBatch.End();
 

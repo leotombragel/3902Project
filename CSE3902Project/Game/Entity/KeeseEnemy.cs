@@ -24,7 +24,6 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
     //animation
     private readonly AnimationController _animationController;
     private readonly IHurtbox _bodyHurtbox;
-
     private readonly int StartingPosY = 100;
 
     public KeeseEnemy(int GroundHeight)
@@ -40,11 +39,9 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
         IsGoingUp = false;
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new KeeseAnimationFactory());
-        Velocity = Vector2.Zero;
         CurrentState = new KeeseFlyingState(this);
 
-        // TODO Adjust the hurtbox data based on actual sprite
-        _bodyHurtbox = new BodyHurtbox(this, new Point(4, 4), new Point(20, 20));
+        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(32, 26));
     }
 
     public Sprite Sprite { get; set; }
@@ -55,12 +52,13 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
 
     //state
     public bool IsFacingLeft { get; private set; }
+    private int deadAnimationBuffer = 0;
     public bool IsDead { get; set; }
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        // TODO
-        Console.WriteLine($"Keese took damage. Source: {damageInfo.Source}");
+        
+        ChangeState(new KeeseDeadState(this));
     }
 
     public Vector2 Position { get; private set; }
@@ -81,14 +79,31 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
 
     public virtual void Update(GameTime gameTime)
     {
-        _animationController.Update(gameTime);
-        Animation?.Update(gameTime);
-        CurrentState.Update(gameTime);
+        if (CurrentState is not KeeseDeadState){
+            _animationController.Update(gameTime);
+            Animation?.Update(gameTime);
+            CurrentState.Update(gameTime);
 
-        IsGoingUp = MoveVertical(IsGoingUp);
-        IsFacingLeft = MoveHorizontal(IsFacingLeft);
+            IsGoingUp = MoveVertical(IsGoingUp);
+            IsFacingLeft = MoveHorizontal(IsFacingLeft);
 
-        UpdatePosition();
+            UpdatePosition();
+        }
+        else{
+            if (deadAnimationBuffer < 8)
+            {
+                deadAnimationBuffer++;
+                _animationController.Update(gameTime);
+                Animation?.Update(gameTime);
+                CurrentState.Update(gameTime);
+            }
+            else{
+                IsDead = true;
+                //play pop animation
+            }
+        }
+
+
     }
 
     /// <summary>
