@@ -142,7 +142,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
-        _damageSources.AddRange(_enemies);
 
         _collisionSystem.Update(_actors, _damageSources);
 
