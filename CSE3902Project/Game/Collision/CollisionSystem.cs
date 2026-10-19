@@ -33,6 +33,7 @@ public sealed class CollisionSystem(GraphicsDevice graphicsDevice)
     /// <param name="damageSources"></param>
     public void Update(IReadOnlyList<ICombatActor> actors, IReadOnlyList<IDamageSource> damageSources)
     {
+        // Collision between hurtboxes and hitboxes
         foreach (var source in damageSources)
         {
             if (!source.IsCollisionEnabled || source.IsFinished) continue;
@@ -51,6 +52,9 @@ public sealed class CollisionSystem(GraphicsDevice graphicsDevice)
                 }
             }
         }
+        
+        // Collision between player and items
+        
     }
 
     /// <summary>
