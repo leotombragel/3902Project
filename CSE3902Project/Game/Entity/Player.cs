@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
+using CSE3902Project.Game.Entity.State.Player_States;
 using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,6 +20,7 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
     // Vertical motion
     private const float VerticalMoveSpeed = 4.0f;
     private const float Gravity = 0.1f;
+    private const float MaxFallSpeed = 8.0f;
     
     // Collision
     private readonly IHurtbox _bodyHurtbox;
@@ -30,6 +32,15 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
             yield return _bodyHurtbox;
         }
     }
+
+    // Stage collision (walking on tiles)
+    // the box is smaller than the 64x64 sprite and moves over when the player turns around
+    private const int HitboxWidth = 24;
+    private const int HitboxHeight = 30;
+    private const int HitboxTop = 32;
+    private const int HitboxLeftFacingRight = 11;
+    private const int HitboxLeftFacingLeft = 29;
+    private PlayerStageCollision _stageCollision;
 
     // Etc
     private const int StartingPosX = 200;
@@ -60,6 +71,7 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
 
     public bool IsWalking { get; set; }
     public bool IsJumping { get; set; }
+    public bool IsOnGround { get; set; }
     public Vector2 Velocity { get; set; }
     public int StartingPosY { get; } = 100;
 
@@ -69,6 +81,28 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
     public bool IsDead { get; set; }
     public SpriteAnimation Animation { get; set; }
     public bool IsFacingLeft { get; private set; }
+
+    /// the box used for walking on tiles (smaller than the whole sprite)
+    public Rectangle StageHitbox
+    {
+        get
+        {
+            int left = HitboxLeftFacingRight;
+            if (IsFacingLeft)
+            {
+                left = HitboxLeftFacingLeft;
+            }
+
+            int x = (int)Math.Round(Position.X) + left;
+            int y = (int)Math.Round(Position.Y) + HitboxTop;
+            return new Rectangle(x, y, HitboxWidth, HitboxHeight);
+        }
+    }
+
+    public void SetStageCollision(PlayerStageCollision stageCollision)
+    {
+        _stageCollision = stageCollision;
+    }
 
     public virtual void Update(GameTime gameTime)
     {
@@ -205,8 +239,10 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
 
     public void MoveVertical()
     {
-        if (IsJumping) return;
+        //can only jump when standing on something
+        if (!IsOnGround) return;
 
+        IsOnGround = false;
         IsJumping = true;
         ChangeState(new PlayerJumpingState(this));
 
@@ -216,17 +252,19 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
 
     private void ApplyGravity()
     {
-        if (!IsJumping) return;
-        Velocity = Velocity with { Y = Velocity.Y + Gravity };
+        //no gravity while standing on something
+        if (IsOnGround) return;
 
-        // Check if the player has landed
-        if (Position.Y > StartingPosY)
+        //the dead state does its own gravity
+        if (CurrentState is PlayerDeadState) return;
+
+        float newSpeed = Velocity.Y + Gravity;
+        if (newSpeed > MaxFallSpeed)
         {
-            Position = new Vector2(Position.X, StartingPosY);
-            IsJumping = false;
-            Velocity = Velocity with { Y = 0.0f };
-            ChangeState(new PlayerIdleState(this));
+            newSpeed = MaxFallSpeed;
         }
+
+        Velocity = Velocity with { Y = newSpeed };
     }
 
     /// <summary>
@@ -254,6 +292,14 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
     /// </summary>
     private void UpdatePosition()
     {
-        Position += Velocity;
+        //dead players fall through the stage, so skip the collision
+        if (_stageCollision == null || !ShouldManagePosition || CurrentState is PlayerDeadState)
+        {
+            IsOnGround = false;
+            Position += Velocity;
+            return;
+        }
+
+        _stageCollision.MovePlayer(this);
     }
 }

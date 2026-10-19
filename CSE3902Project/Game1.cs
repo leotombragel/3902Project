@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CSE3902Project.Game.Cameras;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Damage;
@@ -23,11 +24,13 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private readonly List<IProjectile> _projectiles = new();
     private AquamentusEnemy _aquamentusEnemy;
     private Background _background;
+    private Camera _camera;
+    private CameraFollowPlayer _cameraFollowPlayer;
     private CollisionSystem _collisionSystem;
     private List<IController> _controllers;
     private EnemyCycler _enemyCycler;
     private GraphicsDeviceManager _graphics;
-    private GroundRow _ground;
+    private Stage _stage;
     private ItemCycler _items;
     private KeeseEnemy _keeseEnemy;
     private Player _player;
@@ -69,14 +72,18 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         var viewport = GraphicsDevice.Viewport;
         _background = new Background(viewport.Width, viewport.Height);
-        _ground = new GroundRow(viewport.Width, viewport.Height);
+        _stage = new Stage(viewport.Height);
         _items = new ItemCycler(new Vector2(60, 48));
         _tiles = new TileCycler(new Vector2(92, 32));
 
-        _player = new Player(_ground.TileHeight);
+        _player = new Player(_stage.GroundY);
+        _player.SetStageCollision(new PlayerStageCollision(_stage.SolidTiles, _stage.Bounds));
 
-        _keeseEnemy = new KeeseEnemy(_ground.TileHeight);
-        _stalfoEnemy = new StalfoEnemy(_ground.TileHeight);
+        _camera = new Camera(viewport.Width, viewport.Height);
+        _cameraFollowPlayer = new CameraFollowPlayer(_camera, _player, _stage.Bounds);
+
+        _keeseEnemy = new KeeseEnemy(_stage.GroundY);
+        _stalfoEnemy = new StalfoEnemy(_stage.GroundY);
         _wizzrobeEnemy = new WizzrobeEnemy(_player, _projectiles);
         _aquamentusEnemy = new AquamentusEnemy(_player, _projectiles);
 
@@ -128,7 +135,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var attack in _attacks) attack.Update(gameTime);
 
         _player.Update(gameTime);
-        _ground.Update(gameTime);
+        _cameraFollowPlayer.Update();
+        _stage.Update(gameTime);
         _tiles.Update(gameTime);
         _items.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
@@ -154,17 +162,25 @@ public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDevice.Clear(Color.Gray);
 
+        //background stays still on the screen
         _spriteBatch.Begin();
         _background.Draw(_spriteBatch);
-        _ground.Draw(_spriteBatch);
-        _tiles.Draw(_spriteBatch);
-        _items.Draw(_spriteBatch);
+        _spriteBatch.End();
+
+        //everything in the stage gets moved by the camera
+        _spriteBatch.Begin(transformMatrix: _camera.GetTransform());
+        _stage.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         //foreach (var enemy in _enemies) enemy.Update(gameTime);  DONT REMOVE
         _enemyCycler.Draw(_spriteBatch);
         _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
+        _spriteBatch.End();
 
+        //tile and item display stays in the top left corner
+        _spriteBatch.Begin();
+        _tiles.Draw(_spriteBatch);
+        _items.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);
