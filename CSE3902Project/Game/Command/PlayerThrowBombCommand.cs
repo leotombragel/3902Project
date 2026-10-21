@@ -2,10 +2,11 @@ using System;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Entity.State;
 using CSE3902Project.Game.Graphics;
+using CSE3902Project.Game.Items;
 
 namespace CSE3902Project.Game.Command;
 
-public class PlayerThrowBombCommand : ICommand
+public class PlayerThrowBombCommand : IUseItemCommand
 {
     private readonly Player _player;
     private readonly Action<IProjectile> _spawnProjectile;
@@ -27,4 +28,6 @@ public class PlayerThrowBombCommand : ICommand
             _player.IsFacingLeft,
             _player));
     }
+
+    public Type ItemType { get; } = typeof(BombItem);
 }

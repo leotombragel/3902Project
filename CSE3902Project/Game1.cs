@@ -108,12 +108,17 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
-        keyboardController.RegisterPressCommand(Keys.D1,
-            new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile)));
-        keyboardController.RegisterPressCommand(Keys.D2,
-            new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile)));
-        keyboardController.RegisterPressCommand(Keys.D3,
-            new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile)));
+
+        var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
+        var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
+        var fireCommand = new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile));
+        var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand]);
+
+        keyboardController.RegisterPressCommand(Keys.D1, boomerangCommand);
+        keyboardController.RegisterPressCommand(Keys.D2, bombCommand);
+        keyboardController.RegisterPressCommand(Keys.D3, fireCommand);
+        keyboardController.RegisterPressCommand(Keys.D4, currentItemCommand);
+
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
