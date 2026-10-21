@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -20,11 +22,18 @@ public class Stage
 
     //everything the player can stand on or run into
     public List<ITile> SolidTiles { get; }
+    public string[] MapRows { get; }
 
     public Stage(int screenHeight)
     {
-        int stageWidth = WidthInTiles * Tile.Size;
+        var mapPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "Content",
+            "levelFiles",
+            "1-1LevelExcel.csv");
+        MapRows = File.ReadAllLines(mapPath);
 
+        int stageWidth = WidthInTiles * Tile.Size;
         _ground = new GroundRow(stageWidth, screenHeight);
         GroundY = _ground.TileHeight;
         Bounds = new Rectangle(0, 0, stageWidth, screenHeight);
