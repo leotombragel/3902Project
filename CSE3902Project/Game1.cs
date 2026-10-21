@@ -140,9 +140,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _tiles.Update(gameTime);
         foreach (var item in _items) item.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
-        _projectiles.RemoveAll(projectile => projectile.IsFinished);
         foreach (var enemy in _enemies) enemy.Update(gameTime);
-        _enemies.RemoveAll(enemy => enemy.IsDead);
 
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
@@ -152,6 +150,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         _attacks.RemoveAll(attack => attack.IsFinished);
         _enemies.RemoveAll(enemy => enemy.IsDead);
+        _items.RemoveAll(item => item.IsDead);
         _damageSources.RemoveAll(damageSource => damageSource.IsFinished);
 
         base.Update(gameTime);
