@@ -40,6 +40,12 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         _bodyHurtbox = new BodyHurtbox(this, new Point(-7, 0), new Point(46, 32));
     }
 
+    public StalfoEnemy(Vector2 spawnPosition)
+        : this()
+    {
+        Position = spawnPosition;
+    }
+
     public StalfoEnemy(Sprite sprite)
     {
         Sprite = sprite;

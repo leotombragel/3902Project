@@ -1,5 +1,6 @@
 using CSE3902Project.Game.Entity;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace CSE3902Project.Game.Cameras;
 
@@ -19,7 +20,9 @@ public class CameraFollowPlayer
 
     public void Update()
     {
-        Point playerCenter = _player.StageHitbox.Center;
+        var playerCenter = new Point(
+            (int)Math.Round(_player.Position.X + 32),
+            _player.StageHitbox.Center.Y);
         float x = playerCenter.X - _camera.ViewWidth / 2f;
         float y = playerCenter.Y - _camera.ViewHeight / 2f;
 
