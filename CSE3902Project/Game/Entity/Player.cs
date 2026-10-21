@@ -122,7 +122,12 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
         Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
     }
 
-    public IItem CurrentItem { get; set; } = null;
+    public IItem CurrentItem { get; private set; } = null;
+    public void ChangeItem(IItem item)
+    {
+        // Could play an animation here later
+        CurrentItem = item;
+    }
 
     public void SetStageCollision(PlayerStageCollision stageCollision)
     {

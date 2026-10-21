@@ -31,7 +31,7 @@ public abstract class Item : IItem
         _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(_size.X, _size.Y));
     }
 
-    public DamageTeam Team => DamageTeam.Neutral;
+    public DamageTeam Team => DamageTeam.Item;
     public bool IsFacingLeft { get; }
 
     public IEnumerable<IHurtbox> Hurtboxes
