@@ -29,11 +29,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private CollisionSystem _collisionSystem;
     private List<IController> _controllers;
     private GraphicsDeviceManager _graphics;
-    private Stage _stage;
-    private ItemCycler _items;
+    private List<IItem> _items = new();
     private KeeseEnemy _keeseEnemy;
     private Player _player;
     private SpriteBatch _spriteBatch;
+    private Stage _stage;
     private StalfoEnemy _stalfoEnemy;
     private TileCycler _tiles;
     private WizzrobeEnemy _wizzrobeEnemy;
@@ -72,7 +72,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var viewport = GraphicsDevice.Viewport;
         _background = new Background(viewport.Width, viewport.Height);
         _stage = new Stage(viewport.Height);
-        _items = new ItemCycler(new Vector2(60, 48));
+        _items = Item.GetAllItems(new Vector2(300, 360));
         _tiles = new TileCycler(new Vector2(92, 32));
 
         _player = new Player(_stage.GroundY);
@@ -97,6 +97,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _enemies.Add(_aquamentusEnemy);
         _actors.Add(_player);
         _actors.AddRange(_enemies);
+        _actors.AddRange(_items);
 
 
 
@@ -107,18 +108,21 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
-        keyboardController.RegisterPressCommand(Keys.D1,
-            new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile)));
-        keyboardController.RegisterPressCommand(Keys.D2,
-            new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile)));
-        keyboardController.RegisterPressCommand(Keys.D3,
-            new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile)));
+
+        var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
+        var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
+        var fireCommand = new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile));
+        var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand]);
+
+        keyboardController.RegisterPressCommand(Keys.D1, boomerangCommand);
+        keyboardController.RegisterPressCommand(Keys.D2, bombCommand);
+        keyboardController.RegisterPressCommand(Keys.D3, fireCommand);
+        keyboardController.RegisterPressCommand(Keys.D4, currentItemCommand);
+
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
         keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
         keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
-        keyboardController.RegisterPressCommand(Keys.U, new PreviousItemCommand(_items));
-        keyboardController.RegisterPressCommand(Keys.I, new NextItemCommand(_items));
 
         mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
 
@@ -134,11 +138,9 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _cameraFollowPlayer.Update();
         _stage.Update(gameTime);
         _tiles.Update(gameTime);
-        _items.Update(gameTime);
+        foreach (var item in _items) item.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
-        _projectiles.RemoveAll(projectile => projectile.IsFinished);
         foreach (var enemy in _enemies) enemy.Update(gameTime);
-        _enemies.RemoveAll(enemy => enemy.IsDead);
 
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
@@ -148,6 +150,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         _attacks.RemoveAll(attack => attack.IsFinished);
         _enemies.RemoveAll(enemy => enemy.IsDead);
+        _items.RemoveAll(item => item.IsDead);
         _damageSources.RemoveAll(damageSource => damageSource.IsFinished);
 
         base.Update(gameTime);
@@ -174,7 +177,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         //tile and item display stays in the top left corner
         _spriteBatch.Begin();
         _tiles.Draw(_spriteBatch);
-        _items.Draw(_spriteBatch);
+        foreach (var item in _items) item.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);
