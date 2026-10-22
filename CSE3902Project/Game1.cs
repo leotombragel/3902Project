@@ -96,10 +96,10 @@ public class Game1 : Microsoft.Xna.Framework.Game
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
         keyboardController.RegisterCommand(Keys.A, new PlayerMoveLeftCommand(_player));
-        keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
-        keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
-        keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
-        keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
+        keyboardController.RegisterPressCommand(Keys.Space, new PlayerJumpCommand(_player));
+        keyboardController.RegisterPressCommand(Keys.N, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
+        keyboardController.RegisterPressCommand(Keys.Z, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
+        keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
 
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
