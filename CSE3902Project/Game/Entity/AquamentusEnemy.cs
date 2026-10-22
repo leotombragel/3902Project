@@ -14,7 +14,6 @@ namespace CSE3902Project.Game.Entity;
 /// </summary>
 public class AquamentusEnemy : IEnemy
 {
-    private const int StartingPosX = 600;
     private const int SpriteFrameHeight = 32;
 
     private const int SpriteScale = 4;
@@ -27,6 +26,7 @@ public class AquamentusEnemy : IEnemy
     private readonly Player _player;
     private readonly List<IProjectile> _projectiles;
     private readonly int StartingPosY = 320;
+    private const int StartingPosX = 600;
 
     public int health { get; set; }
     //private IMortal _mortalImplementation;

@@ -22,7 +22,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     private readonly List<IEnemy> _enemies = new();
     private readonly List<IProjectile> _projectiles = new();
-    private AquamentusEnemy _aquamentusEnemy;
     private Background _background;
     private Camera _camera;
     private CameraFollowPlayer _cameraFollowPlayer;
@@ -30,13 +29,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private List<IController> _controllers;
     private GraphicsDeviceManager _graphics;
     private List<IItem> _items = new();
-    private KeeseEnemy _keeseEnemy;
     private Player _player;
     private SpriteBatch _spriteBatch;
     private Stage _stage;
     private StalfoEnemy _stalfoEnemy;
-    private TileCycler _tiles;
+    private KeeseEnemy _keeseEnemy;
     private WizzrobeEnemy _wizzrobeEnemy;
+    private WallmasterEnemy _wallmasterEnemy;
+    private AquamentusEnemy _aquamentusEnemy;
+    private TileCycler _tiles;
+
 
     public Game1()
     {
@@ -84,17 +86,20 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _keeseEnemy = new KeeseEnemy(_stage.GroundY);
         _stalfoEnemy = new StalfoEnemy(_stage.GroundY);
         _wizzrobeEnemy = new WizzrobeEnemy(_player, _projectiles);
+        _wallmasterEnemy = new WallmasterEnemy(_player);
         _aquamentusEnemy = new AquamentusEnemy(_player, _projectiles);
+        
 
         _enemies.Clear();
         _projectiles.Clear();
         _actors.Clear();
         _damageSources.Clear();
 
-        _enemies.Add(_keeseEnemy);
-        _enemies.Add(_stalfoEnemy);
-        _enemies.Add(_wizzrobeEnemy);
-        _enemies.Add(_aquamentusEnemy);
+        //_enemies.Add(_keeseEnemy);
+        //_enemies.Add(_stalfoEnemy);
+        //_enemies.Add(_wizzrobeEnemy);
+        _enemies.Add(_wallmasterEnemy);
+        //_enemies.Add(_aquamentusEnemy);
         _actors.Add(_player);
         _actors.AddRange(_enemies);
         _actors.AddRange(_items);
