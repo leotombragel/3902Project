@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-///     Wizzrobe enemy class, implements IMortal
+///     Wizzrobe enemy class, StatefulEntityBase, IEnemy
 /// </summary>
 public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 {
