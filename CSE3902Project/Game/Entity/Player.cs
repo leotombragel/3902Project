@@ -5,12 +5,13 @@ using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
 using CSE3902Project.Game.Entity.State.Player_States;
 using CSE3902Project.Game.Graphics;
+using CSE3902Project.Game.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CSE3902Project.Game.Entity;
 
-public class Player : StatefulEntityBase, IAnimatable, ICombatActor
+public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
 {
     // Motion
     private const float MaxSpeed = 3.0f;
@@ -18,20 +19,9 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
     private const float Deceleration = 0.1f;
 
     // Vertical motion
-    private const float VerticalMoveSpeed = 4.0f;
+    private const float VerticalMoveSpeed = 5.25f;
     private const float Gravity = 0.1f;
     private const float MaxFallSpeed = 8.0f;
-    
-    // Collision
-    private readonly IHurtbox _bodyHurtbox;
-
-    public IEnumerable<IHurtbox> Hurtboxes
-    {
-        get
-        {
-            yield return _bodyHurtbox;
-        }
-    }
 
     // Stage collision (walking on tiles)
     // the box is smaller than the 64x64 sprite and moves over when the player turns around
@@ -40,13 +30,17 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
     private const int HitboxTop = 32;
     private const int HitboxLeftFacingRight = 11;
     private const int HitboxLeftFacingLeft = 29;
-    private PlayerStageCollision _stageCollision;
 
     // Etc
     private const int StartingPosX = 200;
     private readonly AnimationController _animationController;
+
+    // Collision
+    private readonly IHurtbox _bodyHurtbox;
+    private readonly List<IItem> _items = new();
     private bool _previouslyFacingRight = true;
     private float _previousSpeed;
+    private PlayerStageCollision _stageCollision;
 
     public Player(int groundHeight)
     {
@@ -57,7 +51,7 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
         Velocity = Vector2.Zero;
         _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
-        _bodyHurtbox = new BodyHurtbox(this, new Point(8, 8), new Point(32, 32)); // TODO
+        _bodyHurtbox = new BodyHurtbox(this, new Point(8, 31), new Point(32, 32)); 
     }
 
     // Animation data
@@ -75,34 +69,22 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
     public Vector2 Velocity { get; set; }
     public int StartingPosY { get; } = 100;
 
-    public Vector2 Position { get; set; }
-    public DamageTeam Team => DamageTeam.Player;
-
-    public bool IsDead { get; set; }
-    public SpriteAnimation Animation { get; set; }
-    public bool IsFacingLeft { get; private set; }
-
     /// the box used for walking on tiles (smaller than the whole sprite)
     public Rectangle StageHitbox
     {
         get
         {
-            int left = HitboxLeftFacingRight;
-            if (IsFacingLeft)
-            {
-                left = HitboxLeftFacingLeft;
-            }
+            var left = HitboxLeftFacingRight;
+            if (IsFacingLeft) left = HitboxLeftFacingLeft;
 
-            int x = (int)Math.Round(Position.X) + left;
-            int y = (int)Math.Round(Position.Y) + HitboxTop;
+            var x = (int)Math.Round(Position.X) + left;
+            var y = (int)Math.Round(Position.Y) + HitboxTop;
             return new Rectangle(x, y, HitboxWidth, HitboxHeight);
         }
     }
 
-    public void SetStageCollision(PlayerStageCollision stageCollision)
-    {
-        _stageCollision = stageCollision;
-    }
+    public SpriteAnimation Animation { get; set; }
+    public bool IsFacingLeft { get; private set; }
 
     public virtual void Update(GameTime gameTime)
     {
@@ -125,9 +107,31 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
         _animationController.Draw(spriteBatch, Position, IsFacingLeft);
     }
 
+    public IEnumerable<IHurtbox> Hurtboxes
+    {
+        get { yield return _bodyHurtbox; }
+    }
+
+    public Vector2 Position { get; set; }
+    public DamageTeam Team => DamageTeam.Player;
+
+    public bool IsDead { get; set; }
+
     public void TakeDamage(DamageInfo damageInfo)
     {
         Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
+    }
+
+    public IItem CurrentItem { get; private set; } = null;
+    public void ChangeItem(IItem item)
+    {
+        // Could play an animation here later
+        CurrentItem = item;
+    }
+
+    public void SetStageCollision(PlayerStageCollision stageCollision)
+    {
+        _stageCollision = stageCollision;
     }
 
     public void MoveHorizontal(bool isToTheRight)
@@ -258,11 +262,8 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
         //the dead state does its own gravity
         if (CurrentState is PlayerDeadState) return;
 
-        float newSpeed = Velocity.Y + Gravity;
-        if (newSpeed > MaxFallSpeed)
-        {
-            newSpeed = MaxFallSpeed;
-        }
+        var newSpeed = Velocity.Y + Gravity;
+        if (newSpeed > MaxFallSpeed) newSpeed = MaxFallSpeed;
 
         Velocity = Velocity with { Y = newSpeed };
     }

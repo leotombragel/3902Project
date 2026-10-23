@@ -24,7 +24,7 @@ public class StalfoAnimationFactory : IAnimationFactory
         ["StalfoDead"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateStalfoSprite(),
             16,
             16,
-            2,
+            1,
             0.08f,
             2,
             59),

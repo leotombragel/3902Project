@@ -45,12 +45,12 @@ public class SwordAttack : IAttack
         get
         {
             var x = Owner.IsFacingLeft
-                ? (int)Owner.Position.X - 24
-                : (int)Owner.Position.X + 32;
+                ? (int)Owner.Position.X - 3
+                : (int)Owner.Position.X + 26;
 
             return new Rectangle(
                 x,
-                (int)Owner.Position.Y + 8,
+                (int)Owner.Position.Y + 40,
                 24,
                 16);
         }

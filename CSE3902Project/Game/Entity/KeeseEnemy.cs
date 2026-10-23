@@ -17,6 +17,7 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
     private const float VerticalMoveSpeed = 4.0f;
     private const float MaxSpeed = 3.0f;
     private const int StartingPosX = 400; //figure out how to set these through constructor late
+    private readonly int _startingPosX;
 
     //movement
     private static readonly Random _rng = new();
@@ -24,7 +25,6 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
     //animation
     private readonly AnimationController _animationController;
     private readonly IHurtbox _bodyHurtbox;
-
     private readonly int StartingPosY = 100;
 
     public KeeseEnemy(int GroundHeight)
@@ -34,17 +34,24 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
         StartingPosY =
             GroundHeight - 32 -
             spriteHeight; // Assuming the keese sprite is 32 pixels tall and we want it to be above the ground tile
+        _startingPosX = StartingPosX;
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 1);
         BoxContainer = new Vector2(100, 50);
         IsGoingUp = false;
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new KeeseAnimationFactory());
-        Velocity = Vector2.Zero;
         CurrentState = new KeeseFlyingState(this);
 
-        // TODO Adjust the hurtbox data based on actual sprite
-        _bodyHurtbox = new BodyHurtbox(this, new Point(4, 4), new Point(20, 20));
+        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(32, 26));
+    }
+
+    public KeeseEnemy(int groundHeight, Vector2 spawnPosition)
+        : this(groundHeight)
+    {
+        StartingPosY = (int)spawnPosition.Y;
+        _startingPosX = (int)spawnPosition.X;
+        Position = spawnPosition;
     }
 
     public Sprite Sprite { get; set; }
@@ -55,12 +62,13 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
 
     //state
     public bool IsFacingLeft { get; private set; }
+    private int deadAnimationBuffer = 0;
     public bool IsDead { get; set; }
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        // TODO
-        Console.WriteLine($"Keese took damage. Source: {damageInfo.Source}");
+        
+        ChangeState(new KeeseDeadState(this));
     }
 
     public Vector2 Position { get; private set; }
@@ -81,14 +89,31 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
 
     public virtual void Update(GameTime gameTime)
     {
-        _animationController.Update(gameTime);
-        Animation?.Update(gameTime);
-        CurrentState.Update(gameTime);
+        if (CurrentState is not KeeseDeadState){
+            _animationController.Update(gameTime);
+            Animation?.Update(gameTime);
+            CurrentState.Update(gameTime);
 
-        IsGoingUp = MoveVertical(IsGoingUp);
-        IsFacingLeft = MoveHorizontal(IsFacingLeft);
+            IsGoingUp = MoveVertical(IsGoingUp);
+            IsFacingLeft = MoveHorizontal(IsFacingLeft);
 
-        UpdatePosition();
+            UpdatePosition();
+        }
+        else{
+            if (deadAnimationBuffer < 8)
+            {
+                deadAnimationBuffer++;
+                _animationController.Update(gameTime);
+                Animation?.Update(gameTime);
+                CurrentState.Update(gameTime);
+            }
+            else{
+                IsDead = true;
+                //play pop animation
+            }
+        }
+
+
     }
 
     /// <summary>
@@ -155,12 +180,12 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
 
     public bool CheckHorizontalBoundary(bool IsFacingLeft)
     {
-        if (Position.X < StartingPosX - BoxContainer.X)
+        if (Position.X < _startingPosX - BoxContainer.X)
         {
             IsFacingLeft = false;
             Velocity = Velocity with { X = -Velocity.X };
         }
-        else if (Position.X > StartingPosX + BoxContainer.X)
+        else if (Position.X > _startingPosX + BoxContainer.X)
         {
             IsFacingLeft = true;
             Velocity = Velocity with { X = -Velocity.X };

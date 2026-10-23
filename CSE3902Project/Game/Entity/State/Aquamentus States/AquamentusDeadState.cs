@@ -11,7 +11,7 @@ public class AquamentusDeadState : IState
         _aquamentusEnemy = enemy;
     }
 
-    public string AnimationName => "AquaementusDead";
+    public string AnimationName => "AquamentusDead";
 
     public void Enter()
     {

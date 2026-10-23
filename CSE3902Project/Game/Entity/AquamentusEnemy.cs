@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
@@ -9,23 +10,27 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-///     aquamentus enemy class, implements IMortal
+///     aquamentus enemy class, implements IEnemy
 /// </summary>
 public class AquamentusEnemy : IEnemy
 {
-    private const int StartingPosX = 500;
     private const int SpriteFrameHeight = 32;
 
-    private const int SpriteScale = 4;
+    private const int SpriteScale = 3;
+    private const int heightNormalizationOffset = 32;
 
     //animation
     private readonly AnimationController _animationController;
+    private IHurtbox _bodyHurtbox;
 
     // references
     private readonly Player _player;
     private readonly List<IProjectile> _projectiles;
-    private readonly int StartingPosY = 100;
-    private IMortal _mortalImplementation;
+    private readonly int StartingPosY = 320;
+    private const int StartingPosX = 600;
+
+    public int health { get; set; }
+    //private IMortal _mortalImplementation;
 
     //projectile
     public AquamentusProjectile fireball1, fireball2, fireball3;
@@ -43,6 +48,14 @@ public class AquamentusEnemy : IEnemy
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new AquamentusAnimationFactory());
         CurrentState = new AquamentusLeftState(this);
+        health = 2;
+        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(96, 128));
+    }
+
+    public AquamentusEnemy(Player player, List<IProjectile> projectiles, Vector2 spawnPosition)
+        : this(player, projectiles)
+    {
+        Position = spawnPosition - new Vector2(0, SpriteFrameHeight * SpriteScale);
     }
 
     public AquamentusEnemy(Player player, List<IProjectile> projectiles, int GroundHeight)
@@ -52,13 +65,15 @@ public class AquamentusEnemy : IEnemy
         Sprite = SpriteFactory.Instance.CreateAquamentusSprite();
         var spriteHeight = SpriteFrameHeight * SpriteScale;
         StartingPosY =
-            GroundHeight - 32 -
-            spriteHeight; // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
+            GroundHeight - heightNormalizationOffset - //TODO change this to be aquamentus's height
+            spriteHeight; 
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 0);
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new AquamentusAnimationFactory());
         CurrentState = new AquamentusLeftState(this);
+        health = 2;
+        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(96, 128));
     }
 
     public Sprite Sprite { get; set; }
@@ -69,14 +84,19 @@ public class AquamentusEnemy : IEnemy
     public bool IsFacingLeft { get; private set; }
     public IState CurrentState { get; private set; }
     public bool IsDead { get; set; }
+    private int deadAnimationBuffer = 0;
 
     // Damage
     public void TakeDamage(DamageInfo damageInfo)
     {
-        _mortalImplementation.TakeDamage(damageInfo);
+        // _mortalImplementation.TakeDamage(damageInfo);
+        ChangeState(new AquamentusDeadState(this));
     }
 
-    public IEnumerable<IHurtbox> Hurtboxes { get; }
+    public IEnumerable<IHurtbox> Hurtboxes
+    {
+        get { yield return _bodyHurtbox; }
+    }
 
     //movement
     public Vector2 Position { get; private set; }
@@ -91,14 +111,37 @@ public class AquamentusEnemy : IEnemy
 
     public virtual void Update(GameTime gameTime)
     {
-        _animationController.Update(gameTime);
-        Animation?.Update(gameTime);
-        CurrentState.Update(gameTime);
+        if (CurrentState is not AquamentusDeadState){
+            _animationController.Update(gameTime);
+            Animation?.Update(gameTime);
+            CurrentState.Update(gameTime);
 
-        if (CheckFireballBuffer()) ThrowFireball();
-        UpdateDirection();
-        MoveHorizontal(IsFacingLeft);
-        UpdatePosition();
+            if (CheckFireballBuffer()) ThrowFireball();
+            UpdateDirection();
+            MoveHorizontal(IsFacingLeft);
+            UpdatePosition();
+        }
+        else{
+            if (deadAnimationBuffer < 16)
+            {
+                deadAnimationBuffer++;
+                _animationController.Update(gameTime);
+                Animation?.Update(gameTime);
+                CurrentState.Update(gameTime);
+            }
+            else{
+                if (health == 0){
+                    IsDead = true;
+                    //play pop animation
+                }
+                else
+                {
+                    health -= 1;
+                    deadAnimationBuffer = 0;
+                    ChangeState(new AquamentusLeftState(this));
+                }
+            }
+        }
     }
 
     public void ChangeState(IState newState)
@@ -151,7 +194,7 @@ public class AquamentusEnemy : IEnemy
     {
         if (CurrentState is AquamentusLeftState || CurrentState is AquamentusRightState)
         {
-            if (FireballsBuffer < 150)
+            if (FireballsBuffer < 250)
             {
                 FireballsBuffer += 1;
             }
@@ -167,6 +210,7 @@ public class AquamentusEnemy : IEnemy
 
     private void ThrowFireball()
     {
+        
         fireball1 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft, MathHelper.ToRadians(25), this);
         _projectiles.Add(fireball1);
 

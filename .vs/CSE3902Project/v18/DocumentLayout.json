@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\awild\\source\\repos\\3902Project\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\stalfoenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\stalfoenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\collisionsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\collisionsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\aquamentusenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\aquamentusenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,12 +31,38 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "StalfoEnemy.cs",
+              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
+              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
+              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
+              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAIwBIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T17:55:39.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AquamentusEnemy.cs",
+              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\AquamentusEnemy.cs",
+              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\AquamentusEnemy.cs",
+              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\AquamentusEnemy.cs",
+              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\AquamentusEnemy.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T17:55:24.878Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "CollisionSystem.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
               "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
               "RelativeToolTip": "CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
-              "ViewState": "AgIAAEkAAAAAAAAAAAAkwE8AAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH0AAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-19T16:41:44.453Z",
               "EditorCaption": ""
