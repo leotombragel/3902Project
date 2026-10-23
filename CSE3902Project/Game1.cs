@@ -175,15 +175,15 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _spriteBatch.Begin(transformMatrix: _camera.GetTransform());
         _stage.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
+        foreach (var item in _items) item.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         foreach (var enemy in _enemies) enemy.Draw(_spriteBatch);
         _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
         _spriteBatch.End();
 
-        //tile and item display stays in the top left corner
+        //tile display stays in the top left corner
         _spriteBatch.Begin();
         _tiles.Draw(_spriteBatch);
-        foreach (var item in _items) item.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);
