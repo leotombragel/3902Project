@@ -105,35 +105,7 @@ public sealed class CollisionSystem(GraphicsDevice graphicsDevice)
 
 
 
-    //public void CheckForEnemyCollision(IReadOnlyList <IEnemy> enemies)
-    //{
-    //    for(int i = 0; i < enemies.Count; i++)
-    //    {
-    //        for(int j = i; j < enemies.Count; j++)
-    //        {
-    //            IEnemy enemy1 = enemies[i];
-    //            IEnemy enemy2 = enemies[j];
-
-    //            if (enemy1.collidesWith(enemy2))
-    //            {
-    //                if (enemy1.isFacingLeft != enemy2.isFacingLeft)
-    //                {
-    //                    enemy1.flipDirection();
-    //                    enemy2.flipDirection();
-    //                }
-    //                else if (enemy1.isFacingLeft)
-    //                {
-    //                    enemy2.flipDirection();
-    //                }
-    //                else
-    //                    enemy1.flipDirection();
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-
-    /// <summary>
+     /// <summary>
     ///     Draws hitbox and hurtbox collision bounds for debugging purposes.
     /// </summary>
     /// <param name="spriteBatch"></param>

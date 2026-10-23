@@ -3,64 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\awild\\source\\repos\\3902Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\aquamentusenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\aquamentusenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\graphics\\iprojectile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\graphics\\iprojectile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\wizzrobeenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\wizzrobeenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\keeseenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\keeseenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\stalfoenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\stalfoenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\collisionsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\collisionsystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\damage\\icombatactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\damage\\icombatactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\ihashurtboxes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\ihashurtboxes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\ienemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\ienemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\playertilecollisionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\playertilecollisionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\ihurtbox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\ihurtbox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\collisionside.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\collisionside.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\enemycycler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\enemycycler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -70,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -78,197 +22,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "IProjectile.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Graphics\\IProjectile.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Graphics\\IProjectile.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Graphics\\IProjectile.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Graphics\\IProjectile.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T17:18:12.629Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Player.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\Player.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\Player.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\Player.cs*",
-              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\Player.cs*",
-              "ViewState": "AgIAACQBAAAAAAAAAAAuwDUBAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T17:18:00.223Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "WizzrobeEnemy.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\WizzrobeEnemy.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\WizzrobeEnemy.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\WizzrobeEnemy.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\WizzrobeEnemy.cs",
-              "ViewState": "AgIAAJkAAAAAAAAAAAAuwKsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T17:17:22.495Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AquamentusEnemy.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\AquamentusEnemy.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\AquamentusEnemy.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\AquamentusEnemy.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\AquamentusEnemy.cs",
-              "ViewState": "AgIAAKcAAAAAAAAAAAAqwLIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T17:15:49.481Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "IEnemy.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\IEnemy.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\IEnemy.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\IEnemy.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\IEnemy.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAA0AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T17:07:07.853Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "IHurtbox.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\IHurtbox.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\IHurtbox.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\IHurtbox.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\IHurtbox.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T16:50:09.951Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "IHasHurtboxes.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\IHasHurtboxes.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\IHasHurtboxes.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\IHasHurtboxes.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\IHasHurtboxes.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T16:50:06.22Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ICombatActor.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Damage\\ICombatActor.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Damage\\ICombatActor.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Damage\\ICombatActor.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Damage\\ICombatActor.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T16:49:56.547Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "StalfoEnemy.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
-              "ViewState": "AgIAAHwAAAAAAAAAAAAqwI4AAAADAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T02:48:43.833Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
               "Title": "CollisionSystem.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
               "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
               "RelativeToolTip": "CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
-              "ViewState": "AgIAAF0AAAAAAAAAAAAkwGIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAkwAwAAABjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-19T16:41:44.453Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "KeeseEnemy.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\KeeseEnemy.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\KeeseEnemy.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\KeeseEnemy.cs*",
-              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\KeeseEnemy.cs*",
-              "ViewState": "AgIAAMAAAAAAAAAAAAAAALoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T02:45:45.581Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Game1.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game1.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game1.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game1.cs",
-              "RelativeToolTip": "CSE3902Project\\Game1.cs",
-              "ViewState": "AgIAAIMAAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-23T02:41:21.737Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "PlayerTileCollisionHandler.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\PlayerTileCollisionHandler.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\PlayerTileCollisionHandler.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\PlayerTileCollisionHandler.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\PlayerTileCollisionHandler.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-19T16:54:56.084Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "CollisionSide.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSide.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\CollisionSide.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSide.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\CollisionSide.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-19T16:53:47.624Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "EnemyCycler.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\EnemyCycler.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\EnemyCycler.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\EnemyCycler.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\EnemyCycler.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-19T16:41:01.443Z",
               "EditorCaption": ""
             }
           ]
