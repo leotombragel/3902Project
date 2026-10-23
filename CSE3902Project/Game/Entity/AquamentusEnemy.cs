@@ -51,6 +51,12 @@ public class AquamentusEnemy : IEnemy
         _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(96, 128));
     }
 
+    public AquamentusEnemy(Player player, List<IProjectile> projectiles, Vector2 spawnPosition)
+        : this(player, projectiles)
+    {
+        Position = spawnPosition;
+    }
+
     public AquamentusEnemy(Player player, List<IProjectile> projectiles, int GroundHeight)
     {
         _player = player;

@@ -42,6 +42,12 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
         _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
     }
 
+    public WizzrobeEnemy(Player player, List<IProjectile> projectiles, Vector2 spawnPosition)
+        : this(player, projectiles)
+    {
+        Position = spawnPosition;
+    }
+
     public WizzrobeEnemy(Sprite sprite, Player player, List<IProjectile> projectiles)
     {
         Sprite = sprite;

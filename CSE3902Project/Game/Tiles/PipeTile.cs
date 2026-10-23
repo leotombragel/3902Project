@@ -9,4 +9,9 @@ public class PipeTile : Tile
         : base(TileType.Pipe, TileSpriteFactory.Instance.CreatePipeSprite(), position)
     {
     }
+
+    public PipeTile(Vector2 position, ISprite sprite)
+        : base(TileType.Pipe, sprite, position)
+    {
+    }
 }

@@ -18,10 +18,12 @@ public class TileSpriteFactory
     public static TileSpriteFactory Instance { get; } = new TileSpriteFactory();
 
     private Texture2D _tileSheet;
+    private Texture2D _marioTileSheet;
 
     public void LoadAllAssets(ContentManager content)
     {
         _tileSheet = content.Load<Texture2D>("images/tiles");
+        _marioTileSheet = content.Load<Texture2D>("images/MarioTiles");
     }
 
     public ISprite CreateGroundSprite() => CreateStaticSprite(0, 0);
@@ -33,6 +35,14 @@ public class TileSpriteFactory
     public ISprite CreatePipeSprite() => CreateStaticSprite(3, 0);
 
     public ISprite CreatePipeBodySprite() => CreateStaticSprite(0, 2);
+
+    public ISprite CreatePipeLeftBodySprite() => CreateMarioTileSprite(120, 86);
+
+    public ISprite CreatePipeRightBodySprite() => CreateMarioTileSprite(137, 86);
+
+    public ISprite CreatePipeLeftOpeningSprite() => CreateMarioTileSprite(120, 69);
+
+    public ISprite CreatePipeRightOpeningSprite() => CreateMarioTileSprite(137, 69);
 
     public ISprite CreateQuestionBlockSprite()
     {
@@ -51,5 +61,14 @@ public class TileSpriteFactory
     private Sprite CreateSheetSprite()
     {
         return new Sprite(_tileSheet) { Scale = new Vector2(DrawScale) };
+    }
+
+    private Sprite CreateMarioTileSprite(int x, int y)
+    {
+        return new Sprite(_marioTileSheet)
+        {
+            Scale = new Vector2(DrawScale),
+            SourceRectangle = new Rectangle(x, y, CellSize, CellSize)
+        };
     }
 }

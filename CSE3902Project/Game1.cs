@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CSE3902Project.Game.Cameras;
 using CSE3902Project.Game.Collision;
@@ -32,13 +33,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private Player _player;
     private SpriteBatch _spriteBatch;
     private Stage _stage;
-    private StalfoEnemy _stalfoEnemy;
-    private KeeseEnemy _keeseEnemy;
-    private WizzrobeEnemy _wizzrobeEnemy;
-    private WallmasterEnemy _wallmasterEnemy;
-    private AquamentusEnemy _aquamentusEnemy;
     private TileCycler _tiles;
-
 
     public Game1()
     {
@@ -78,33 +73,25 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _tiles = new TileCycler(new Vector2(92, 32));
 
         _player = new Player(_stage.GroundY);
+        _player.Position = _stage.PlayerSpawnPosition;
         _player.SetStageCollision(new PlayerStageCollision(_stage.SolidTiles, _stage.Bounds));
 
         _camera = new Camera(viewport.Width, viewport.Height);
         _cameraFollowPlayer = new CameraFollowPlayer(_camera, _player, _stage.Bounds);
-
-        _keeseEnemy = new KeeseEnemy(_stage.GroundY);
-        _stalfoEnemy = new StalfoEnemy(_stage.GroundY);
-        _wizzrobeEnemy = new WizzrobeEnemy(_player, _projectiles);
-        _wallmasterEnemy = new WallmasterEnemy(_player);
-        _aquamentusEnemy = new AquamentusEnemy(_player, _projectiles);
-        
 
         _enemies.Clear();
         _projectiles.Clear();
         _actors.Clear();
         _damageSources.Clear();
 
-        //_enemies.Add(_keeseEnemy);
-        //_enemies.Add(_stalfoEnemy);
-        //_enemies.Add(_wizzrobeEnemy);
-        _enemies.Add(_wallmasterEnemy);
-        //_enemies.Add(_aquamentusEnemy);
         _actors.Add(_player);
-        _actors.AddRange(_enemies);
+        foreach (var spawn in _stage.EnemySpawns)
+        {
+            var enemy = CreateEnemy(spawn);
+            _enemies.Add(enemy);
+            _actors.Add(enemy);
+        }
         _actors.AddRange(_items);
-
-
 
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
@@ -132,6 +119,18 @@ public class Game1 : Microsoft.Xna.Framework.Game
         mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
 
         _controllers = new List<IController> { keyboardController, mouseController };
+    }
+
+    private IEnemy CreateEnemy(EnemySpawn spawn)
+    {
+        return spawn.Type switch
+        {
+            StageCellType.Aquamentus => new AquamentusEnemy(_player, _projectiles, spawn.Position),
+            StageCellType.Keese => new KeeseEnemy(_stage.GroundY, spawn.Position),
+            StageCellType.Stalfo => new StalfoEnemy(spawn.Position),
+            StageCellType.Wizzrobe => new WizzrobeEnemy(_player, _projectiles, spawn.Position),
+            _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported enemy spawn type.")
+        };
     }
 
     protected override void Update(GameTime gameTime)

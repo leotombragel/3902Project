@@ -19,7 +19,7 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
     private const float Deceleration = 0.1f;
 
     // Vertical motion
-    private const float VerticalMoveSpeed = 4.0f;
+    private const float VerticalMoveSpeed = 5.25f;
     private const float Gravity = 0.1f;
     private const float MaxFallSpeed = 8.0f;
 
