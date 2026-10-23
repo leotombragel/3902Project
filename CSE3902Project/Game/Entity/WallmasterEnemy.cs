@@ -17,7 +17,7 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
     //movement
     public Vector2 Velocity { get; private set; }
     public Vector2 Position { get; private set; }
-    private readonly int StartingPosY = 70;
+    private int StartingPosY = 70;
     private const int StartingPosX = 600;
 
     //animation
@@ -34,6 +34,19 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
         CurrentState = new WallmasterWaitingState(this);
         Velocity = new Vector2(0, 1);
         Position = new Vector2(StartingPosX, StartingPosY);
+
+        _player = player;
+        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
+    }
+
+    public WallmasterEnemy(Player player, Vector2 spawnPosition)
+    {
+        Position = spawnPosition;
+
+        Sprite = SpriteFactory.Instance.CreateWallmasterSprite();
+        _animationController = new AnimationController(this, new WallmasterAnimationFactory());
+        CurrentState = new WallmasterWaitingState(this);
+        Velocity = new Vector2(0, 1);
 
         _player = player;
         _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
@@ -162,5 +175,4 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
         }
     }
 }
-
 

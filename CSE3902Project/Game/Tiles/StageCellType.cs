@@ -19,5 +19,6 @@ public enum StageCellType
     Keese,
     Stalfo,
     Wizzrobe,
+    WallMaster,
     PlayerSpawn
 }
