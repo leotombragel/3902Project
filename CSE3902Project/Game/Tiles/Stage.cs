@@ -121,7 +121,8 @@ public class Stage
         return cellType is StageCellType.Aquamentus
             or StageCellType.Keese
             or StageCellType.Stalfo
-            or StageCellType.Wizzrobe;
+            or StageCellType.Wizzrobe
+            or StageCellType.WallMaster;    
     }
 
     private static ITile CreateTile(StageCellType cellType, Vector2 position)

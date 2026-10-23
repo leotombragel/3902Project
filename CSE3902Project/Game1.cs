@@ -129,6 +129,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
             StageCellType.Keese => new KeeseEnemy(_stage.GroundY, spawn.Position),
             StageCellType.Stalfo => new StalfoEnemy(spawn.Position),
             StageCellType.Wizzrobe => new WizzrobeEnemy(_player, _projectiles, spawn.Position),
+            StageCellType.WallMaster => new WallmasterEnemy(_player, spawn.Position),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported enemy spawn type.")
         };
     }
@@ -146,6 +147,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
         foreach (var enemy in _enemies) enemy.Update(gameTime);
 
+        _damageSources.Clear();
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
 

@@ -26,6 +26,7 @@ public static class StageCellMap
             ["k"] = StageCellType.Keese,
             ["se"] = StageCellType.Stalfo,
             ["wr"] = StageCellType.Wizzrobe,
+            ["wm"] = StageCellType.WallMaster,
             ["spawn"] = StageCellType.PlayerSpawn
         };
 
