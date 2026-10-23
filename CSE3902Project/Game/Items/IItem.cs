@@ -1,10 +1,11 @@
+using CSE3902Project.Game.Damage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CSE3902Project.Game.Items;
 
 /// An item in the level (boomerang, rupee, key, etc.).
-public interface IItem
+public interface IItem : ICombatActor
 {
     ItemType Type { get; }
 

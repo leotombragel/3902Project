@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CSE3902Project.Game.Damage;
+using CSE3902Project.Game.Entity;
+using CSE3902Project.Game.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -21,6 +23,7 @@ public sealed class CollisionSystem(GraphicsDevice graphicsDevice)
         if (source.Owner.Team == victim.Team) return false;
         if (victim.IsDead) return false;
         if (source.HasHit(victim)) return false;
+        if (victim.Team == DamageTeam.Item) return false;
 
         return true;
     }
@@ -33,6 +36,7 @@ public sealed class CollisionSystem(GraphicsDevice graphicsDevice)
     /// <param name="damageSources"></param>
     public void Update(IReadOnlyList<ICombatActor> actors, IReadOnlyList<IDamageSource> damageSources)
     {
+        // Collision between hurtboxes and hitboxes
         foreach (var source in damageSources)
         {
             if (!source.IsCollisionEnabled || source.IsFinished) continue;
@@ -48,6 +52,32 @@ public sealed class CollisionSystem(GraphicsDevice graphicsDevice)
                     source.RecordHit(target);
                     target.TakeDamage(source.Damage);
                     source.OnHit(target);
+                }
+            }
+        }
+        
+        // Collision between item users and items
+        var itemUsers = actors.Where(actor => actor is IUsesItems);
+        var items = actors.Where(actor => actor is IItem);
+        
+        foreach (var source in itemUsers)
+        {
+            foreach (var target in items)
+            {
+                if (target.Hurtboxes == null) continue;
+        
+                foreach (var itemHurtbox in target.Hurtboxes)
+                {
+                    if (!itemHurtbox.IsEnabled) continue;
+                    
+                    foreach (var sourceHurtbox in source.Hurtboxes)
+                    {
+                        if (!sourceHurtbox.IsEnabled) continue;
+        
+                        if (!sourceHurtbox.Bounds.Intersects(itemHurtbox.Bounds)) continue;
+                        ((IUsesItems)source).ChangeItem((IItem)target);
+                        ((IItem)target).IsDead = true;
+                    }
                 }
             }
         }

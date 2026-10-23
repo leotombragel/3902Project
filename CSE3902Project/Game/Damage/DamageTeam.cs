@@ -4,5 +4,6 @@ public enum DamageTeam
 {
     Player,
     Enemy,
-    Neutral
+    Neutral,
+    Item
 }

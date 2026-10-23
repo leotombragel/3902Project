@@ -10,8 +10,8 @@ public class ItemCycler
     private static readonly ItemType[] AllTypes = Enum.GetValues<ItemType>();
 
     private readonly Vector2 _center;
-    private int _index;
     private IItem _currentItem;
+    private int _index;
 
     public ItemCycler(Vector2 center)
     {
@@ -19,11 +19,20 @@ public class ItemCycler
         Reset();
     }
 
-    public void Next() => Select(_index + 1);
+    public void Next()
+    {
+        Select(_index + 1);
+    }
 
-    public void Previous() => Select(_index - 1);
+    public void Previous()
+    {
+        Select(_index - 1);
+    }
 
-    public void Reset() => Select(0);
+    public void Reset()
+    {
+        Select(0);
+    }
 
     public void Update(GameTime gameTime)
     {
