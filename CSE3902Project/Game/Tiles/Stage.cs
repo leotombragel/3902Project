@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -144,13 +145,13 @@ public class Stage
             case StageCellType.HiddenBlockWithFire:
                 return TileFactory.Create(TileType.QuestionBlock, position);
             case StageCellType.PipeLeftBody:
-                return TileFactory.Create(TileType.Pipe, position);
+                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeLeftBodySprite());
             case StageCellType.PipeRightBody:
-                return TileFactory.Create(TileType.Pipe, position);
+                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeRightBodySprite());
             case StageCellType.PipeLeftOpening:
-                return TileFactory.Create(TileType.Pipe, position);
+                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeLeftOpeningSprite());
             case StageCellType.PipeRightOpening:
-                return TileFactory.Create(TileType.Pipe, position);
+                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeRightOpeningSprite());
             case StageCellType.Air:
                 return null;
             default:
