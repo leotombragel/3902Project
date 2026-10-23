@@ -302,4 +302,10 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor
 
         _stageCollision.MovePlayer(this);
     }
+
+    public void flipDirection()
+    {
+        Velocity = new Vector2(-Velocity.X, Velocity.Y);
+        IsFacingLeft = !IsFacingLeft;
+    }
 }

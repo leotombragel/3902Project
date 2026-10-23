@@ -166,4 +166,8 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
             fireballThrown = true;
         }
     }
+
+    public void flipDirection()
+    {
+    }
 }

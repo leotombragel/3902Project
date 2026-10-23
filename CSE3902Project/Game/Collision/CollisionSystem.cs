@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CSE3902Project.Game.Damage;
+using CSE3902Project.Game.Entity;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -51,7 +52,86 @@ public sealed class CollisionSystem(GraphicsDevice graphicsDevice)
                 }
             }
         }
+
+        foreach (var enemy1 in actors)
+        {
+            if (enemy1 is not IEnemy)
+            {
+                continue;
+            }
+
+            foreach (var enemy2 in actors)
+            {
+                if (enemy2 is not IEnemy || enemy1.Equals(enemy2))
+                {
+                    continue;
+                }
+
+                bool collides = false;
+
+                if (enemy1.Hurtboxes == null || enemy2.Hurtboxes == null)
+                {
+                    continue;
+                }
+
+                foreach (var hurtbox1 in enemy1.Hurtboxes)
+                {
+                    foreach (var hurtbox2 in enemy2.Hurtboxes)
+                    {
+                        if (hurtbox1.Bounds.Intersects(hurtbox2.Bounds))
+                            collides = true;
+                    }
+                }
+
+                if (collides)
+                {
+                    if (enemy1.IsFacingLeft != enemy2.IsFacingLeft)
+                    {
+                        enemy1.flipDirection();
+                        enemy2.flipDirection();
+                    }
+                    else if (enemy1.IsFacingLeft)
+                    {
+                        enemy2.flipDirection();
+                    }
+                    else
+                        enemy1.flipDirection();
+                }
+
+            }
+        }
     }
+
+
+
+
+    //public void CheckForEnemyCollision(IReadOnlyList <IEnemy> enemies)
+    //{
+    //    for(int i = 0; i < enemies.Count; i++)
+    //    {
+    //        for(int j = i; j < enemies.Count; j++)
+    //        {
+    //            IEnemy enemy1 = enemies[i];
+    //            IEnemy enemy2 = enemies[j];
+
+    //            if (enemy1.collidesWith(enemy2))
+    //            {
+    //                if (enemy1.isFacingLeft != enemy2.isFacingLeft)
+    //                {
+    //                    enemy1.flipDirection();
+    //                    enemy2.flipDirection();
+    //                }
+    //                else if (enemy1.isFacingLeft)
+    //                {
+    //                    enemy2.flipDirection();
+    //                }
+    //                else
+    //                    enemy1.flipDirection();
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     /// <summary>
     ///     Draws hitbox and hurtbox collision bounds for debugging purposes.
