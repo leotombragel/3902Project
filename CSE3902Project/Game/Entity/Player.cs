@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CSE3902Project.Game.Entity;
 
-public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
+public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 {
     // Motion
     private const float MaxSpeed = 3.0f;
@@ -51,7 +51,7 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
         Velocity = Vector2.Zero;
         _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
-        _bodyHurtbox = new BodyHurtbox(this, new Point(8, 31), new Point(32, 32)); 
+        _bodyHurtbox = new BodyHurtbox(this, new Point(8, 31), new Point(32, 32));
     }
 
     // Animation data
@@ -82,6 +82,8 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
             return new Rectangle(x, y, HitboxWidth, HitboxHeight);
         }
     }
+
+    public bool IsUsingBow { get; set; }
 
     public SpriteAnimation Animation { get; set; }
     public bool IsFacingLeft { get; private set; }
@@ -122,7 +124,22 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
         Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
     }
 
-    public IItem CurrentItem { get; private set; } = null;
+    public IState CurrentState { get; private set; }
+
+    public void ChangeState(IState newState)
+    {
+        // Ignore state change if re-entering the current state
+        if (newState.GetType() == CurrentState.GetType()) return;
+
+        // 
+
+        CurrentState?.Exit();
+        CurrentState = newState;
+        CurrentState?.Enter();
+    }
+
+    public IItem CurrentItem { get; private set; }
+
     public void ChangeItem(IItem item)
     {
         // Could play an animation here later
@@ -248,7 +265,10 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
 
         IsOnGround = false;
         IsJumping = true;
-        ChangeState(new PlayerJumpingState(this));
+        if (!IsUsingBow)
+            ChangeState(new PlayerJumpingState(this));
+        else
+            ChangeState(new PlayerBowJumpState(this));
 
         // _verticalSpeed = -VerticalMoveSpeed; // Negative makes the player move up (towards the top of the screen where y = 0)
         Velocity = Velocity with { Y = -VerticalMoveSpeed };
@@ -266,6 +286,12 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
         if (newSpeed > MaxFallSpeed) newSpeed = MaxFallSpeed;
 
         Velocity = Velocity with { Y = newSpeed };
+    }
+
+    public void ReleaseBow()
+    {
+        IsUsingBow = false;
+        SwitchToInactiveState();
     }
 
     /// <summary>

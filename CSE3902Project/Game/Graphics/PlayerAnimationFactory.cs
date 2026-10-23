@@ -8,12 +8,12 @@ public class PlayerAnimationFactory : IAnimationFactory
     private static readonly Dictionary<string, Func<SpriteAnimation>> AnimationFactories = new()
     {
         ["PlayerIdle"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
-            24,//32
-            32,//32
+            24, //32
+            32, //32
             1,
             0.08f,
             32 * 3,
-            0, 
+            0,
             8),
         ["PlayerWalk"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
             24,
@@ -21,7 +21,7 @@ public class PlayerAnimationFactory : IAnimationFactory
             3,
             0.08f,
             32 * 5,
-            0, 
+            0,
             8),
         ["PlayerJump"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
             24 - 3,
@@ -29,7 +29,7 @@ public class PlayerAnimationFactory : IAnimationFactory
             1,
             0.08f,
             32 * 5,
-            32, 
+            32,
             8),
         ["PlayerFall"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
             24,
@@ -37,7 +37,7 @@ public class PlayerAnimationFactory : IAnimationFactory
             1,
             0.08f,
             32 * 6 - 3,
-            32, 
+            32,
             8),
         ["PlayerStab"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
             24,
@@ -54,9 +54,9 @@ public class PlayerAnimationFactory : IAnimationFactory
             0.15f,
             32 * 5,
             32 * 4,
-            loops: false
-            ),
-        ["PlayerDead"] = () => new(SpriteFactory.Instance.CreateLinkSprite(),
+            false
+        ),
+        ["PlayerDead"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
             32,
             32,
             1,
@@ -64,16 +64,53 @@ public class PlayerAnimationFactory : IAnimationFactory
             32 * 6,
             32 * 2
         ),
+        ["PlayerBow"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+            24,
+            32,
+            2,
+            0.1f,
+            32 * 0,
+            32 * 5
+        ),
+        ["PlayerBowIdle"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+            24,
+            32,
+            1,
+            0.08f,
+            32 * 2,
+            32 * 5
+        ),
+        ["PlayerBowWalk"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+            24,
+            32,
+            3,
+            0.08f,
+            32 * 3,
+            32 * 5
+        ),
+        ["PlayerBowJump"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+            24,
+            32,
+            1,
+            0.08f,
+            32 * 6,
+            32 * 5
+        ),
+        ["PlayerBowFall"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+            24,
+            32,
+            1,
+            0.08f,
+            32 * 7,
+            32 * 5
+        )
     };
 
     private readonly Dictionary<string, SpriteAnimation> _animations = new();
 
     public ISprite Create(string animationName)
     {
-        if (_animations.TryGetValue(animationName, out var animation))
-        {
-            return animation;
-        }
+        if (_animations.TryGetValue(animationName, out var animation)) return animation;
 
         animation = AnimationFactories[animationName]();
         _animations.Add(animationName, animation);

@@ -97,9 +97,15 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
         keyboardController.RegisterCommand(Keys.A, new PlayerMoveLeftCommand(_player));
         keyboardController.RegisterPressCommand(Keys.Space, new PlayerJumpCommand(_player));
-        keyboardController.RegisterPressCommand(Keys.N, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
-        keyboardController.RegisterPressCommand(Keys.Z, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
+        keyboardController.RegisterPressCommand(Keys.N,
+            new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
+        keyboardController.RegisterPressCommand(Keys.Z,
+            new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
+
+        keyboardController.RegisterPressCommand(Keys.K, new PlayerBowDrawCommand(_player));
+        keyboardController.RegisterReleaseCommand(Keys.K,
+            new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile)));
 
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
@@ -136,9 +142,9 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         foreach (var controller in _controllers) controller.Update();
+        _player.Update(gameTime);
         foreach (var attack in _attacks) attack.Update(gameTime);
 
-        _player.Update(gameTime);
         _cameraFollowPlayer.Update();
         _stage.Update(gameTime);
         _tiles.Update(gameTime);
@@ -146,6 +152,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
         foreach (var enemy in _enemies) enemy.Update(gameTime);
 
+        _damageSources.Clear();
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
 
