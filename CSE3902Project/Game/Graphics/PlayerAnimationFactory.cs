@@ -65,10 +65,10 @@ public class PlayerAnimationFactory : IAnimationFactory
             32 * 2
         ),
         ["PlayerBow"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
-            24,
+            32,
             32,
             2,
-            0.1f,
+            0.25f,
             32 * 0,
             32 * 5
         ),
@@ -76,12 +76,12 @@ public class PlayerAnimationFactory : IAnimationFactory
             24,
             32,
             1,
-            0.08f,
+            0.25f,
             32 * 2,
             32 * 5
         ),
         ["PlayerBowWalk"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
-            24,
+            32,
             32,
             3,
             0.08f,
@@ -103,7 +103,13 @@ public class PlayerAnimationFactory : IAnimationFactory
             0.08f,
             32 * 7,
             32 * 5
-        )
+        ),
+        ["Arrow"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(), 32,
+            32,
+            1,
+            0.08f,
+            32 * 7,
+            32 * 4)
     };
 
     private readonly Dictionary<string, SpriteAnimation> _animations = new();
