@@ -21,7 +21,6 @@ public sealed class PlayerBowReleaseCommand : ICommand
 
     public void Execute()
     {
-        Console.WriteLine("Here are the conditions: " + _player.IsUsingBow + ", " + (_player.CurrentItem is ArrowItem) + ", " + (_player.CurrentItem is BowItem));
         if (!_player.IsUsingBow || _player.CurrentItem is not BowItem) return;
 
         if (_player.CurrentState.AnimationName != "PlayerBow") // PlayerBow is for when they are drawing the bow

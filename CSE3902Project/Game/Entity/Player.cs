@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
@@ -131,6 +132,8 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         // Ignore state change if re-entering the current state
         if (newState.GetType() == CurrentState.GetType()) return;
 
+        Console.WriteLine($"Player state changed from {CurrentState?.GetType().Name} to {newState.GetType().Name}");
+        
         CurrentState?.Exit();
         CurrentState = newState;
         CurrentState?.Enter();
@@ -303,6 +306,22 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     /// </summary>
     public void SwitchToInactiveState()
     {
+        if (IsUsingBow)
+        {
+            switch (Velocity.Y)
+            {
+                case > 0:
+                    ChangeState(new PlayerBowFallState(this));
+                    return;
+                case < 0:
+                    ChangeState(new PlayerBowJumpState(this));
+                    return;
+                default:
+                    ChangeState(new PlayerBowIdleState(this));
+                    return;
+            }
+        }
+
         switch (Velocity.Y)
         {
             case > 0:
