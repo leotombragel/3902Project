@@ -65,12 +65,13 @@ public class PlayerAnimationFactory : IAnimationFactory
             32 * 2
         ),
         ["PlayerBow"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
-            32,
+            24,
             32,
             2,
             0.25f,
             32 * 0,
-            32 * 5
+            32 * 5,
+            8
         ),
         ["PlayerBowIdle"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
             24,
@@ -81,12 +82,13 @@ public class PlayerAnimationFactory : IAnimationFactory
             32 * 5
         ),
         ["PlayerBowWalk"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
-            32,
+            24,
             32,
             3,
             0.08f,
             32 * 3,
-            32 * 5
+            32 * 5,
+            8
         ),
         ["PlayerBowJump"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
             24,
