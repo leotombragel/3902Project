@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,23 +11,12 @@ namespace CSE3902Project.Game.Tiles;
 /// The level the player walks around in.
 public class Stage
 {
-    public int GroundY { get; }
-    public Rectangle Bounds { get; }
-    public List<ITile> SolidTiles { get; }
-    public List<EnemySpawn> EnemySpawns { get; } = new();
-    public List<ItemSpawn> ItemSpawns { get; } = new();
-    public string[] MapRows { get; }
-    public Vector2 PlayerSpawnPosition { get; private set; }
-
     public Stage(int screenHeight)
     {
         var mapPath = Path.Combine(AppContext.BaseDirectory, "Content", "levelFiles", "1-1LevelExcel.csv");
         var mapRows = File.ReadAllLines(mapPath);
         var mapRowCount = mapRows.Length;
-        while (mapRowCount > 0 && string.IsNullOrWhiteSpace(mapRows[mapRowCount - 1]))
-        {
-            mapRowCount--;
-        }
+        while (mapRowCount > 0 && string.IsNullOrWhiteSpace(mapRows[mapRowCount - 1])) mapRowCount--;
 
         MapRows = mapRows[..mapRowCount];
         var mapTokens = new string[MapRows.Length][];
@@ -42,22 +32,26 @@ public class Stage
         Bounds = new Rectangle(0, 0, mapWidthInTiles * Tile.Size, Math.Max(screenHeight, mapHeight));
         SolidTiles = new List<ITile>();
         GroundY = LoadStageFromCsv(mapTokens, mapTop);
+        BuildSolidRectangles();
     }
+
+    public int GroundY { get; }
+    public Rectangle Bounds { get; }
+    public List<ITile> SolidTiles { get; }
+    public List<Rectangle> SolidRectangles { get; } = new();
+    public List<EnemySpawn> EnemySpawns { get; } = new();
+    public List<ItemSpawn> ItemSpawns { get; } = new();
+    public string[] MapRows { get; }
+    public Vector2 PlayerSpawnPosition { get; private set; }
 
     public void Update(GameTime gameTime)
     {
-        foreach (var tile in SolidTiles)
-        {
-            tile.Update(gameTime);
-        }
+        foreach (var tile in SolidTiles) tile.Update(gameTime);
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        foreach (var tile in SolidTiles)
-        {
-            tile.Draw(spriteBatch);
-        }
+        foreach (var tile in SolidTiles) tile.Draw(spriteBatch);
     }
 
     private int LoadStageFromCsv(string[][] mapTokens, int mapTop)
@@ -65,60 +59,49 @@ public class Stage
         var groundY = -1;
         var hasPlayerSpawn = false;
         for (var row = 0; row < mapTokens.Length; row++)
+        for (var column = 0; column < mapTokens[row].Length; column++)
         {
-            for (var column = 0; column < mapTokens[row].Length; column++)
+            var token = mapTokens[row][column].Trim().TrimStart('\uFEFF');
+            if (!StageCellMap.TryGetCellType(token, out var cellType))
             {
-                var token = mapTokens[row][column].Trim().TrimStart('\uFEFF');
-                if (!StageCellMap.TryGetCellType(token, out var cellType))
-                {
-                    Console.WriteLine(
-                        $"Unknown stage token '{token}' at row {row + 1}, column {column + 1}; treating it as air.");
-                    cellType = StageCellType.Air;
-                }
-
-                var position = new Vector2(column * Tile.Size, mapTop + row * Tile.Size);
-                if (cellType == StageCellType.PlayerSpawn)
-                {
-                    PlayerSpawnPosition = position;
-                    hasPlayerSpawn = true;
-                    continue;
-                }
-
-                if (IsEnemy(cellType))
-                {
-                    EnemySpawns.Add(new EnemySpawn(cellType, position));
-                    continue;
-                }
-
-                if (isItem(cellType))
-                {
-                    ItemSpawns.Add(new ItemSpawn(cellType, position));
-                    continue;
-                }
-
-                var tile = CreateTile(cellType, position);
-                if (tile is null)
-                {
-                    continue;
-                }
-
-                SolidTiles.Add(tile);
-                if (cellType == StageCellType.Ground && groundY < 0)
-                {
-                    groundY = (int)position.Y;
-                }
+                Console.WriteLine(
+                    $"Unknown stage token '{token}' at row {row + 1}, column {column + 1}; treating it as air.");
+                cellType = StageCellType.Air;
             }
+
+            var position = new Vector2(column * Tile.Size, mapTop + row * Tile.Size);
+            if (cellType == StageCellType.PlayerSpawn)
+            {
+                PlayerSpawnPosition = position;
+                hasPlayerSpawn = true;
+                continue;
+            }
+
+            if (IsEnemy(cellType))
+            {
+                EnemySpawns.Add(new EnemySpawn(cellType, position));
+                continue;
+            }
+
+            if (isItem(cellType))
+            {
+                ItemSpawns.Add(new ItemSpawn(cellType, position));
+                continue;
+            }
+
+            var tile = CreateTile(cellType, position);
+            if (tile is null)
+            {
+                continue;
+            }
+
+            SolidTiles.Add(tile);
+            if (cellType == StageCellType.Ground && groundY < 0) groundY = (int)position.Y;
         }
 
-        if (groundY < 0)
-        {
-            throw new InvalidDataException("The stage CSV does not contain any ground tiles.");
-        }
+        if (groundY < 0) throw new InvalidDataException("The stage CSV does not contain any ground tiles.");
 
-        if (!hasPlayerSpawn)
-        {
-            throw new InvalidDataException("The stage CSV does not contain a player spawn.");
-        }
+        if (!hasPlayerSpawn) throw new InvalidDataException("The stage CSV does not contain a player spawn.");
 
         return groundY;
     }
@@ -129,7 +112,7 @@ public class Stage
             or StageCellType.Keese
             or StageCellType.Stalfo
             or StageCellType.Wizzrobe
-            or StageCellType.WallMaster;    
+            or StageCellType.WallMaster;
     }
 
     private static bool isItem(StageCellType cellType)
@@ -177,5 +160,38 @@ public class Stage
             default:
                 throw new ArgumentOutOfRangeException(nameof(cellType), cellType, "Unknown stage cell type.");
         }
+    }
+
+    private void BuildSolidRectangles()
+    {
+        var rectangles = new List<Rectangle>();
+
+        var grouped = SolidTiles
+            .Select(tile => tile.Bounds)
+            .OrderBy(r => r.Y)
+            .ThenBy(r => r.X)
+            .ToList();
+
+        foreach (var rect in grouped)
+        {
+            if (rectangles.Count == 0)
+            {
+                rectangles.Add(rect);
+                continue;
+            }
+
+            var lastRect = rectangles.Last();
+
+            // Merge rectangles that are in the same row and adjacent horizontally
+            if (lastRect.Y == rect.Y && lastRect.Right == rect.X)
+            {
+                rectangles[^1] = new Rectangle(lastRect.X, lastRect.Y, lastRect.Width + rect.Width, lastRect.Height);
+                continue;
+            }
+
+            rectangles.Add(rect);
+        }
+
+        SolidRectangles.AddRange(rectangles);
     }
 }

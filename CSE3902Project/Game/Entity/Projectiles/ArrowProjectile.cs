@@ -83,6 +83,12 @@ public class ArrowProjectile : IProjectile
         IsFinished = true;
         IsCollisionEnabled = false;
     }
+    
+    public void OnHitTile()
+    {
+        IsFinished = true;
+        IsCollisionEnabled = false;
+    }
 
     public SpriteAnimation Animation { get; set; }
 

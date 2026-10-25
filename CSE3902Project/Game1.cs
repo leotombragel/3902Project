@@ -113,7 +113,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
         var fireCommand = new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile));
         var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand]);
-        
+
         keyboardController.RegisterPressCommand(Keys.K, currentItemCommand);
 
         keyboardController.RegisterPressCommand(Keys.K, new PlayerBowDrawCommand(_player));
@@ -177,7 +177,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
 
-        _collisionSystem.Update(_actors, _damageSources);
+        _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
 
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         _attacks.RemoveAll(attack => attack.IsFinished);

@@ -45,6 +45,11 @@ public class FireProjectile : IProjectile
     {
         IsFinished = true;
     }
+    
+    public void OnHitTile()
+    {
+        IsFinished = true;
+    }
 
     public FireProjectile(
         int startingX,

@@ -48,6 +48,12 @@ public class BoomerangProjectile : IProjectile
         // The boomerang continues moving after a hit.
     }
 
+    public void OnHitTile()
+    {
+        // The boomerang bounces off a tile.
+        IsReturning = true;
+    }
+
     public BoomerangProjectile(Player player, int startingX, int startingY, bool isFacingLeft)
     {
         _player = player;
