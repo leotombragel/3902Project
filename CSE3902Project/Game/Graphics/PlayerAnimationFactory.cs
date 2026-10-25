@@ -112,14 +112,8 @@ public class PlayerAnimationFactory : IAnimationFactory
             32 * 4)
     };
 
-    private readonly Dictionary<string, SpriteAnimation> _animations = new();
-
     public ISprite Create(string animationName)
     {
-        if (_animations.TryGetValue(animationName, out var animation)) return animation;
-
-        animation = AnimationFactories[animationName]();
-        _animations.Add(animationName, animation);
-        return animation;
+        return AnimationFactories[animationName]();
     }
 }
