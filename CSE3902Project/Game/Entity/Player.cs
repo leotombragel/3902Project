@@ -132,8 +132,6 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         // Ignore state change if re-entering the current state
         if (newState.GetType() == CurrentState.GetType()) return;
 
-        Console.WriteLine($"Player state changed from {CurrentState?.GetType().Name} to {newState.GetType().Name}");
-        
         CurrentState?.Exit();
         CurrentState = newState;
         CurrentState?.Enter();
@@ -176,79 +174,6 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         _previouslyFacingRight = isToTheRight;
         _previousSpeed = Velocity.X;
     }
-
-
-    // public void HandleKeeseCollision(KeeseEnemy k)
-    // {
-    //     var midX = (k.Hitbox.x1 + k.Hitbox.x2) / 2;
-    //     var midY = (k.Hitbox.y1 + k.Hitbox.y2) / 2;
-    //     var slope = (k.Hitbox.y2 - k.Hitbox.y1) / (k.Hitbox.x2 - k.Hitbox.x1);
-    //     var X1 = k.Hitbox.x1;
-    //     var X2 = k.Hitbox.x2;
-    //     var Y1 = k.Hitbox.y1;
-    //     var Y2 = k.Hitbox.y2;
-    //
-    //     if (midX < Position.X && Position.X < X2)
-    //         if (-slope * (Position.X - X1) + Y2 < Position.Y && Position.Y < slope * (Position.X - X1) + Y1)
-    //         {
-    //             Velocity = Velocity with { X = 0 };
-    //             Position = Position with { X = k.Hitbox.x2 };
-    //         }
-    //
-    //     if (midX > Position.X && Position.X > X1)
-    //         if (-slope * (Position.X - X1) + Y2 > Position.Y && Position.Y > slope * (Position.X - X1) + Y1)
-    //         {
-    //             Velocity = Velocity with { X = 0 };
-    //             Position = Position with { X = k.Hitbox.x1 };
-    //         }
-    //
-    //     if (midY < Position.Y && Position.Y < Y2)
-    //         if ((Position.Y - Y1) / slope + X1 < Position.X && Position.X < -(Position.Y - Y2) / slope + X1)
-    //         {
-    //             Velocity = Velocity with { X = 0, Y = 0 };
-    //             Position = Position with { Y = k.Hitbox.y1 };
-    //         }
-    //
-    //
-    //     if (midY > Position.Y && Position.Y > Y1)
-    //         if ((Position.Y - Y1) / slope + X1 < Position.X && Position.X < -(Position.Y - Y2) / slope + X1)
-    //         {
-    //             Velocity = Velocity with { Y = 0 };
-    //             Position = Position with { Y = k.Hitbox.y1 };
-    //         }
-    //
-    //     if (midY < Position.Y && Position.Y < Y2)
-    //         if ((Position.Y - Y1) / slope + X1 > Position.X && Position.X > -(Position.Y - Y2) / slope + X1)
-    //         {
-    //             Velocity = Velocity with { Y = 0 };
-    //             Position = Position with { Y = k.Hitbox.y2 };
-    //         }
-    // }
-    //
-    // private bool IsInXRange(Rect r)
-    // {
-    //     if (r == null) return false;
-    //
-    //     if (r.x1 < Position.X && Position.X < r.x2)
-    //         return true;
-    //     return false;
-    // }
-    //
-    // private bool IsInYRange(Rect r)
-    // {
-    //     if (r == null) return false;
-    //
-    //     if (r.y1 < Position.Y && Position.Y < r.y2)
-    //         return true;
-    //     return false;
-    // }
-    //
-    // private bool IsInBoundingBox(Rect r)
-    // {
-    //     if (r == null) return false;
-    //     return IsInXRange(r) && IsInYRange(r);
-    // }
-
 
     private void Decelerate()
     {
