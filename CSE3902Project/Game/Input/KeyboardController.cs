@@ -6,10 +6,10 @@ namespace CSE3902Project.Game.Input;
 
 public class KeyboardController : IController
 {
-    private readonly Dictionary<Keys, ICommand> _keyBindings = new();
-    private readonly Dictionary<Keys, ICommand> _pressBindings = new();
+    private readonly Dictionary<Keys, List<ICommand>> _keyBindings = new();
+    private readonly Dictionary<Keys, List<ICommand>> _pressBindings = new();
     private KeyboardState _previousState;
-    private readonly Dictionary<Keys, ICommand> _releaseBindings = new();
+    private readonly Dictionary<Keys, List<ICommand>> _releaseBindings = new();
 
     public void Update()
     {
@@ -17,28 +17,41 @@ public class KeyboardController : IController
 
         foreach (var binding in _keyBindings)
             if (state.IsKeyDown(binding.Key))
-                binding.Value.Execute();
+                foreach (var command in binding.Value)
+                    command.Execute();
 
         foreach (var binding in _pressBindings)
             if (state.IsKeyDown(binding.Key) && _previousState.IsKeyUp(binding.Key))
-                binding.Value.Execute();
+                foreach (var command in binding.Value)
+                    command.Execute();
 
         foreach (var binding in _releaseBindings)
             if (state.IsKeyUp(binding.Key) && _previousState.IsKeyDown(binding.Key))
-                binding.Value.Execute();
+                foreach (var command in binding.Value)
+                    command.Execute();
 
         _previousState = state;
+    }
+    
+    private static void AddToDictionary(Dictionary<Keys, List<ICommand>> dictionary, Keys key, ICommand command)
+    {
+        if (!dictionary.TryGetValue(key, out var value))
+        {
+            value = new List<ICommand>();
+            dictionary[key] = value;
+        }
+        value.Add(command);
     }
 
     public void RegisterCommand(Keys key, ICommand command)
     {
-        _keyBindings[key] = command;
+        AddToDictionary(_keyBindings, key, command);
     }
 
     /// Registers a command that runs once each time the key goes down, instead of every frame while held.
     public void RegisterPressCommand(Keys key, ICommand command)
     {
-        _pressBindings[key] = command;
+        AddToDictionary(_pressBindings, key, command);
     }
 
     /// <summary>
@@ -48,7 +61,7 @@ public class KeyboardController : IController
     /// <param name="command"></param>
     public void RegisterReleaseCommand(Keys key, ICommand command)
     {
-        _releaseBindings[key] = command;
+        AddToDictionary(_releaseBindings, key, command);
     }
 
     public void RemoveCommand(Keys key)

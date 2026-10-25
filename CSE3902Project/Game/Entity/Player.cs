@@ -131,8 +131,6 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         // Ignore state change if re-entering the current state
         if (newState.GetType() == CurrentState.GetType()) return;
 
-        // 
-
         CurrentState?.Exit();
         CurrentState = newState;
         CurrentState?.Enter();
@@ -142,7 +140,12 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public void ChangeItem(IItem item)
     {
-        // Could play an animation here later
+        if (IsUsingBow)
+        {
+            IsUsingBow = false;
+            SwitchToInactiveState();
+        }
+        
         CurrentItem = item;
     }
 

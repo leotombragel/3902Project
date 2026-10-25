@@ -2,6 +2,7 @@ using System;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Entity.Projectiles;
 using CSE3902Project.Game.Graphics;
+using CSE3902Project.Game.Items;
 
 namespace CSE3902Project.Game.Command;
 
@@ -20,7 +21,8 @@ public sealed class PlayerBowReleaseCommand : ICommand
 
     public void Execute()
     {
-        if (!_player.IsUsingBow) return;
+        Console.WriteLine("Here are the conditions: " + _player.IsUsingBow + ", " + (_player.CurrentItem is ArrowItem) + ", " + (_player.CurrentItem is BowItem));
+        if (!_player.IsUsingBow || _player.CurrentItem is not BowItem) return;
 
         if (_player.CurrentState.AnimationName != "PlayerBow") // PlayerBow is for when they are drawing the bow
             _spawnProjectile(new ArrowProjectile(

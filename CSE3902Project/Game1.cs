@@ -91,6 +91,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
             _enemies.Add(enemy);
             _actors.Add(enemy);
         }
+
         _actors.AddRange(_items);
 
         // Bind commands to button presses
@@ -103,19 +104,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
             new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
 
-        keyboardController.RegisterPressCommand(Keys.K, new PlayerBowDrawCommand(_player));
-        keyboardController.RegisterReleaseCommand(Keys.K,
-            new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile)));
-
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
         var fireCommand = new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile));
         var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand]);
+        
+        keyboardController.RegisterPressCommand(Keys.K, currentItemCommand);
 
-        keyboardController.RegisterPressCommand(Keys.D1, boomerangCommand);
-        keyboardController.RegisterPressCommand(Keys.D2, bombCommand);
-        keyboardController.RegisterPressCommand(Keys.D3, fireCommand);
-        keyboardController.RegisterPressCommand(Keys.D4, currentItemCommand);
+        keyboardController.RegisterPressCommand(Keys.K, new PlayerBowDrawCommand(_player));
+        keyboardController.RegisterReleaseCommand(Keys.K,
+            new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile)));
 
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
