@@ -16,7 +16,8 @@ public class AquamentusEnemy : IEnemy
 {
     private const int SpriteFrameHeight = 32;
 
-    private const int SpriteScale = 4;
+    private const int SpriteScale = 3;
+    private const int heightNormalizationOffset = 32;
 
     //animation
     private readonly AnimationController _animationController;
@@ -54,7 +55,7 @@ public class AquamentusEnemy : IEnemy
     public AquamentusEnemy(Player player, List<IProjectile> projectiles, Vector2 spawnPosition)
         : this(player, projectiles)
     {
-        Position = spawnPosition;
+        Position = spawnPosition - new Vector2(0, SpriteFrameHeight * SpriteScale);
     }
 
     public AquamentusEnemy(Player player, List<IProjectile> projectiles, int GroundHeight)
@@ -64,7 +65,7 @@ public class AquamentusEnemy : IEnemy
         Sprite = SpriteFactory.Instance.CreateAquamentusSprite();
         var spriteHeight = SpriteFrameHeight * SpriteScale;
         StartingPosY =
-            GroundHeight - 32 - //TODO change this to be aquamentus's height
+            GroundHeight - heightNormalizationOffset - //TODO change this to be aquamentus's height
             spriteHeight; 
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 0);
