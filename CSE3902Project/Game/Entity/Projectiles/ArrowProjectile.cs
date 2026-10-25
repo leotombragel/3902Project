@@ -16,7 +16,14 @@ public class ArrowProjectile : IProjectile
     private const int CollisionWidth = 24;
     private const int CollisionHeight = 8;
     private const int OffsetX = 0;
-    private const int OffsetY = 42;
+    private const int OffsetY = 40;
+    private const float OriginX = 16.0f;
+
+    /// <summary>
+    ///     This is the row of pixels the shaft of the arrow sits on in its 32x32 section of the player sprite sheet. Putting
+    ///     the origin here makes the arrow rotate around its true center.
+    /// </summary>
+    private const float OriginY = 22.0f;
 
     private readonly HashSet<ICombatActor> _hitActors = new();
 
@@ -44,11 +51,12 @@ public class ArrowProjectile : IProjectile
     }
 
     public Vector2 Position { get; set; }
-    public Vector2 Velocity { get; private set; }
     public bool IsFacingLeft { get; set; }
+    public Vector2 Velocity { get; private set; }
 
     public ICombatActor Owner { get; }
     public DamageInfo Damage { get; }
+
     public Rectangle Bounds =>
         new(
             (int)(Position.X - CollisionWidth / 2.0f),
@@ -77,7 +85,7 @@ public class ArrowProjectile : IProjectile
     }
 
     public SpriteAnimation Animation { get; set; }
-    
+
     public void Draw(SpriteBatch s)
     {
         Animation?.Draw(s, Position);
@@ -92,13 +100,10 @@ public class ArrowProjectile : IProjectile
             Velocity.Y + Gravity);
         Position += Velocity;
 
-        if (Animation is not null)
-        {
-            Animation.Sprite.Rotation =
-                MathF.Atan2(Velocity.Y, Velocity.X);
-            Animation.Sprite.Origin = new Vector2(
-                AnimationFrameWidth / 2.0f,
-                AnimationFrameHeight / 2.0f);
-        }
+        if (Animation is null) return;
+        
+        // The arrow points towards its velocity vector, which makes its trajectory look more realistic.
+        Animation.Sprite.Rotation = MathF.Atan2(Velocity.Y, Velocity.X);
+        Animation.Sprite.Origin = new Vector2(OriginX, OriginY);
     }
 }
