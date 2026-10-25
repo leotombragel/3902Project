@@ -9,32 +9,56 @@ namespace CSE3902Project.Game.Entity.Projectiles;
 
 public class ArrowProjectile : IProjectile
 {
-    public ArrowProjectile(int startingX,
+    private const int AnimationFrameWidth = 32;
+    private const int AnimationFrameHeight = 32;
+    private const float Speed = 5.0f;
+    private const float Gravity = 0.07f;
+    private const int CollisionWidth = 24;
+    private const int CollisionHeight = 8;
+    private const int OffsetX = 0;
+    private const int OffsetY = 42;
+
+    private readonly HashSet<ICombatActor> _hitActors = new();
+
+    public ArrowProjectile(
+        int startingX,
         int startingY,
         bool isFacingLeft,
         ICombatActor owner)
     {
-        Position = new Vector2(startingX, startingY);
-        IsFacingLeft = isFacingLeft;
         Owner = owner;
-        Damage = new DamageInfo(owner, 1, Vector2.Zero, DamageTeam.Player);
-        var playerAnimFactory = new PlayerAnimationFactory();
-        Animation = (SpriteAnimation)playerAnimFactory.Create("Arrow");
-        Bounds = new Rectangle(startingX + 20, startingY + 38, 23, 10);
+        Damage = new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Player);
+        IsFacingLeft = isFacingLeft;
+
+        Position = new Vector2(startingX + OffsetX, startingY + OffsetY);
+        Velocity = new Vector2(isFacingLeft ? -Speed : Speed, 0.0f);
+
+        var playerAnimationFactory = new PlayerAnimationFactory();
+        Animation = (SpriteAnimation)playerAnimationFactory.Create("Arrow");
+        Animation.Sprite.Origin = new Vector2(
+            AnimationFrameWidth / 2.0f,
+            AnimationFrameHeight / 2.0f);
+
         IsCollisionEnabled = true;
         IsFinished = false;
     }
 
     public Vector2 Position { get; set; }
+    public Vector2 Velocity { get; private set; }
     public bool IsFacingLeft { get; set; }
 
     public ICombatActor Owner { get; }
     public DamageInfo Damage { get; }
-    public Rectangle Bounds { get; }
+    public Rectangle Bounds =>
+        new(
+            (int)(Position.X - CollisionWidth / 2.0f),
+            (int)(Position.Y - CollisionHeight / 2.0f),
+            CollisionWidth,
+            CollisionHeight);
+
     public bool IsCollisionEnabled { get; private set; }
     public bool IsFinished { get; private set; }
 
-    private readonly HashSet<ICombatActor> _hitActors = new();
     public bool HasHit(ICombatActor victim)
     {
         return _hitActors.Contains(victim);
@@ -53,15 +77,28 @@ public class ArrowProjectile : IProjectile
     }
 
     public SpriteAnimation Animation { get; set; }
-
-    public Vector2 Velocity { get; set; }
-
+    
     public void Draw(SpriteBatch s)
     {
-        Animation?.Draw(s, Position, IsFacingLeft);
+        Animation?.Draw(s, Position);
     }
 
     public void Update(GameTime gameTime)
     {
+        Animation?.Update(gameTime);
+
+        Velocity = new Vector2(
+            Velocity.X,
+            Velocity.Y + Gravity);
+        Position += Velocity;
+
+        if (Animation is not null)
+        {
+            Animation.Sprite.Rotation =
+                MathF.Atan2(Velocity.Y, Velocity.X);
+            Animation.Sprite.Origin = new Vector2(
+                AnimationFrameWidth / 2.0f,
+                AnimationFrameHeight / 2.0f);
+        }
     }
 }
