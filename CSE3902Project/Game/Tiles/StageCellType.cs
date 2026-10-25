@@ -20,5 +20,13 @@ public enum StageCellType
     Stalfo,
     Wizzrobe,
     WallMaster,
+    BoomerangItem,
+    BowItem,
+    ArrowItem,
+    BombItem,
+    RupeeItem,
+    TriforceItem,  
+    KeyItem,
+    HeartItem,
     PlayerSpawn
 }

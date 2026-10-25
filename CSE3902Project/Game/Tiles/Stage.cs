@@ -14,6 +14,7 @@ public class Stage
     public Rectangle Bounds { get; }
     public List<ITile> SolidTiles { get; }
     public List<EnemySpawn> EnemySpawns { get; } = new();
+    public List<ItemSpawn> ItemSpawns { get; } = new();
     public string[] MapRows { get; }
     public Vector2 PlayerSpawnPosition { get; private set; }
 
@@ -89,6 +90,12 @@ public class Stage
                     continue;
                 }
 
+                if (isItem(cellType))
+                {
+                    ItemSpawns.Add(new ItemSpawn(cellType, position));
+                    continue;
+                }
+
                 var tile = CreateTile(cellType, position);
                 if (tile is null)
                 {
@@ -123,6 +130,18 @@ public class Stage
             or StageCellType.Stalfo
             or StageCellType.Wizzrobe
             or StageCellType.WallMaster;    
+    }
+
+    private static bool isItem(StageCellType cellType)
+    {
+        return cellType is StageCellType.BoomerangItem
+            or StageCellType.BowItem
+            or StageCellType.ArrowItem
+            or StageCellType.BombItem
+            or StageCellType.RupeeItem
+            or StageCellType.TriforceItem
+            or StageCellType.KeyItem
+            or StageCellType.HeartItem;
     }
 
     private static ITile CreateTile(StageCellType cellType, Vector2 position)

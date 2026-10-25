@@ -69,7 +69,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var viewport = GraphicsDevice.Viewport;
         _background = new Background(viewport.Width, viewport.Height);
         _stage = new Stage(viewport.Height);
-        _items = Item.GetAllItems(new Vector2(300, 360));
+        _items = new List<IItem>();
         _tiles = new TileCycler(new Vector2(92, 32));
 
         _player = new Player(_stage.GroundY);
@@ -90,6 +90,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
             var enemy = CreateEnemy(spawn);
             _enemies.Add(enemy);
             _actors.Add(enemy);
+        }
+
+        foreach (var item in _stage.ItemSpawns)
+        {
+            _items.Add(CreateItem(item));
         }
 
         _actors.AddRange(_items);
@@ -135,6 +140,23 @@ public class Game1 : Microsoft.Xna.Framework.Game
             StageCellType.Wizzrobe => new WizzrobeEnemy(_player, _projectiles, spawn.Position),
             StageCellType.WallMaster => new WallmasterEnemy(_player, spawn.Position),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported enemy spawn type.")
+        };
+    }
+
+    private static IItem CreateItem(ItemSpawn spawn)
+    {
+        var center = spawn.Position + new Vector2(Tile.Size / 2f);
+        return spawn.Type switch
+        {
+            StageCellType.BoomerangItem => new BoomerangItem(center),
+            StageCellType.BowItem => new BowItem(center),
+            StageCellType.ArrowItem => new ArrowItem(center),
+            StageCellType.BombItem => new BombItem(center),
+            StageCellType.RupeeItem => new RupeeItem(center),
+            StageCellType.TriforceItem => new TriforceItem(center),
+            StageCellType.KeyItem => new KeyItem(center),
+            StageCellType.HeartItem => new HeartItem(center),
+            _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported item spawn type.")
         };
     }
 
