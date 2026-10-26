@@ -1,0 +1,16 @@
+WallmasterEnemy.cs Code Review
+
+Reviewer: Jordan Boogaard
+Date of Review: 10/25/2026
+Sprint: 3
+File: WallmasterEnemy.cs
+File Author: Leo Tombragel
+Time Taken: 9 minutes
+
+Readability Comments:
+- The state names (Waiting, Tracking, MovingDown, MovingUp, Recover) tell the story of what the enemy does, and the fields are grouped with //movement, //animation and //state labels
+- UpdatePosition() is about 40 lines of one if/else chain on "CurrentState is ..." doing movement, timers and state changes together. It would read better if each state handled its own movement
+- Three constructors repeat the same lines and only the one with a spawn position is used
+- Magic numbers: 150, 8, 400, 3, -6, 4 and 10, and the hurtbox size (34, 40) is typed three times
+- Names are inconsistent: StartingPosY and TrackingBuffer are PascalCase private fields, deadAnimationBuffer has no underscore, and _player is public
+- The animation update lines are written twice in Update() and the brace and indent style on lines 90-109 and 139-175 doesn't match the rest of the project

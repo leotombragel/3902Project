@@ -34,4 +34,9 @@ public interface IDamageSource
     /// </summary>
     /// <param name="victim"></param>
     void OnHit(ICombatActor victim);
+
+    /// <summary>
+    ///    The action taken when the damage source collides with part of the stage.
+    /// </summary>
+    void OnHitTile();
 }

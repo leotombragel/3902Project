@@ -72,7 +72,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var viewport = GraphicsDevice.Viewport;
         _background = new Background(viewport.Width, viewport.Height);
         _stage = new Stage(viewport.Height);
-        _items = Item.GetAllItems(new Vector2(300, 360));
+        _items = new List<IItem>();
         //_tiles = new TileCycler(new Vector2(92, 32));
 
         _player = new Player(_stage.GroundY);
@@ -94,25 +94,40 @@ public class Game1 : Microsoft.Xna.Framework.Game
             _enemies.Add(enemy);
             _actors.Add(enemy);
         }
+
+        foreach (var item in _stage.ItemSpawns) _items.Add(CreateItem(item));
+
         _actors.AddRange(_items);
 
         // Bind commands to button presses
         keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
         keyboardController.RegisterCommand(Keys.A, new PlayerMoveLeftCommand(_player));
-        keyboardController.RegisterCommand(Keys.Space, new PlayerJumpCommand(_player));
-        keyboardController.RegisterCommand(Keys.N, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
-        keyboardController.RegisterCommand(Keys.Z, new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
-        keyboardController.RegisterCommand(Keys.E, new PlayerDamageCommand(_player));
+        keyboardController.RegisterPressCommand(Keys.Space, new PlayerJumpCommand(_player));
+        keyboardController.RegisterPressCommand(Keys.N,
+            new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
+        keyboardController.RegisterPressCommand(Keys.Z,
+            new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
+        keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
 
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
         var fireCommand = new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile));
+        var bowDrawCommand = new PlayerBowDrawCommand(_player);
+        var bowReleaseCommand = new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile));
+        var bowDrawCommandNumber = new PlayerBowDrawCommand(_player, false);
+        var bowReleaseCommandNumber =
+            new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), false);
         var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand]);
+
+        keyboardController.RegisterPressCommand(Keys.K, currentItemCommand);
+        keyboardController.RegisterPressCommand(Keys.K, bowDrawCommand);
+        keyboardController.RegisterReleaseCommand(Keys.K, bowReleaseCommand);
 
         keyboardController.RegisterPressCommand(Keys.D1, boomerangCommand);
         keyboardController.RegisterPressCommand(Keys.D2, bombCommand);
         keyboardController.RegisterPressCommand(Keys.D3, fireCommand);
-        keyboardController.RegisterPressCommand(Keys.D4, currentItemCommand);
+        keyboardController.RegisterPressCommand(Keys.D4, bowDrawCommandNumber);
+        keyboardController.RegisterReleaseCommand(Keys.D4, bowReleaseCommandNumber);
 
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
@@ -130,27 +145,57 @@ public class Game1 : Microsoft.Xna.Framework.Game
             StageCellType.Keese => new KeeseEnemy(_stage.GroundY, spawn.Position),
             StageCellType.Stalfo => new StalfoEnemy(spawn.Position),
             StageCellType.Wizzrobe => new WizzrobeEnemy(_player, _projectiles, spawn.Position),
+            StageCellType.WallMaster => new WallmasterEnemy(_player, spawn.Position),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported enemy spawn type.")
+        };
+    }
+
+    private static IItem CreateItem(ItemSpawn spawn)
+    {
+        var center = spawn.Position + new Vector2(Tile.Size / 2f);
+        return spawn.Type switch
+        {
+            StageCellType.BoomerangItem => new BoomerangItem(center),
+            StageCellType.BowItem => new BowItem(center),
+            StageCellType.ArrowItem => new ArrowItem(center),
+            StageCellType.BombItem => new BombItem(center),
+            StageCellType.RupeeItem => new RupeeItem(center),
+            StageCellType.TriforceItem => new TriforceItem(center),
+            StageCellType.KeyItem => new KeyItem(center),
+            StageCellType.HeartItem => new HeartItem(center),
+            _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported item spawn type.")
         };
     }
 
     protected override void Update(GameTime gameTime)
     {
         foreach (var controller in _controllers) controller.Update();
+        _player.Update(gameTime);
         foreach (var attack in _attacks) attack.Update(gameTime);
 
-        _player.Update(gameTime);
         _cameraFollowPlayer.Update();
         _stage.Update(gameTime);
-        //_tiles.Update(gameTime);  this was tile cycler
+
+        //turn the items that popped out into real items
+        foreach (ItemSpawn spawn in _stage.PoppedItems)
+        {
+            IItem poppedItem = CreateItem(spawn);
+            _items.Add(poppedItem);
+            _actors.Add(poppedItem);
+        }
+
+        _stage.PoppedItems.Clear();
+
+        //_tiles.Update(gameTime);
         foreach (var item in _items) item.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
         foreach (var enemy in _enemies) enemy.Update(gameTime);
 
+        _damageSources.Clear();
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
 
-        _collisionSystem.Update(_actors, _damageSources);
+        _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
 
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         _attacks.RemoveAll(attack => attack.IsFinished);
@@ -174,15 +219,15 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _spriteBatch.Begin(transformMatrix: _camera.GetTransform());
         _stage.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
+        foreach (var item in _items) item.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         foreach (var enemy in _enemies) enemy.Draw(_spriteBatch);
         _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
         _spriteBatch.End();
 
-        //tile and item display stays in the top left corner
+        //tile display stays in the top left corner
         _spriteBatch.Begin();
-        //_tiles.Draw(_spriteBatch); this was tile cycler
-        foreach (var item in _items) item.Draw(_spriteBatch);
+        //_tiles.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);

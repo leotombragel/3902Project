@@ -53,6 +53,10 @@ public class BombProjectile : IProjectile
         // The explosion can damage each target once while it is active.
     }
 
+    public void OnHitTile()
+    {
+    }
+
     public bool IsFacingLeft { get; private set; }
     public int XPosition { get; private set; }
     public int XDisplacement {get; private set; }

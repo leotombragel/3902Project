@@ -26,6 +26,15 @@ public static class StageCellMap
             ["k"] = StageCellType.Keese,
             ["se"] = StageCellType.Stalfo,
             ["wr"] = StageCellType.Wizzrobe,
+            ["wm"] = StageCellType.WallMaster,
+            ["bmi"] = StageCellType.BoomerangItem,
+            ["bwi"] = StageCellType.BowItem,
+            ["ari"] = StageCellType.ArrowItem,
+            ["bbi"] = StageCellType.BombItem,
+            ["rui"] = StageCellType.RupeeItem,
+            ["tri"] = StageCellType.TriforceItem,
+            ["kyi"] = StageCellType.KeyItem,
+            ["hri"] = StageCellType.HeartItem,
             ["spawn"] = StageCellType.PlayerSpawn
         };
 
