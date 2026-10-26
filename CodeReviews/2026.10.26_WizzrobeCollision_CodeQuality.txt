@@ -1,0 +1,19 @@
+Code Review Author: Collin White
+Date: 10/26/26
+Sprint 3
+
+Reviewed File(s):
+File(s) Author: Spencer Talarzyk
+
+Minutes to review: 6
+
+Notes:
+- Constructor is good and simple, no unneeded arguments
+- Fields are private and readonly, good
+- Code is organized nicely, with one helper method
+- The collision detection in the IsInTile method is wayyy too intense - no need to do a nested for loop to tell if the Wizzrobe is in the tile
+- This leads to way longer than needed time to detect and could lead to lag spikes and at best is very inefficient
+
+Suggested Change:
+- Only check collision tiles near where the spawn is projected to be; this could be done as the position is known at all times and would drastically change the time needed,
+going from O(n^2) to O(1), as a consistent number of tiles need to be checked each time.
