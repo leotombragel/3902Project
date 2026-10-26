@@ -25,16 +25,6 @@ namespace CSE3902Project.Game.Collision
                 stalfo.Position += new Vector2(overlap.Width, 0);
                 stalfo.flipDirection();
             }
-
-            //if (stalfo._bodyHurtbox.Bounds.Intersects(tile.Bounds))
-            //{
-            //    stalfo.flipDirection();
-            //    if (stalfo.isFacingLeft)
-            //    {
-            //        stalfo.Position
-            //    }
-            //}
-             
         }
     }
 }

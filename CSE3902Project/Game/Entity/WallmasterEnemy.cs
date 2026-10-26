@@ -25,6 +25,8 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
     public Player _player;
     private IHurtbox _bodyHurtbox;
 
+    private WallmasterStageCollision _stageCollision;
+
     private int TrackingBuffer = 0;
 
     public WallmasterEnemy(Player player)
@@ -62,6 +64,11 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
 
         _player = player;
         _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
+    }
+
+    public void SetStageCollision(WallmasterStageCollision stageCollision)
+    {
+        _stageCollision = stageCollision;
     }
 
     public Sprite Sprite { get; set; }
@@ -134,45 +141,62 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
 
     private void UpdatePosition()
     {
-        if (CheckTrackingBuffer()) ChangeState(new WallmasterMovingDownState(this));
+        if (_stageCollision == null)
+        {
+            if (CheckTrackingBuffer()) ChangeState(new WallmasterMovingDownState(this));
 
-        if (CurrentState is WallmasterWaitingState){
-                if (_player.Position.X > Position.X -10 && _player.Position.X < Position.X + 10){
+            if (CurrentState is WallmasterWaitingState)
+            {
+                if (_player.Position.X > Position.X - 10 && _player.Position.X < Position.X + 10)
+                {
                     ChangeState(new WallmasterTrackingState(this));
                 }
-        }
-        else if (CurrentState is WallmasterTrackingState){
-                Position = new Vector2(_player.Position.X , Position.Y);
-        }
-        else if(CurrentState is WallmasterMovingDownState){
+            }
+            else if (CurrentState is WallmasterTrackingState)
+            {
+                Position = new Vector2(_player.Position.X, Position.Y);
+            }
+            else if (CurrentState is WallmasterMovingDownState)
+            {
                 Velocity = new Vector2(0, 3);
                 Position += Velocity;
 
-                if (Position.Y >= 400){ //need real collision detection
+                if (Position.Y >= 400)
+                { //need real collision detection
                     ChangeState(new WallmasterMovingUpState(this));
                 }
-        }
-        else if(CurrentState is WallmasterMovingUpState){
-            Velocity = new Vector2(0, -6);
-            Position += Velocity;
-
-            if (Position.Y <= StartingPosY){ 
-                ChangeState(new WallmasterRecoverState(this));
             }
-        }
-        else if(CurrentState is WallmasterRecoverState){
-            if(_player.Position.X > Position.X){
-                Velocity = new Vector2(4, 0);
-            } 
-            else if(_player.Position.X < Position.X){
-                Velocity = new Vector2(-4, 0);
-            }
-            Position += Velocity;
+            else if (CurrentState is WallmasterMovingUpState)
+            {
+                Velocity = new Vector2(0, -6);
+                Position += Velocity;
 
-            if (_player.Position.X > Position.X -10 && _player.Position.X < Position.X + 10){
+                if (Position.Y <= StartingPosY)
+                {
+                    ChangeState(new WallmasterRecoverState(this));
+                }
+            }
+            else if (CurrentState is WallmasterRecoverState)
+            {
+                if (_player.Position.X > Position.X)
+                {
+                    Velocity = new Vector2(4, 0);
+                }
+                else if (_player.Position.X < Position.X)
+                {
+                    Velocity = new Vector2(-4, 0);
+                }
+                Position += Velocity;
+
+                if (_player.Position.X > Position.X - 10 && _player.Position.X < Position.X + 10)
+                {
                     ChangeState(new WallmasterTrackingState(this));
+                }
             }
+            return;
         }
+
+        _stageCollision.MoveWallmaster(this);
     }
 
     public void flipDirection()
