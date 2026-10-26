@@ -277,4 +277,10 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
         _stageCollision.MovePlayer(this);
     }
+
+    public void flipDirection()
+    {
+        Velocity = new Vector2(-Velocity.X, Velocity.Y);
+        IsFacingLeft = !IsFacingLeft;
+    }
 }

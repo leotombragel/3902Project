@@ -86,7 +86,53 @@ public sealed class CollisionSystem
                     if (!sourceHurtbox.Bounds.Intersects(itemHurtbox.Bounds)) continue;
                     ((IUsesItems)source).ChangeItem((IItem)target);
                     ((IItem)target).IsDead = true;
+
+        //collision between enemies
+        foreach (var enemy1 in actors)
+        {
+            if (enemy1 is not IEnemy)
+            {
+                continue;
+            }
+
+            foreach (var enemy2 in actors)
+            {
+                if (enemy2 is not IEnemy || enemy1.Equals(enemy2))
+                {
+                    continue;
                 }
+
+                bool collides = false;
+
+                if (enemy1.Hurtboxes == null || enemy2.Hurtboxes == null)
+                {
+                    continue;
+                }
+
+                foreach (var hurtbox1 in enemy1.Hurtboxes)
+                {
+                    foreach (var hurtbox2 in enemy2.Hurtboxes)
+                    {
+                        if (hurtbox1.Bounds.Intersects(hurtbox2.Bounds))
+                            collides = true;
+                    }
+                }
+
+                if (collides)
+                {
+                    if (enemy1.IsFacingLeft != enemy2.IsFacingLeft)
+                    {
+                        enemy1.flipDirection();
+                        enemy2.flipDirection();
+                    }
+                    else if (enemy1.IsFacingLeft)
+                    {
+                        enemy2.flipDirection();
+                    }
+                    else
+                        enemy1.flipDirection();
+                }
+
             }
         }
 
@@ -101,7 +147,10 @@ public sealed class CollisionSystem
         }
     }
 
-    /// <summary>
+
+
+
+     /// <summary>
     ///     Draws hitbox and hurtbox collision bounds for debugging purposes.
     /// </summary>
     /// <param name="spriteBatch"></param>
