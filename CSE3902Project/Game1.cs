@@ -129,7 +129,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
             StageCellType.Aquamentus => new AquamentusEnemy(_player, _projectiles, spawn.Position),
             StageCellType.Keese => new KeeseEnemy(_stage.GroundY, spawn.Position),
             StageCellType.Stalfo => CreateStalfoEnemy(spawn.Position),
-            StageCellType.Wizzrobe => new WizzrobeEnemy(_player, _projectiles, spawn.Position),
+            StageCellType.Wizzrobe => CreateWizzrobeEnemy(_player, _projectiles, spawn.Position),
             StageCellType.WallMaster => new WallmasterEnemy(_player, spawn.Position),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported enemy spawn type.")
         };
@@ -140,6 +140,13 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var stalfo = new StalfoEnemy(spawnPosition);
         stalfo.SetStageCollision(new StalfoStageCollision(_stage.SolidTiles));
         return stalfo;
+    }
+
+    private WizzrobeEnemy CreateWizzrobeEnemy(Player player, List<IProjectile> projectiles, Vector2 spawnPosition)
+    {
+        var wizzrobe = new WizzrobeEnemy(player, projectiles, spawnPosition);
+        wizzrobe.SetCollision(new WizzrobeCollision(_stage.SolidTiles));
+        return wizzrobe;
     }
 
     protected override void Update(GameTime gameTime)

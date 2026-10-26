@@ -21,7 +21,9 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
     private readonly AnimationController _animationController;
     public Player _player;
     public List<IProjectile> _projectiles;
-    private IHurtbox _bodyHurtbox;
+    public IHurtbox _bodyHurtbox;
+
+    private WizzrobeCollision _collision;
 
     //fireball
     public WizzrobeProjectile fireball;
@@ -115,6 +117,11 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
          get { yield return _bodyHurtbox; }
     }
 
+    public void SetCollision(WizzrobeCollision coll)
+    {
+        _collision = coll;
+    }
+
     public bool CheckVisibilityBuffer()
     {
         if (CurrentState is WizzrobeInvisibleState)
@@ -150,22 +157,24 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
         return false;
     }
 
-    private void UpdatePosition()
+    public void UpdatePosition()
     {
-        if (CurrentState is WizzrobeVisibleState)
-        {
-            var n = _rng.Next(2); // randomize either to the left or right of player
-            if (n == 1)
+            if (CurrentState is WizzrobeVisibleState)
             {
-                Position = new Vector2(_player.Position.X - 200, _player.Position.Y + 24);
-                IsFacingLeft = false;
-            }
-            else
-            {
-                Position = new Vector2(_player.Position.X + 200, _player.Position.Y + 24);
-                IsFacingLeft = true;
-            }
-        }
+                var n = _rng.Next(2); // randomize either to the left or right of player
+                if (n == 1)
+                {
+                    Position = new Vector2(_player.Position.X - 200, _player.Position.Y + 24);
+                    IsFacingLeft = false;
+                }
+                else
+                {
+                    Position = new Vector2(_player.Position.X + 200, _player.Position.Y + 24);
+                    IsFacingLeft = true;
+                }
+            } 
+
+        _collision.CheckForValidPosition(this);
     }
 
     private bool CheckFireballBuffer()
