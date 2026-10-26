@@ -26,7 +26,7 @@ public class BoomerangProjectile : IProjectile
     public bool IsFacingLeft { get; private set; }
     public ICombatActor Owner => _player;
     public DamageInfo Damage { get; }
-    public Rectangle Bounds => new(XPosition, YPosition, 12, 12);
+    public Rectangle Bounds => new(XPosition, YPosition, 24, 24);
     public bool IsCollisionEnabled => !IsFinished;
     public int XPosition { get; private set; }
     public int XDisplacement {get; private set; }
