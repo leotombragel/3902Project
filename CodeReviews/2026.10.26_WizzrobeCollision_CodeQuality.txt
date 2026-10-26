@@ -17,5 +17,3 @@ Notes:
 Suggested Change:
 - Only check collision tiles near where the spawn is projected to be; this could be done as the position is known at all times and would drastically change the time needed,
 going from O(n^2) to O(1), as a consistent number of tiles need to be checked each time.
-- Additional suggestion is to simply change were the Wizzrobe would be spawned if it would spawn in a tile instead of just killing it; would lead to a better and more
-predicatable user experience
