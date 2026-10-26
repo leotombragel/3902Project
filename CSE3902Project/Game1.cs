@@ -186,7 +186,9 @@ public class Game1 : Microsoft.Xna.Framework.Game
             StageCellType.HeartItem => new HeartItem(center),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported item spawn type.")
         };
+    }
 
+    //test
 
     protected override void Update(GameTime gameTime)
     {

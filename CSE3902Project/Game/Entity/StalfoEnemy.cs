@@ -27,7 +27,6 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     public int FrameBuffer; //Stalfo has no animation, just a frame flipped over the y axis
     public readonly IHurtbox _bodyHurtbox;
 
-    public Rect Hitbox;
     private StalfoStageCollision _stageCollision;
 
     public int LeftRightBuffer; //use this until we get collision to switch direction like a goomba
