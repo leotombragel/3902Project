@@ -174,5 +174,11 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
             }
         }
     }
+
+    public void flipDirection()
+    {
+        Velocity = new Vector2(-Velocity.X, Velocity.Y);
+        IsFacingLeft = !IsFacingLeft;
+    }
 }
 

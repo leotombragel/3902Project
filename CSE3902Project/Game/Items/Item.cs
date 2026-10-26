@@ -74,4 +74,8 @@ public abstract class Item : IItem
             items.Add(ItemFactory.Create(type, center + new Vector2(offsetX * items.Count, 0)));
         return items;
     }
+
+    public void flipDirection()
+    {
+    }
 }

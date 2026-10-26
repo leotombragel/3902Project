@@ -1,11 +1,13 @@
-using System;
-using System.Collections.Generic;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
+using CSE3902Project.Game.Entity.State.Player_States;
 using CSE3902Project.Game.Graphics;
+using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace CSE3902Project.Game.Entity;
 
@@ -23,11 +25,13 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     private readonly AnimationController _animationController;
     private readonly int StartingPosY = 100;
     public int FrameBuffer; //Stalfo has no animation, just a frame flipped over the y axis
-    private readonly IHurtbox _bodyHurtbox;
+    public readonly IHurtbox _bodyHurtbox;
 
     public Rect Hitbox;
+    private StalfoStageCollision _stageCollision;
 
     public int LeftRightBuffer; //use this until we get collision to switch direction like a goomba
+
 
     public StalfoEnemy()
     {
@@ -44,6 +48,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         : this()
     {
         Position = spawnPosition;
+
     }
 
     public StalfoEnemy(Sprite sprite)
@@ -74,11 +79,11 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     }
 
     public Sprite Sprite { get; set; }
-    public Vector2 Velocity { get; private set; }
+    public Vector2 Velocity { get; set; }
     public SpriteAnimation Animation { get; set; }
 
     //state
-    public bool IsFacingLeft { get; private set; }
+    public bool IsFacingLeft { get; set; }
     private int deadAnimationBuffer = 0;
     public bool IsDead { get; set; }
 
@@ -89,7 +94,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     }
 
     //movement
-    public Vector2 Position { get; private set; }
+    public Vector2 Position { get; set; }
 
     public DamageTeam Team => DamageTeam.Enemy;
 
@@ -141,12 +146,23 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         get { yield return _bodyHurtbox; }
     }
 
+    public void SetStageCollision(StalfoStageCollision stageCollision)
+    {
+        _stageCollision = stageCollision;
+    }
+
     /// <summary>
     ///     Uses the velocity to update the stalfo's position.
     /// </summary>
     private void UpdatePosition()
     {
-        Position += Velocity;
+        if (_stageCollision == null)
+        {
+            Position += Velocity;
+            return;
+        }
+
+        _stageCollision.MoveStalfo(this);
     }
 
     public void MoveVertical()
@@ -168,6 +184,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
 
         return IsFacingLeft;
     }
+
 
     public void flipDirection()
     {
