@@ -207,5 +207,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 
     public void flipDirection()
     {
+        //if spawns in tile, go invisible and let him spawn again later
+        CurrentState = new WizzrobeInvisibleState(this);
     }
 }

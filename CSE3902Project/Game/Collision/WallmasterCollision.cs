@@ -10,7 +10,6 @@ namespace CSE3902Project.Game.Collision
         private readonly List<ITile> _tiles;
         private readonly StageBoundary _boundary;
         private readonly TileCollisionDetector _detector = new TileCollisionDetector();
-        private readonly WallmasterTileCollisionHandler _handler = new WallmasterTileCollisionHandler();
 
         public WallmasterStageCollision(List<ITile> tiles)
         {
@@ -24,7 +23,7 @@ namespace CSE3902Project.Game.Collision
              CollisionSide side = _detector.GetHorizontalSide(wallmaster._bodyHurtbox.Bounds, tile.Bounds);
              if (side != CollisionSide.None)
                 {
-                     _handler.HandleCollision(wallmaster, tile, side);
+                    wallmaster.flipDirection();
                 }
             }
         }

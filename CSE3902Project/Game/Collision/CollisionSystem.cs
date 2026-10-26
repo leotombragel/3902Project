@@ -39,7 +39,7 @@ public sealed class CollisionSystem
     }
 
     /// <summary>
-    ///     Checks for collision between player and enemie hurtboxes, specifically when link runs into an enemy.
+    ///     Checks for collision between player and enemy hurtboxes, specifically when link runs into an enemy.
     ///     applying damage when collision is detected.
     /// </summary>
     /// <param name="actors"></param>
