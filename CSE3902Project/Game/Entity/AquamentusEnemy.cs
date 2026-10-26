@@ -14,29 +14,36 @@ namespace CSE3902Project.Game.Entity;
 /// </summary>
 public class AquamentusEnemy : IEnemy
 {
-    private const int SpriteFrameHeight = 32;
-
-    private const int SpriteScale = 3;
-    private const int heightNormalizationOffset = 32;
+    //movement
+    public Vector2 Position { get; private set; }
+    private readonly int StartingPosY = 320;
+    private const int StartingPosX = 600;
+    public IHurtbox _bodyHurtbox { get; }
 
     //animation
     private readonly AnimationController _animationController;
-    private IHurtbox _bodyHurtbox;
+    private const int SpriteFrameHeight = 32;
+    private const int SpriteScale = 3;
 
     // references
     private readonly Player _player;
     private readonly List<IProjectile> _projectiles;
-    private readonly int StartingPosY = 320;
-    private const int StartingPosX = 600;
-
     public int health { get; set; }
-    //private IMortal _mortalImplementation;
 
     //projectile
     public AquamentusProjectile fireball1, fireball2, fireball3;
     private int FireballsBuffer; //timer to allow him to become visible AND THEN throw fireball
     public int FrameBuffer = 0;
-    public int LeftRightBuffer; //use this until we get collision to switch direction like a goomba
+    public int LeftRightBuffer; 
+    public Sprite Sprite { get; set; }
+    public Vector2 Velocity { get; private set; }
+    public SpriteAnimation Animation { get; set; }
+
+    //state
+    public bool IsFacingLeft { get; private set; }
+    public IState CurrentState { get; private set; }
+    public bool IsDead { get; set; }
+    private int deadAnimationBuffer = 0;
 
     public AquamentusEnemy(Player player, List<IProjectile> projectiles)
     {
@@ -58,34 +65,6 @@ public class AquamentusEnemy : IEnemy
         Position = spawnPosition - new Vector2(0, SpriteFrameHeight * SpriteScale);
     }
 
-    public AquamentusEnemy(Player player, List<IProjectile> projectiles, int GroundHeight)
-    {
-        _player = player;
-        _projectiles = projectiles;
-        Sprite = SpriteFactory.Instance.CreateAquamentusSprite();
-        var spriteHeight = SpriteFrameHeight * SpriteScale;
-        StartingPosY =
-            GroundHeight - heightNormalizationOffset - //TODO change this to be aquamentus's height
-            spriteHeight; 
-        Position = new Vector2(StartingPosX, StartingPosY);
-        Velocity = new Vector2(-1, 0);
-        IsFacingLeft = true;
-        _animationController = new AnimationController(this, new AquamentusAnimationFactory());
-        CurrentState = new AquamentusLeftState(this);
-        health = 2;
-        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(96, 128));
-    }
-
-    public Sprite Sprite { get; set; }
-    public Vector2 Velocity { get; private set; }
-    public SpriteAnimation Animation { get; set; }
-
-    //state
-    public bool IsFacingLeft { get; private set; }
-    public IState CurrentState { get; private set; }
-    public bool IsDead { get; set; }
-    private int deadAnimationBuffer = 0;
-
     // Damage
     public void TakeDamage(DamageInfo damageInfo)
     {
@@ -93,15 +72,12 @@ public class AquamentusEnemy : IEnemy
         ChangeState(new AquamentusDeadState(this));
     }
 
+    public DamageTeam Team => DamageTeam.Enemy;
+
     public IEnumerable<IHurtbox> Hurtboxes
     {
         get { yield return _bodyHurtbox; }
     }
-
-    //movement
-    public Vector2 Position { get; private set; }
-
-    public DamageTeam Team => DamageTeam.Enemy;
 
     //sprite sheet from https://www.spriters-resource.com/nes/legendofzelda/asset/31806/
     public void Draw(SpriteBatch spriteBatch)

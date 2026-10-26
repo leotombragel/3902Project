@@ -10,27 +10,34 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-///     Wizzrobe enemy class, StatefulEntityBase, IEnemy
+///     Wizzrobe enemy class implements StatefulEntityBase, IEnemy
 /// </summary>
 public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 {
     //movement
+    public Vector2 Position { get; private set; }
     private static readonly Random _rng = new();
+    public IHurtbox _bodyHurtbox { get; set; }
+    private WizzrobeCollision _collision;
 
     //animation
     private readonly AnimationController _animationController;
     public Player _player;
-    public List<IProjectile> _projectiles;
-    public IHurtbox _bodyHurtbox;
+    public Sprite Sprite { get; set; }
+    public SpriteAnimation Animation { get; set; }
 
-    private WizzrobeCollision _collision;
+    //state
+    public bool IsFacingLeft { get; private set; }
+    public bool IsDead { get; set; } // for list culling later
+    private int deadAnimationBuffer = 0;
 
     //fireball
     public WizzrobeProjectile fireball;
     private int FireballBuffer; //timer to allow him to become visible AND THEN throw fireball
     private bool fireballThrown;
     private int VisibilityBuffer;
-
+    public List<IProjectile> _projectiles;
+    
     public WizzrobeEnemy(Player player, List<IProjectile> projectiles)
     {
         Sprite = SpriteFactory.Instance.CreateWizzrobeSprite();
@@ -50,33 +57,10 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
         Position = spawnPosition;
     }
 
-    public WizzrobeEnemy(Sprite sprite, Player player, List<IProjectile> projectiles)
-    {
-        Sprite = sprite;
-        IsFacingLeft = true;
-        _animationController = new AnimationController(this, new WizzrobeAnimationFactory());
-        CurrentState = new WizzrobeInvisibleState(this);
-        fireballThrown = false;
-
-        _player = player;
-        _projectiles = projectiles;
-        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
-    }
-
-    public Sprite Sprite { get; set; }
-    public SpriteAnimation Animation { get; set; }
-
-    //state
-    public bool IsFacingLeft { get; private set; }
-    public bool IsDead { get; set; } // for list culling later
-    private int deadAnimationBuffer = 0;
-
     public void TakeDamage(DamageInfo damageInfo)
     {
         ChangeState(new WizzrobeDeadState(this));
     }
-
-    public Vector2 Position { get; private set; }
 
     public DamageTeam Team => DamageTeam.Enemy;
 
@@ -84,6 +68,16 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
     public void Draw(SpriteBatch spriteBatch)
     {
         _animationController.Draw(spriteBatch, Position, IsFacingLeft);
+    }
+
+        public IEnumerable<IHurtbox> Hurtboxes
+    {
+         get { yield return _bodyHurtbox; }
+    }
+
+    public void SetCollision(WizzrobeCollision coll)
+    {
+        _collision = coll;
     }
 
     public virtual void Update(GameTime gameTime)
@@ -112,21 +106,11 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
         }
     }
 
-    public IEnumerable<IHurtbox> Hurtboxes
-    {
-         get { yield return _bodyHurtbox; }
-    }
-
-    public void SetCollision(WizzrobeCollision coll)
-    {
-        _collision = coll;
-    }
-
     public bool CheckVisibilityBuffer()
     {
         if (CurrentState is WizzrobeInvisibleState)
         {
-            _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(0,0));
+            _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(0,0)); //hurtbox of area 0 
             fireballThrown = false;
             if (VisibilityBuffer < 60)
             {
@@ -207,5 +191,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 
     public void flipDirection()
     {
+        //if spawns in tile, go invisible and let him try again later
+        CurrentState = new WizzrobeInvisibleState(this);
     }
 }

@@ -3,7 +3,6 @@ using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
-using CSE3902Project.Game.Entity.State;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
 using CSE3902Project.Game.Items;
@@ -34,13 +33,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private Player _player;
     private SpriteBatch _spriteBatch;
     private Stage _stage;
-    private TileCycler _tiles;
+
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        //_graphics.PreferredBackBufferWidth = 1000;   change window size here
+        //_graphics.PreferredBackBufferHeight = 750;
     }
 
     protected override void Initialize()
@@ -71,7 +73,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _background = new Background(viewport.Width, viewport.Height);
         _stage = new Stage(viewport.Height);
         _items = new List<IItem>();
-        _tiles = new TileCycler(new Vector2(92, 32));
 
         _player = new Player(_stage.GroundY);
         _player.Position = _stage.PlayerSpawnPosition;
@@ -129,10 +130,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
-        keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
-        keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
-
-        mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
 
         _controllers = new List<IController> { keyboardController, mouseController };
     }
@@ -188,8 +185,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         };
     }
 
-    //test
-
     protected override void Update(GameTime gameTime)
     {
         foreach (var controller in _controllers) controller.Update();
@@ -209,7 +204,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         _stage.PoppedItems.Clear();
 
-        _tiles.Update(gameTime);
         foreach (var item in _items) item.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
         foreach (var enemy in _enemies) enemy.Update(gameTime);
@@ -219,6 +213,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _damageSources.AddRange(_attacks);
 
         _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
+        _collisionSystem.Update(_player, _enemies, _stage.SolidRectangles);
 
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         _attacks.RemoveAll(attack => attack.IsFinished);
@@ -245,12 +240,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var item in _items) item.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         foreach (var enemy in _enemies) enemy.Draw(_spriteBatch);
-        _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
+        //_collisionSystem.Draw(_spriteBatch, _actors, _damageSources);     this displays hit/hurtboxes
         _spriteBatch.End();
 
-        //tile display stays in the top left corner
+        
         _spriteBatch.Begin();
-        _tiles.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);

@@ -57,7 +57,7 @@ public class PlayerDeadState : IState
         if (_player.Position.Y > 1000)
         {
             _player.ShouldManagePosition = true;
-
+            _player.IsDead = false;
             _player.ChangeState(new PlayerIdleState(_player));
         }
     }

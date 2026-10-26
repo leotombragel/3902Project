@@ -46,6 +46,7 @@ public class BoomerangProjectile : IProjectile
     public void OnHit(ICombatActor victim)
     {
         // The boomerang continues moving after a hit.
+        IsReturning = true;
     }
 
     public void OnHitTile()

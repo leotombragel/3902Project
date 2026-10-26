@@ -29,8 +29,6 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     private const int HitboxWidth = 24;
     private const int HitboxHeight = 30;
     private const int HitboxTop = 32;
-    private const int HitboxLeftFacingRight = 11;
-    private const int HitboxLeftFacingLeft = 29;
 
     // Etc
     private const int StartingPosX = 200;
@@ -75,10 +73,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     {
         get
         {
-            var left = HitboxLeftFacingRight;
-            if (IsFacingLeft) left = HitboxLeftFacingLeft;
-
-            var x = (int)Math.Round(Position.X) + left;
+            var x = (int)Math.Round(Position.X) + 11;
             var y = (int)Math.Round(Position.Y) + HitboxTop;
             return new Rectangle(x, y, HitboxWidth, HitboxHeight);
         }
@@ -102,6 +97,11 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
             ApplyGravity();
         }
 
+        if (IsDead)
+        {
+          ChangeState(new PlayerDeadState(this));  
+        }
+
         UpdatePosition();
     }
 
@@ -122,6 +122,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public void TakeDamage(DamageInfo damageInfo)
     {
+        IsDead = true;
         Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
     }
 
@@ -208,7 +209,13 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     private void ApplyGravity()
     {
         //no gravity while standing on something
-        if (IsOnGround) return;
+        if (IsOnGround){
+            if(CurrentState is PlayerFallingState or PlayerBowFallState)
+            {
+                SwitchToInactiveState();
+            }
+            return;
+        }
 
         //the dead state does its own gravity
         if (CurrentState is PlayerDeadState) return;
