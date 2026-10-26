@@ -8,7 +8,6 @@ namespace CSE3902Project.Game.Collision
     public class WallmasterStageCollision
     {
         private readonly List<ITile> _tiles;
-        private readonly StageBoundary _boundary;
         private readonly TileCollisionDetector _detector = new TileCollisionDetector();
 
         public WallmasterStageCollision(List<ITile> tiles)

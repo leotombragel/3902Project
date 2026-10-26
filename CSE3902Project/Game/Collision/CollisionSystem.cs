@@ -71,10 +71,15 @@ public sealed class CollisionSystem
         {
             if (!source.IsCollisionEnabled || source.IsFinished) continue;
 
+            if (tileBounds.Any(tile => source.Bounds.Intersects(tile)))
+            {
+                source.OnHitTile();
+                continue;
+            }
+
             foreach (var target in actors)
             {
                 if (!CanDamage(source, target)) continue;
-                //if (target.Hurtboxes == null) continue; // Temporary until all entities have hurtboxes
 
                 if (target.Hurtboxes.Where(hurtbox => hurtbox.IsEnabled)
                     .Any(hurtbox => source.Bounds.Intersects(hurtbox.Bounds)))
@@ -82,6 +87,7 @@ public sealed class CollisionSystem
                     source.RecordHit(target);
                     target.TakeDamage(source.Damage);
                     source.OnHit(target);
+                    if (source.IsFinished) break;
                 }
             }
         }
