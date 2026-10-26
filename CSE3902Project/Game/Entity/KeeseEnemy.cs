@@ -10,22 +10,29 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CSE3902Project.Game.Entity;
 
 /// <summary>
-///     keese enemy class, implements IMortal
+///     keese enemy class, implements StatefulEntityBase, IEnemy
 /// </summary>
 public class KeeseEnemy : StatefulEntityBase, IEnemy
 {
-    private const float VerticalMoveSpeed = 4.0f;
-    private const float MaxSpeed = 3.0f;
-    private const int StartingPosX = 400; //figure out how to set these through constructor late
-    private readonly int _startingPosX;
-
     //movement
+    public Vector2 BoxContainer { get; } //constricting values so keese doesn't fly off the screen
     private static readonly Random _rng = new();
+    public Vector2 Position { get; private set; }
 
     //animation
     private readonly AnimationController _animationController;
     public IHurtbox _bodyHurtbox { get;}
-    private readonly int StartingPosY = 100;
+     private readonly int StartingPosX = 400; //csv file will override this
+    private readonly int StartingPosY = 100; //csv file will override this
+    public Sprite Sprite { get; set; }
+    public bool IsGoingUp { get; private set; }
+    public Vector2 Velocity { get; private set; }
+    public SpriteAnimation Animation { get; set; }
+
+    //state
+    public bool IsFacingLeft { get; private set; }
+    private int deadAnimationBuffer = 0;
+    public bool IsDead { get; set; }
 
     public KeeseEnemy(int GroundHeight)
     {
@@ -34,7 +41,7 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
         StartingPosY =
             GroundHeight - 32 -
             spriteHeight; // Assuming the keese sprite is 32 pixels tall and we want it to be above the ground tile
-        _startingPosX = StartingPosX;
+
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 1);
         BoxContainer = new Vector2(100, 50);
@@ -42,7 +49,6 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new KeeseAnimationFactory());
         CurrentState = new KeeseFlyingState(this);
-
         _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(32, 26));
     }
 
@@ -50,28 +56,15 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
         : this(groundHeight)
     {
         StartingPosY = (int)spawnPosition.Y;
-        _startingPosX = (int)spawnPosition.X;
+        StartingPosX = (int)spawnPosition.X;
         Position = spawnPosition;
     }
-
-    public Sprite Sprite { get; set; }
-    public bool IsGoingUp { get; private set; }
-    public Vector2 Velocity { get; private set; }
-    public Vector2 BoxContainer { get; } //constricting values so keese doesn't fly off the screen
-    public SpriteAnimation Animation { get; set; }
-
-    //state
-    public bool IsFacingLeft { get; private set; }
-    private int deadAnimationBuffer = 0;
-    public bool IsDead { get; set; }
 
     public void TakeDamage(DamageInfo damageInfo)
     {
         
         ChangeState(new KeeseDeadState(this));
     }
-
-    public Vector2 Position { get; private set; }
 
     // Combat actor and hurtbox info
     public DamageTeam Team => DamageTeam.Enemy;
@@ -109,11 +102,9 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
             }
             else{
                 IsDead = true;
-                //play pop animation
+                //play pop animation here
             }
         }
-
-
     }
 
     /// <summary>
@@ -128,11 +119,11 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
     {
         var temp = Velocity.Y;
         IsGoingUp = CheckVerticalBoundary(IsGoingUp);
-        if (temp != Velocity.Y) return IsGoingUp;
+        if (temp != Velocity.Y) return IsGoingUp; //if Y velocity is changed due to bounding box, return
 
         var n = _rng.Next(60);
         if (n == 0) IsGoingUp = FlipVertical(IsGoingUp);
-        return IsGoingUp;
+        return IsGoingUp; //if not, give chance for random flipping
     }
 
     public bool CheckVerticalBoundary(bool IsGoingUp)
@@ -171,21 +162,21 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
     {
         var temp = Velocity.X;
         IsFacingLeft = CheckHorizontalBoundary(IsFacingLeft);
-        if (temp != Velocity.X) return IsFacingLeft;
+        if (temp != Velocity.X) return IsFacingLeft;//if X velocity is changed due to bounding box, return
 
         var n = _rng.Next(60);
         if (n == 0) IsFacingLeft = FlipHorizontal(IsFacingLeft);
-        return IsFacingLeft;
+        return IsFacingLeft;//if not, give chance for random flipping
     }
 
     public bool CheckHorizontalBoundary(bool IsFacingLeft)
     {
-        if (Position.X < _startingPosX - BoxContainer.X)
+        if (Position.X < StartingPosX - BoxContainer.X)
         {
             IsFacingLeft = false;
             Velocity = Velocity with { X = -Velocity.X };
         }
-        else if (Position.X > _startingPosX + BoxContainer.X)
+        else if (Position.X > StartingPosX + BoxContainer.X)
         {
             IsFacingLeft = true;
             Velocity = Velocity with { X = -Velocity.X };

@@ -19,27 +19,20 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
     public Vector2 Position { get; private set; }
     private int StartingPosY = 70;
     private const int StartingPosX = 600;
+    public IHurtbox _bodyHurtbox { get; }
+    private WallmasterStageCollision _stageCollision;
 
     //animation
     private readonly AnimationController _animationController;
     public Player _player;
-   public IHurtbox _bodyHurtbox { get; }
-
-    private WallmasterStageCollision _stageCollision;
-
     private int TrackingBuffer = 0;
+    public Sprite Sprite { get; set; }
+    public SpriteAnimation Animation { get; set; }
 
-    public WallmasterEnemy(Player player)
-    {
-        Sprite = SpriteFactory.Instance.CreateWallmasterSprite();
-        _animationController = new AnimationController(this, new WallmasterAnimationFactory());
-        CurrentState = new WallmasterWaitingState(this);
-        Velocity = new Vector2(0, 1);
-        Position = new Vector2(StartingPosX, StartingPosY);
-
-        _player = player;
-        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
-    }
+    //state
+    public bool IsFacingLeft { get; private set; }
+    public bool IsDead { get; set; } // for list culling later
+    private int deadAnimationBuffer = 0;
 
     public WallmasterEnemy(Player player, Vector2 spawnPosition)
     {
@@ -54,30 +47,10 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
         _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
     }
 
-    public WallmasterEnemy(Sprite sprite, Player player)
-    {
-        Sprite = sprite;
-        _animationController = new AnimationController(this, new WallmasterAnimationFactory());
-        CurrentState = new WallmasterWaitingState(this);
-        Velocity = new Vector2(0, 1);
-        Position = new Vector2(StartingPosX, StartingPosY);
-
-        _player = player;
-        _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(34, 40));
-    }
-
     public void SetStageCollision(WallmasterStageCollision stageCollision)
     {
         _stageCollision = stageCollision;
     }
-
-    public Sprite Sprite { get; set; }
-    public SpriteAnimation Animation { get; set; }
-
-    //state
-    public bool IsFacingLeft { get; private set; }
-    public bool IsDead { get; set; } // for list culling later
-    private int deadAnimationBuffer = 0;
 
     public void TakeDamage(DamageInfo damageInfo)
     {
@@ -111,7 +84,7 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
             }
             else{
                 IsDead = true;
-                //play pop animation
+                //play pop animation here
             }
         }
     }
@@ -119,24 +92,6 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
     public IEnumerable<IHurtbox> Hurtboxes
     {
          get { yield return _bodyHurtbox; }
-    }
-
-    public bool CheckTrackingBuffer()
-    {
-        if (CurrentState is WallmasterTrackingState)
-        {
-            if (TrackingBuffer < 150)
-            {
-                TrackingBuffer += 1;
-            }
-            else
-            {
-                TrackingBuffer = 0;
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void UpdatePosition()
@@ -153,14 +108,15 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
             else if (CurrentState is WallmasterTrackingState)
             {
                 Position = new Vector2(_player.Position.X, Position.Y);
+                //will change out of this state via CheckTrackingBuffer()
             }
             else if (CurrentState is WallmasterMovingDownState)
             {
                 Velocity = new Vector2(0, 3);
                 Position += Velocity;
 
-                if (Position.Y >= 400)
-                { //need real collision detection
+                if (Position.Y >= 400)//back up  for if stage collision fails or he goes in a hole
+                { 
                     ChangeState(new WallmasterMovingUpState(this));
                 }
             }
@@ -196,6 +152,25 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
 
         _stageCollision.MoveWallmaster(this);
     }
+
+    public bool CheckTrackingBuffer()
+    {
+        if (CurrentState is WallmasterTrackingState)
+        {
+            if (TrackingBuffer < 150)
+            {
+                TrackingBuffer += 1;
+            }
+            else
+            {
+                TrackingBuffer = 0;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     public void flipDirection()
     {

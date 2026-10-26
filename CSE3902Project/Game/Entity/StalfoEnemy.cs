@@ -14,21 +14,24 @@ namespace CSE3902Project.Game.Entity;
 /// </summary>
 public class StalfoEnemy : StatefulEntityBase, IEnemy
 {
-    private const float VerticalMoveSpeed = 4.0f;
-    private const float MaxSpeed = 3.0f;
-
-    private const int StartingPosX = 600; //figure out how to set these through constructor late
+    //movement
+    public Vector2 Position { get; set; }
+    private const int StartingPosX = 600; //overridden by csv file
+    private readonly int StartingPosY = 100; //overridden by csv file
+    public Vector2 Velocity { get; set; }
+    public IHurtbox _bodyHurtbox { get; }
+    private StalfoStageCollision _stageCollision;
 
     //animation
     private readonly AnimationController _animationController;
-    private readonly int StartingPosY = 100;
     public int FrameBuffer; //Stalfo has no animation, just a frame flipped over the y axis
-    public IHurtbox _bodyHurtbox { get; }
+    public Sprite Sprite { get; set; }
+    public SpriteAnimation Animation { get; set; }
 
-    private StalfoStageCollision _stageCollision;
-
-    public int LeftRightBuffer; //use this until we get collision to switch direction like a goomba
-
+    //state
+    public bool IsFacingLeft { get; set; }
+    private int deadAnimationBuffer = 0;
+    public bool IsDead { get; set; }
 
     public StalfoEnemy()
     {
@@ -48,47 +51,10 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
 
     }
 
-    public StalfoEnemy(Sprite sprite)
-    {
-        Sprite = sprite;
-        Velocity = new Vector2(-1, 0);
-        Position = new Vector2(StartingPosX, StartingPosY);
-        IsFacingLeft = true;
-        _animationController = new AnimationController(this, new StalfoAnimationFactory());
-        CurrentState = new StalfoLeftState(this);
-        _bodyHurtbox = new BodyHurtbox(this, new Point(-7, 0), new Point(46, 32));
-    }
-
-    public StalfoEnemy(int GroundHeight)
-    {
-        Sprite = SpriteFactory.Instance.CreateStalfoSprite();
-        var spriteHeight = Sprite.SourceRectangle?.Height ?? 0;
-        StartingPosY =
-            GroundHeight - 32 - spriteHeight; // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
-        Position = new Vector2(StartingPosX, StartingPosY);
-        Velocity = new Vector2(-1, 0);
-        IsFacingLeft = true;
-        _animationController = new AnimationController(this, new StalfoAnimationFactory());
-        CurrentState = new StalfoLeftState(this);
-        _bodyHurtbox = new BodyHurtbox(this, new Point(-7, 0), new Point(46, 32));
-    }
-
-    public Sprite Sprite { get; set; }
-    public Vector2 Velocity { get; set; }
-    public SpriteAnimation Animation { get; set; }
-
-    //state
-    public bool IsFacingLeft { get; set; }
-    private int deadAnimationBuffer = 0;
-    public bool IsDead { get; set; }
-
     public void TakeDamage(DamageInfo damageInfo)
     {
         ChangeState(new StalfoDeadState(this));
     }
-
-    //movement
-    public Vector2 Position { get; set; }
 
     public DamageTeam Team => DamageTeam.Enemy;
 
@@ -102,10 +68,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         }
         else
         {
-            if (IsFacingLeft)
-                IsFacingLeft = false;
-            else
-                IsFacingLeft = true;
+            IsFacingLeft = !IsFacingLeft;
             FrameBuffer = 0;
         }
     }
@@ -117,7 +80,6 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
             Animation?.Update(gameTime);
             CurrentState.Update(gameTime);
 
-            //IsFacingLeft = MoveHorizontal(IsFacingLeft);
             UpdatePosition();
         }
         else{
@@ -158,22 +120,6 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
 
         _stageCollision.MoveSideways(this);
     }
-
-    public bool MoveHorizontal(bool IsFacingLeft)
-    {
-        if (LeftRightBuffer < 400)
-        {
-            LeftRightBuffer += 1;
-        }
-        else
-        {
-            LeftRightBuffer = 0;
-            flipDirection();
-        }
-
-        return IsFacingLeft;
-    }
-
 
     public void flipDirection()
     {
