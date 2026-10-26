@@ -137,7 +137,7 @@ public sealed class CollisionSystem
         }
 
         // Collision between projectiles and tiles
-        foreach (var source in damageSources)
+        foreach (var Source in damageSources)
         {
             if (!source.IsCollisionEnabled || source.IsFinished || source is not IProjectile) continue;
 
