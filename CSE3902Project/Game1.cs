@@ -150,9 +150,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         };
     }
 
-
-    //test
-
     private StalfoEnemy CreateStalfoEnemy(Vector2 spawnPosition)
     {
         var stalfo = new StalfoEnemy(spawnPosition);
