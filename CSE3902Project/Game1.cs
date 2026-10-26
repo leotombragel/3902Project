@@ -150,6 +150,9 @@ public class Game1 : Microsoft.Xna.Framework.Game
         };
     }
 
+
+    //test
+
     private StalfoEnemy CreateStalfoEnemy(Vector2 spawnPosition)
     {
         var stalfo = new StalfoEnemy(spawnPosition);
@@ -186,6 +189,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
             StageCellType.HeartItem => new HeartItem(center),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported item spawn type.")
         };
+    }
 
 
     protected override void Update(GameTime gameTime)

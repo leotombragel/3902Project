@@ -3,48 +3,37 @@
   "WorkspaceRootPath": "C:\\Users\\awild\\source\\repos\\3902Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\wallmasterenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\wallmasterenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\wallmasterstagecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\wallmasterstagecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\wallmastertilecolision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\wallmastertilecolision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\stalfoenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\stalfoenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\stalfostagecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\stalfostagecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\stalfotilecollisionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\stalfotilecollisionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\wizzrobeenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\wizzrobeenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\wizzrobecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\wizzrobecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\stalfoenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\stalfoenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\playerstagecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\playerstagecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\entity\\wallmasterenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\entity\\wallmasterenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|c:\\users\\awild\\source\\repos\\3902project\\cse3902project\\game\\collision\\playerstagecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D5932AB-549B-4EA3-9AD9-EC0C58E94F34}|CSE3902Project\\CSE3902Project.csproj|solutionrelative:cse3902project\\game\\collision\\playerstagecollision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,17 +43,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "Game1.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game1.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game1.cs",
               "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game1.cs",
               "RelativeToolTip": "CSE3902Project\\Game1.cs",
-              "ViewState": "AgIAAIsAAAAAAAAAAAAIwIwAAABIAAAAAAAAAA==",
+              "ViewState": "AgIAAJoAAAAAAAAAAAAIwKMAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-26T05:58:17.947Z",
               "IsPinned": true,
@@ -72,60 +61,77 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 6,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\Player.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\Player.cs",
               "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\Player.cs",
               "RelativeToolTip": "CSE3902Project\\Game\\Entity\\Player.cs",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAUwEcAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAUwEgAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-23T18:18:32.878Z",
               "IsPinned": true,
               "EditorCaption": ""
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "WallmasterEnemy.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\WallmasterEnemy.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\WallmasterEnemy.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\WallmasterEnemy.cs*",
-              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\WallmasterEnemy.cs*",
-              "ViewState": "AgIAALYAAAAAAAAAAAAiwMUAAAAAAAAAAAAAAA==",
+              "Title": "Game1.cs",
+              "DocumentMoniker": "C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game1.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game1.cs",
+              "ToolTip": "C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game1.cs",
+              "RelativeToolTip": "..\\..\\..\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game1.cs",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAiwJQAAAByAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-26T07:15:13.266Z",
+              "WhenOpened": "2026-10-26T15:55:31.545Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "WallmasterTileColision.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\WallmasterTileColision.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\WallmasterTileColision.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\WallmasterTileColision.cs*",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\WallmasterTileColision.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAfAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "StalfoEnemy.cs",
+              "DocumentMoniker": "C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
+              "ToolTip": "C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
+              "RelativeToolTip": "..\\..\\..\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-26T07:10:39.99Z",
+              "WhenOpened": "2026-10-26T15:55:00.314Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "WallmasterStageCollision.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\WallmasterStageCollision.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\WallmasterStageCollision.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\WallmasterStageCollision.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\WallmasterStageCollision.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAASAAAAAAAAAA==",
+              "Title": "CollisionSystem.cs",
+              "DocumentMoniker": "C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
+              "ToolTip": "C:\\Users\\awild\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
+              "RelativeToolTip": "..\\..\\..\\OneDrive\\Documents\\GitHub\\3902Project\\CSE3902Project\\Game\\Collision\\CollisionSystem.cs",
+              "ViewState": "AgIAAHcAAAAAAAAAAAAAAHUAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-26T07:08:54.81Z",
+              "WhenOpened": "2026-10-26T15:53:07.478Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "WallmasterEnemy.cs",
+              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\WallmasterEnemy.cs",
+              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\WallmasterEnemy.cs",
+              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\WallmasterEnemy.cs",
+              "RelativeToolTip": "CSE3902Project\\Game\\Entity\\WallmasterEnemy.cs",
+              "ViewState": "AgIAALYAAAAAAAAAAAAiwMQAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-26T07:15:13.266Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -135,14 +141,14 @@
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
               "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
               "RelativeToolTip": "CSE3902Project\\Game\\Entity\\StalfoEnemy.cs",
-              "ViewState": "AgIAAJMAAAAAAAAAAAAIwKQAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAJIAAAAAAAAAAAAIwKMAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-26T06:38:43.766Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 3,
               "Title": "WizzrobeEnemy.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Entity\\WizzrobeEnemy.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Entity\\WizzrobeEnemy.cs",
@@ -156,45 +162,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "WizzrobeCollision.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\WizzrobeCollision.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\WizzrobeCollision.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\WizzrobeCollision.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\WizzrobeCollision.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAqwCEAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-26T06:26:16.093Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "StalfoTileCollisionHandler.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\StalfoTileCollisionHandler.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\StalfoTileCollisionHandler.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\StalfoTileCollisionHandler.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\StalfoTileCollisionHandler.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-26T06:25:42.042Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "StalfoStageCollision.cs",
-              "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\StalfoStageCollision.cs",
-              "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\StalfoStageCollision.cs",
-              "ToolTip": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\StalfoStageCollision.cs",
-              "RelativeToolTip": "CSE3902Project\\Game\\Collision\\StalfoStageCollision.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAADAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-26T06:25:40.579Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
               "Title": "PlayerStageCollision.cs",
               "DocumentMoniker": "C:\\Users\\awild\\source\\repos\\3902Project\\CSE3902Project\\Game\\Collision\\PlayerStageCollision.cs",
               "RelativeDocumentMoniker": "CSE3902Project\\Game\\Collision\\PlayerStageCollision.cs",
