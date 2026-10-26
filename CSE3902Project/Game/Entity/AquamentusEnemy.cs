@@ -184,6 +184,12 @@ public class AquamentusEnemy : IEnemy
             IsFacingLeft = true;
     }
 
+    public void flipDirection()
+    {
+        Velocity = new Vector2(-Velocity.X, Velocity.Y);
+        IsFacingLeft = !IsFacingLeft;
+    }
+
     private bool CheckFireballBuffer()
     {
         if (CurrentState is AquamentusLeftState || CurrentState is AquamentusRightState)

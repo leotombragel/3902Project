@@ -209,4 +209,10 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
 
         return IsFacingLeft;
     }
+
+    public void flipDirection()
+    {
+        Velocity = new Vector2(-Velocity.X, Velocity.Y);
+        IsFacingLeft = !IsFacingLeft;
+    }
 }

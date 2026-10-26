@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
 using CSE3902Project.Game.Cameras;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
+using CSE3902Project.Game.Entity.State;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Input;
 using CSE3902Project.Game.Items;
@@ -12,6 +11,8 @@ using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace CSE3902Project;
 
@@ -142,11 +143,32 @@ public class Game1 : Microsoft.Xna.Framework.Game
         {
             StageCellType.Aquamentus => new AquamentusEnemy(_player, _projectiles, spawn.Position),
             StageCellType.Keese => new KeeseEnemy(_stage.GroundY, spawn.Position),
-            StageCellType.Stalfo => new StalfoEnemy(spawn.Position),
-            StageCellType.Wizzrobe => new WizzrobeEnemy(_player, _projectiles, spawn.Position),
-            StageCellType.WallMaster => new WallmasterEnemy(_player, spawn.Position),
+            StageCellType.Stalfo => CreateStalfoEnemy(spawn.Position),
+            StageCellType.Wizzrobe => CreateWizzrobeEnemy(_player, _projectiles, spawn.Position),
+            StageCellType.WallMaster => CreateWallmasterEnemy(_player, spawn.Position),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported enemy spawn type.")
         };
+    }
+
+    private StalfoEnemy CreateStalfoEnemy(Vector2 spawnPosition)
+    {
+        var stalfo = new StalfoEnemy(spawnPosition);
+        stalfo.SetStageCollision(new StalfoStageCollision(_stage.SolidTiles));
+        return stalfo;
+    }
+
+    private WizzrobeEnemy CreateWizzrobeEnemy(Player player, List<IProjectile> projectiles, Vector2 spawnPosition)
+    {
+        var wizzrobe = new WizzrobeEnemy(player, projectiles, spawnPosition);
+        wizzrobe.SetCollision(new WizzrobeCollision(_stage.SolidTiles));
+        return wizzrobe;
+    }
+
+    private WallmasterEnemy CreateWallmasterEnemy(Player player, Vector2 spawnPosition)
+    {
+        var wallmaster = new WallmasterEnemy(player, spawnPosition);
+        wallmaster.SetStageCollision(new WallmasterStageCollision(_stage.SolidTiles));
+        return wallmaster;
     }
 
     private static IItem CreateItem(ItemSpawn spawn)
@@ -164,7 +186,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
             StageCellType.HeartItem => new HeartItem(center),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported item spawn type.")
         };
-    }
+
 
     protected override void Update(GameTime gameTime)
     {
