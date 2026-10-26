@@ -199,7 +199,7 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
         _stageCollision.MoveWallmaster(this);
     }
 
-    public void flipDirection()
+    public void FlipDirection()
     {
         Velocity = new Vector2(-Velocity.X, Velocity.Y);
         IsFacingLeft = !IsFacingLeft;

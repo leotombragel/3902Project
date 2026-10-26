@@ -205,7 +205,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
         }
     }
 
-    public void flipDirection()
+    public void FlipDirection()
     {
     }
 }

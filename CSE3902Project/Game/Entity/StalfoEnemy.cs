@@ -177,14 +177,14 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         else
         {
             LeftRightBuffer = 0;
-            flipDirection();
+            FlipDirection();
         }
 
         return IsFacingLeft;
     }
 
 
-    public void flipDirection()
+    public void FlipDirection()
     {
         Velocity = new Vector2(-Velocity.X, Velocity.Y);
         IsFacingLeft = !IsFacingLeft;

@@ -16,5 +16,5 @@ public interface ICombatActor : IMortal, IHasHurtboxes
     Vector2 Position { get; }
     bool IsFacingLeft { get; }
 
-    void flipDirection();
+    void FlipDirection();
 }

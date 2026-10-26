@@ -79,7 +79,7 @@ public abstract class Item : IItem
         return items;
     }
 
-    public void flipDirection()
+    public void FlipDirection()
     {
     }
 }
