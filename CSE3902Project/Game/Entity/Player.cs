@@ -91,6 +91,8 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public virtual void Update(GameTime gameTime)
     {
+        bool wasOnGround = IsOnGround;
+        
         _animationController.Update(gameTime);
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
@@ -103,6 +105,11 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         }
 
         UpdatePosition();
+        
+        if (!wasOnGround && IsOnGround)
+        {
+            IsFacingLeft = !_previouslyFacingRight;
+        }
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -157,6 +164,8 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public void MoveHorizontal(bool isToTheRight)
     {
+        var directionChanged = isToTheRight != _previouslyFacingRight;
+        
         // Update speed
         if (Math.Abs(Velocity.X) < MaxSpeed)
         {
@@ -168,9 +177,11 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
                 Velocity = Velocity with { X = Velocity.X - MoveSpeed };
         }
 
-        // Flip the sprite if the direction changes
-        if (isToTheRight != _previouslyFacingRight) IsFacingLeft = !IsFacingLeft;
-
+        if (IsOnGround && directionChanged)
+        {
+            IsFacingLeft = !isToTheRight;
+        }
+        
         _previouslyFacingRight = isToTheRight;
         _previousSpeed = Velocity.X;
     }
@@ -277,7 +288,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         _stageCollision.MovePlayer(this);
     }
 
-    public void flipDirection()
+    public void FlipDirection()
     {
         Velocity = new Vector2(-Velocity.X, Velocity.Y);
         IsFacingLeft = !IsFacingLeft;
