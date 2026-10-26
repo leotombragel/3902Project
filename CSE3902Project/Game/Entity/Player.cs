@@ -28,8 +28,6 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
     private const int HitboxWidth = 24;
     private const int HitboxHeight = 30;
     private const int HitboxTop = 32;
-    private const int HitboxLeftFacingRight = 11;
-    private const int HitboxLeftFacingLeft = 29;
 
     // Etc
     private const int StartingPosX = 200;
@@ -74,10 +72,8 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
     {
         get
         {
-            var left = HitboxLeftFacingRight;
-            if (IsFacingLeft) left = HitboxLeftFacingLeft;
 
-            var x = (int)Math.Round(Position.X) + left;
+            var x = (int)Math.Round(Position.X) + 11; //11 is the offset needed for both directions
             var y = (int)Math.Round(Position.Y) + HitboxTop;
             return new Rectangle(x, y, HitboxWidth, HitboxHeight);
         }
@@ -256,9 +252,14 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
 
     private void ApplyGravity()
     {
-        //no gravity while standing on something
-        if (IsOnGround) return;
-
+        //no gravity while standing on something AND transition back to idle after jump
+        if (IsOnGround){
+              if (CurrentState is PlayerFallingState){
+                ChangeState(new PlayerIdleState(this));
+              }
+              return;
+            };
+        
         //the dead state does its own gravity
         if (CurrentState is PlayerDeadState) return;
 

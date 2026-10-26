@@ -33,13 +33,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private Player _player;
     private SpriteBatch _spriteBatch;
     private Stage _stage;
-    private TileCycler _tiles;
+
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        //_graphics.PreferredBackBufferWidth = 1000;   change window size here
+        //_graphics.PreferredBackBufferHeight = 750;
     }
 
     protected override void Initialize()
@@ -70,7 +73,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _background = new Background(viewport.Width, viewport.Height);
         _stage = new Stage(viewport.Height);
         _items = Item.GetAllItems(new Vector2(300, 360));
-        _tiles = new TileCycler(new Vector2(92, 32));
+        //_tiles = new TileCycler(new Vector2(92, 32));
 
         _player = new Player(_stage.GroundY);
         _player.Position = _stage.PlayerSpawnPosition;
@@ -113,8 +116,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
-        keyboardController.RegisterPressCommand(Keys.T, new PreviousTileCommand(_tiles));
-        keyboardController.RegisterPressCommand(Keys.Y, new NextTileCommand(_tiles));
 
         mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
 
@@ -141,7 +142,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _player.Update(gameTime);
         _cameraFollowPlayer.Update();
         _stage.Update(gameTime);
-        _tiles.Update(gameTime);
+        //_tiles.Update(gameTime);  this was tile cycler
         foreach (var item in _items) item.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);
         foreach (var enemy in _enemies) enemy.Update(gameTime);
@@ -180,7 +181,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         //tile and item display stays in the top left corner
         _spriteBatch.Begin();
-        _tiles.Draw(_spriteBatch);
+        //_tiles.Draw(_spriteBatch); this was tile cycler
         foreach (var item in _items) item.Draw(_spriteBatch);
         _spriteBatch.End();
 
