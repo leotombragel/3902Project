@@ -44,6 +44,11 @@ public class WizzrobeProjectile : IProjectile
     {
         IsFinished = true;
     }
+    
+    public void OnHitTile()
+    {
+        IsFinished = true;
+    }
 
     public WizzrobeProjectile(
         float startingX,

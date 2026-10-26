@@ -47,6 +47,11 @@ public class AquamentusProjectile : IProjectile
         
     }
 
+    public void OnHitTile()
+    {
+        IsFinished = true;
+    }
+
     public float XPosition { get; private set; }
     public float XDisplacement {get; private set; }
     public float YDisplacement {get; private set; }
