@@ -131,8 +131,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
 
-        //mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
-
         _controllers = new List<IController> { keyboardController, mouseController };
     }
 
@@ -187,8 +185,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         };
     }
 
-    //test
-
     protected override void Update(GameTime gameTime)
     {
         foreach (var controller in _controllers) controller.Update();
@@ -215,7 +211,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _damageSources.Clear();
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
-    
 
         _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
         _collisionSystem.Update(_player, _enemies, _stage.SolidRectangles);
