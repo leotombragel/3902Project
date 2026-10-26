@@ -1,0 +1,20 @@
+Author: Uthman Wood
+Date: Oct. 25, 2026
+Sprint 3
+CS file: Tiles/Stage.cs
+CS authors: Jordan Boogaard and Collin White with minor contributions from myself
+Comments:
+This class is responsible for storing data related to the stage, including lists of tiles and entity spawn positions.
+- This class does not inherit from any classes or implement any interfaces.
+- The CSV is only read once at startup, which is good because reading it multiple times would be expensive.
+- This class will write to the log or throw an exception when unexpected data is found while parsing the stage csv file, which eases the debugging process.
+- Using SolidRectangles to check for stage collision instead of SolidTiles is faster, but further optimization can be done.
+- This class does not handle items, which are placed separately via a static method in the Item class.
+- The IsEnemy method uses the StageCellType enum to determine whether a cell contains an enemy. This is simple and readable, but hard to expand because this method must be updated each time a new enemy is added.
+- If the stage changes after the game is loaded, there is no helper to update both SolidTiles and SolidRectangles.
+
+
+Hypothetical changes:
+- BuildSolidRectangles can be expanded to check for vertically adjacent rectangles, which would decrease the number of checks needed for stage collision.
+- Add a method to this class that can add or remove a tile from both SolidRectangles and SolidTiles.
+- Use a different data structure to store cell types to make it easier to check a cell's properties.

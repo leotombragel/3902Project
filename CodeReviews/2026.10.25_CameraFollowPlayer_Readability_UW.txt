@@ -1,0 +1,11 @@
+Author: Uthman Wood
+Date: Oct. 25, 2026
+Sprint 3
+CS file: Cameras/CameraFollowPlayer.cs
+CS file authors: Jordan Boogaard, minor contributions from Collin White
+Number of minutes taken: 8
+Comments:
+This is a simple class that only contains one method.
+- The code comments are concise and do a good job explaining what the class does.
+- The Update method is over 30 lines long. It would help the class's readability if some of the operations performed were split into private helper methods.
+- There is one magic number used at line 23. This could be remedied by assigning this value to a variable. In this specific case, the number 32 is used as a magic number in many parts of our game's code, particularly with regards to the player's dimensions (see PlayerAnimationFactory). Therefore, this could become a public static constant in the Player class.
