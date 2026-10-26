@@ -12,6 +12,12 @@ public interface ITile
     /// The area the tile occupies in world space. Intended for collision detection.
     Rectangle Bounds { get; }
 
+    /// true once a brick got hit and broke, the stage removes it
+    bool IsBroken { get; }
+
+    /// called when the player hits the tile from below
+    void HitFromBelow();
+
     void Update(GameTime gameTime);
     void Draw(SpriteBatch spriteBatch);
 }

@@ -174,6 +174,17 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         _cameraFollowPlayer.Update();
         _stage.Update(gameTime);
+
+        //turn the items that popped out into real items
+        foreach (ItemSpawn spawn in _stage.PoppedItems)
+        {
+            IItem poppedItem = CreateItem(spawn);
+            _items.Add(poppedItem);
+            _actors.Add(poppedItem);
+        }
+
+        _stage.PoppedItems.Clear();
+
         _tiles.Update(gameTime);
         foreach (var item in _items) item.Update(gameTime);
         foreach (var projectile in _projectiles) projectile.Update(gameTime);

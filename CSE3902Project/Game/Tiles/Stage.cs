@@ -41,12 +41,16 @@ public class Stage
     public List<Rectangle> SolidRectangles { get; } = new();
     public List<EnemySpawn> EnemySpawns { get; } = new();
     public List<ItemSpawn> ItemSpawns { get; } = new();
+
+    //items that popped out of blocks, the game turns these into real items
+    public List<ItemSpawn> PoppedItems { get; } = new List<ItemSpawn>();
     public string[] MapRows { get; }
     public Vector2 PlayerSpawnPosition { get; private set; }
 
     public void Update(GameTime gameTime)
     {
         foreach (var tile in SolidTiles) tile.Update(gameTime);
+        RemoveBrokenTiles();
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -127,7 +131,7 @@ public class Stage
             or StageCellType.HeartItem;
     }
 
-    private static ITile CreateTile(StageCellType cellType, Vector2 position)
+    private ITile CreateTile(StageCellType cellType, Vector2 position)
     {
         switch (cellType)
         {
@@ -136,15 +140,16 @@ public class Stage
             case StageCellType.Breakable:
                 return TileFactory.Create(TileType.Brick, position);
             case StageCellType.BreakableWithCoin:
-                return TileFactory.Create(TileType.Brick, position);
+                return new BrickTile(position, new BlockContents(StageCellType.RupeeItem, PoppedItems));
             case StageCellType.BreakableWithBomb:
-                return TileFactory.Create(TileType.Brick, position);
+                return new BrickTile(position, new BlockContents(StageCellType.BombItem, PoppedItems));
             case StageCellType.Stair:
                 return TileFactory.Create(TileType.Step, position);
             case StageCellType.QuestionBlock:
-                return TileFactory.Create(TileType.QuestionBlock, position);
+                return new QuestionBlockTile(position, new BlockContents(StageCellType.RupeeItem, PoppedItems));
             case StageCellType.QuestionBlockWithBoomerang:
-                return TileFactory.Create(TileType.QuestionBlock, position);
+                return new QuestionBlockTile(position,
+                    new BlockContents(StageCellType.BoomerangItem, PoppedItems));
             case StageCellType.HiddenBlockWithFire:
                 return TileFactory.Create(TileType.QuestionBlock, position);
             case StageCellType.PipeLeftBody:
@@ -162,8 +167,29 @@ public class Stage
         }
     }
 
+    //removes broken bricks from both lists
+    private void RemoveBrokenTiles()
+    {
+        bool removedAny = false;
+
+        for (int i = SolidTiles.Count - 1; i >= 0; i--)
+        {
+            if (SolidTiles[i].IsBroken)
+            {
+                SolidTiles.RemoveAt(i);
+                removedAny = true;
+            }
+        }
+
+        if (removedAny)
+        {
+            BuildSolidRectangles();
+        }
+    }
+
     private void BuildSolidRectangles()
     {
+        SolidRectangles.Clear();
         var rectangles = new List<Rectangle>();
 
         var grouped = SolidTiles

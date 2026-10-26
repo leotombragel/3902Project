@@ -10,7 +10,7 @@ public abstract class Tile : ITile
     /// Width and height of a tile in pixels (16px art scaled 2x, about the same height as the player).
     public const int Size = 32;
 
-    private readonly ISprite _sprite;
+    private ISprite _sprite;
 
     public TileType Type { get; }
     public Vector2 Position { get; }
@@ -21,6 +21,22 @@ public abstract class Tile : ITile
         Type = type;
         _sprite = sprite;
         Position = position;
+    }
+
+    public virtual bool IsBroken
+    {
+        get { return false; }
+    }
+
+    //most tiles don't do anything when they get hit
+    public virtual void HitFromBelow()
+    {
+    }
+
+    //lets a tile swap its picture (like a used question block)
+    protected void ChangeSprite(ISprite sprite)
+    {
+        _sprite = sprite;
     }
 
     public virtual void Update(GameTime gameTime)

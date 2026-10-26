@@ -47,6 +47,16 @@ public class PlayerStageCollision
     {
         player.Position += new Vector2(0, player.Velocity.Y);
 
+        //if the head is under two blocks, hit the one more over the head first
+        if (player.Velocity.Y < 0)
+        {
+            ITile headTile = FindTileOverHead(player);
+            if (headTile != null)
+            {
+                _handler.HandleCollision(player, headTile, CollisionSide.Top);
+            }
+        }
+
         foreach (ITile tile in _tiles)
         {
             CollisionSide side = _detector.GetVerticalSide(player.StageHitbox, tile.Bounds);
@@ -55,6 +65,29 @@ public class PlayerStageCollision
                 _handler.HandleCollision(player, tile, side);
             }
         }
+    }
+
+    //the tile the head is hitting the most (null if none)
+    private ITile FindTileOverHead(Player player)
+    {
+        ITile bestTile = null;
+        int bestOverlap = 0;
+
+        foreach (ITile tile in _tiles)
+        {
+            CollisionSide side = _detector.GetVerticalSide(player.StageHitbox, tile.Bounds);
+            if (side == CollisionSide.Top)
+            {
+                int overlapWidth = Rectangle.Intersect(player.StageHitbox, tile.Bounds).Width;
+                if (overlapWidth > bestOverlap)
+                {
+                    bestOverlap = overlapWidth;
+                    bestTile = tile;
+                }
+            }
+        }
+
+        return bestTile;
     }
 
     private void CheckForGround(Player player)
