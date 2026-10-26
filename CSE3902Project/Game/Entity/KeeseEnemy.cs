@@ -24,7 +24,7 @@ public class KeeseEnemy : StatefulEntityBase, IEnemy
 
     //animation
     private readonly AnimationController _animationController;
-    private readonly IHurtbox _bodyHurtbox;
+    public IHurtbox _bodyHurtbox { get;}
     private readonly int StartingPosY = 100;
 
     public KeeseEnemy(int GroundHeight)

@@ -23,7 +23,7 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
     //animation
     private readonly AnimationController _animationController;
     public Player _player;
-    private IHurtbox _bodyHurtbox;
+   public IHurtbox _bodyHurtbox { get; }
 
     private WallmasterStageCollision _stageCollision;
 
@@ -141,8 +141,6 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
 
     private void UpdatePosition()
     {
-        if (_stageCollision == null)
-        {
             if (CheckTrackingBuffer()) ChangeState(new WallmasterMovingDownState(this));
 
             if (CurrentState is WallmasterWaitingState)
@@ -192,7 +190,7 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
                 {
                     ChangeState(new WallmasterTrackingState(this));
                 }
-            }
+            
             return;
         }
 
@@ -201,8 +199,7 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
 
     public void flipDirection()
     {
-        Velocity = new Vector2(-Velocity.X, Velocity.Y);
-        IsFacingLeft = !IsFacingLeft;
+        ChangeState(new WallmasterMovingUpState(this));
     }
 }
 

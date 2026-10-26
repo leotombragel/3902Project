@@ -1,9 +1,7 @@
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
-using CSE3902Project.Game.Entity.State.Player_States;
 using CSE3902Project.Game.Graphics;
-using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -25,7 +23,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     private readonly AnimationController _animationController;
     private readonly int StartingPosY = 100;
     public int FrameBuffer; //Stalfo has no animation, just a frame flipped over the y axis
-    public readonly IHurtbox _bodyHurtbox;
+    public IHurtbox _bodyHurtbox { get; }
 
     private StalfoStageCollision _stageCollision;
 
@@ -66,8 +64,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         Sprite = SpriteFactory.Instance.CreateStalfoSprite();
         var spriteHeight = Sprite.SourceRectangle?.Height ?? 0;
         StartingPosY =
-            GroundHeight - 32 -
-            spriteHeight; // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
+            GroundHeight - 32 - spriteHeight; // Assuming the stalfo sprite is 32 pixels tall and we want it to be above the ground tile
         Position = new Vector2(StartingPosX, StartingPosY);
         Velocity = new Vector2(-1, 0);
         IsFacingLeft = true;
@@ -88,7 +85,6 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     public void TakeDamage(DamageInfo damageInfo)
     {
         ChangeState(new StalfoDeadState(this));
-        //Console.WriteLine($"Stalfo took damage. Source: {damageInfo.Source}");
     }
 
     //movement
@@ -121,7 +117,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
             Animation?.Update(gameTime);
             CurrentState.Update(gameTime);
 
-            IsFacingLeft = MoveHorizontal(IsFacingLeft);
+            //IsFacingLeft = MoveHorizontal(IsFacingLeft);
             UpdatePosition();
         }
         else{
@@ -160,12 +156,7 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
             return;
         }
 
-        _stageCollision.MoveStalfo(this);
-    }
-
-    public void MoveVertical()
-    {
-        //wait to implement when we get collision
+        _stageCollision.MoveSideways(this);
     }
 
     public bool MoveHorizontal(bool IsFacingLeft)

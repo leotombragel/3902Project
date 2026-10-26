@@ -21,7 +21,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
     private readonly AnimationController _animationController;
     public Player _player;
     public List<IProjectile> _projectiles;
-    public IHurtbox _bodyHurtbox;
+    public IHurtbox _bodyHurtbox { get; set; }
 
     private WizzrobeCollision _collision;
 

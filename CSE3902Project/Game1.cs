@@ -133,7 +133,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
 
-        mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
+        //mouseController.RegisterCommand(MouseButton.LeftButton, new SetRockingPlayerSpriteCommand(_player));
 
         _controllers = new List<IController> { keyboardController, mouseController };
     }
@@ -218,8 +218,10 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _damageSources.Clear();
         _damageSources.AddRange(_projectiles);
         _damageSources.AddRange(_attacks);
+    
 
         _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
+        _collisionSystem.Update(_player, _enemies, _stage.SolidRectangles);
 
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         _attacks.RemoveAll(attack => attack.IsFinished);
@@ -246,7 +248,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var item in _items) item.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         foreach (var enemy in _enemies) enemy.Draw(_spriteBatch);
-        _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
+        //_collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
         _spriteBatch.End();
 
         //tile display stays in the top left corner

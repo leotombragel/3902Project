@@ -21,7 +21,7 @@ public class AquamentusEnemy : IEnemy
 
     //animation
     private readonly AnimationController _animationController;
-    private IHurtbox _bodyHurtbox;
+    public IHurtbox _bodyHurtbox { get; }
 
     // references
     private readonly Player _player;
