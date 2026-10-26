@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
@@ -11,7 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CSE3902Project.Game.Entity;
 
-public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
+public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 {
     // Motion
     private const float MaxSpeed = 3.0f;
@@ -51,7 +52,7 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
         Velocity = Vector2.Zero;
         _animationController = new AnimationController(this, new PlayerAnimationFactory());
         CurrentState = new PlayerIdleState(this);
-        _bodyHurtbox = new BodyHurtbox(this, new Point(8, 31), new Point(32, 32)); 
+        _bodyHurtbox = new BodyHurtbox(this, new Point(8, 31), new Point(32, 32));
     }
 
     // Animation data
@@ -82,6 +83,8 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
             return new Rectangle(x, y, HitboxWidth, HitboxHeight);
         }
     }
+
+    public bool IsUsingBow { get; set; }
 
     public SpriteAnimation Animation { get; set; }
     public bool IsFacingLeft { get; private set; }
@@ -122,10 +125,28 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
         Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
     }
 
-    public IItem CurrentItem { get; private set; } = null;
+    public IState CurrentState { get; private set; }
+
+    public void ChangeState(IState newState)
+    {
+        // Ignore state change if re-entering the current state
+        if (newState.GetType() == CurrentState.GetType()) return;
+
+        CurrentState?.Exit();
+        CurrentState = newState;
+        CurrentState?.Enter();
+    }
+
+    public IItem CurrentItem { get; private set; }
+
     public void ChangeItem(IItem item)
     {
-        // Could play an animation here later
+        if (IsUsingBow)
+        {
+            IsUsingBow = false;
+            SwitchToInactiveState();
+        }
+        
         CurrentItem = item;
     }
 
@@ -154,79 +175,6 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
         _previousSpeed = Velocity.X;
     }
 
-
-    // public void HandleKeeseCollision(KeeseEnemy k)
-    // {
-    //     var midX = (k.Hitbox.x1 + k.Hitbox.x2) / 2;
-    //     var midY = (k.Hitbox.y1 + k.Hitbox.y2) / 2;
-    //     var slope = (k.Hitbox.y2 - k.Hitbox.y1) / (k.Hitbox.x2 - k.Hitbox.x1);
-    //     var X1 = k.Hitbox.x1;
-    //     var X2 = k.Hitbox.x2;
-    //     var Y1 = k.Hitbox.y1;
-    //     var Y2 = k.Hitbox.y2;
-    //
-    //     if (midX < Position.X && Position.X < X2)
-    //         if (-slope * (Position.X - X1) + Y2 < Position.Y && Position.Y < slope * (Position.X - X1) + Y1)
-    //         {
-    //             Velocity = Velocity with { X = 0 };
-    //             Position = Position with { X = k.Hitbox.x2 };
-    //         }
-    //
-    //     if (midX > Position.X && Position.X > X1)
-    //         if (-slope * (Position.X - X1) + Y2 > Position.Y && Position.Y > slope * (Position.X - X1) + Y1)
-    //         {
-    //             Velocity = Velocity with { X = 0 };
-    //             Position = Position with { X = k.Hitbox.x1 };
-    //         }
-    //
-    //     if (midY < Position.Y && Position.Y < Y2)
-    //         if ((Position.Y - Y1) / slope + X1 < Position.X && Position.X < -(Position.Y - Y2) / slope + X1)
-    //         {
-    //             Velocity = Velocity with { X = 0, Y = 0 };
-    //             Position = Position with { Y = k.Hitbox.y1 };
-    //         }
-    //
-    //
-    //     if (midY > Position.Y && Position.Y > Y1)
-    //         if ((Position.Y - Y1) / slope + X1 < Position.X && Position.X < -(Position.Y - Y2) / slope + X1)
-    //         {
-    //             Velocity = Velocity with { Y = 0 };
-    //             Position = Position with { Y = k.Hitbox.y1 };
-    //         }
-    //
-    //     if (midY < Position.Y && Position.Y < Y2)
-    //         if ((Position.Y - Y1) / slope + X1 > Position.X && Position.X > -(Position.Y - Y2) / slope + X1)
-    //         {
-    //             Velocity = Velocity with { Y = 0 };
-    //             Position = Position with { Y = k.Hitbox.y2 };
-    //         }
-    // }
-    //
-    // private bool IsInXRange(Rect r)
-    // {
-    //     if (r == null) return false;
-    //
-    //     if (r.x1 < Position.X && Position.X < r.x2)
-    //         return true;
-    //     return false;
-    // }
-    //
-    // private bool IsInYRange(Rect r)
-    // {
-    //     if (r == null) return false;
-    //
-    //     if (r.y1 < Position.Y && Position.Y < r.y2)
-    //         return true;
-    //     return false;
-    // }
-    //
-    // private bool IsInBoundingBox(Rect r)
-    // {
-    //     if (r == null) return false;
-    //     return IsInXRange(r) && IsInYRange(r);
-    // }
-
-
     private void Decelerate()
     {
         if (Velocity.X > 0.0f)
@@ -248,7 +196,10 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
 
         IsOnGround = false;
         IsJumping = true;
-        ChangeState(new PlayerJumpingState(this));
+        if (!IsUsingBow)
+            ChangeState(new PlayerJumpingState(this));
+        else
+            ChangeState(new PlayerBowJumpState(this));
 
         // _verticalSpeed = -VerticalMoveSpeed; // Negative makes the player move up (towards the top of the screen where y = 0)
         Velocity = Velocity with { Y = -VerticalMoveSpeed };
@@ -268,12 +219,34 @@ public class Player : StatefulEntityBase, IAnimatable, ICombatActor, IUsesItems
         Velocity = Velocity with { Y = newSpeed };
     }
 
+    public void ReleaseBow()
+    {
+        IsUsingBow = false;
+        SwitchToInactiveState();
+    }
+
     /// <summary>
     ///     Changes the player to the appropriate inactive state depending on whether the player is on the ground, jumping, or
     ///     falling.
     /// </summary>
     public void SwitchToInactiveState()
     {
+        if (IsUsingBow)
+        {
+            switch (Velocity.Y)
+            {
+                case > 0:
+                    ChangeState(new PlayerBowFallState(this));
+                    return;
+                case < 0:
+                    ChangeState(new PlayerBowJumpState(this));
+                    return;
+                default:
+                    ChangeState(new PlayerBowIdleState(this));
+                    return;
+            }
+        }
+
         switch (Velocity.Y)
         {
             case > 0:

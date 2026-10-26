@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
+using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CSE3902Project.Game.Collision;
 
 /// <summary>
-///    This class handles collision between all objects in the game.
+///     This class handles collision between all objects in the game.
 /// </summary>
 /// <param name="graphicsDevice">Used for creating rectangles to draw boxes when debugging.</param>
 public sealed class CollisionSystem
@@ -42,7 +43,8 @@ public sealed class CollisionSystem
     /// </summary>
     /// <param name="actors"></param>
     /// <param name="damageSources"></param>
-    public void Update(IReadOnlyList<ICombatActor> actors, IReadOnlyList<IDamageSource> damageSources)
+    public void Update(IReadOnlyList<ICombatActor> actors, IReadOnlyList<IDamageSource> damageSources,
+        IReadOnlyList<Rectangle> tileBounds)
     {
         // Collision between hurtboxes and hitboxes
         foreach (var source in damageSources)
@@ -64,6 +66,28 @@ public sealed class CollisionSystem
             }
         }
 
+        // Collision between item users and items
+        var itemUsers = actors.Where(actor => actor is IUsesItems);
+        var items = actors.Where(actor => actor is IItem);
+
+        foreach (var source in itemUsers)
+        foreach (var target in items)
+        {
+            if (target.Hurtboxes == null) continue;
+
+            foreach (var itemHurtbox in target.Hurtboxes)
+            {
+                if (!itemHurtbox.IsEnabled) continue;
+
+                foreach (var sourceHurtbox in source.Hurtboxes)
+                {
+                    if (!sourceHurtbox.IsEnabled) continue;
+
+                    if (!sourceHurtbox.Bounds.Intersects(itemHurtbox.Bounds)) continue;
+                    ((IUsesItems)source).ChangeItem((IItem)target);
+                    ((IItem)target).IsDead = true;
+
+        //collision between enemies
         foreach (var enemy1 in actors)
         {
             if (enemy1 is not IEnemy)
@@ -110,6 +134,16 @@ public sealed class CollisionSystem
                 }
 
             }
+        }
+
+        // Collision between projectiles and tiles
+        foreach (var source in damageSources)
+        {
+            if (!source.IsCollisionEnabled || source.IsFinished || source is not IProjectile) continue;
+
+            foreach (var tile in tileBounds)
+                if (source.Bounds.Intersects(tile))
+                    source.OnHitTile();
         }
     }
 

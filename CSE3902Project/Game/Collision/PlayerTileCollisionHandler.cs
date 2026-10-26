@@ -32,7 +32,12 @@ public class PlayerTileCollisionHandler
         }
         else if (side == CollisionSide.Top)
         {
-            //bumped head
+            //bumped head. if going up this also hits the tile (breaks bricks, pops items out)
+            if (player.Velocity.Y < 0)
+            {
+                tile.HitFromBelow();
+            }
+
             player.Position += new Vector2(0, overlap.Height);
             player.Velocity = new Vector2(player.Velocity.X, 0);
         }

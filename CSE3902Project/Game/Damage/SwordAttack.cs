@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 
 namespace CSE3902Project.Game.Damage;
 
-// TODO All numbers in this class are placeholders and need to be updated to match up with the animation.
 public class SwordAttack : IAttack
 {
     private readonly HashSet<ICombatActor> _hitTargets = new();
@@ -30,6 +29,10 @@ public class SwordAttack : IAttack
     }
 
     public void OnHit(ICombatActor victim)
+    {
+    }
+    
+    public void OnHitTile()
     {
     }
 

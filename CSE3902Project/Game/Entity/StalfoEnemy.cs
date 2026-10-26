@@ -56,7 +56,6 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         Sprite = sprite;
         Velocity = new Vector2(-1, 0);
         Position = new Vector2(StartingPosX, StartingPosY);
-        Hitbox = new Rect(Position.X, Position.Y, Position.X + 10, Position.Y + 10);
         IsFacingLeft = true;
         _animationController = new AnimationController(this, new StalfoAnimationFactory());
         CurrentState = new StalfoLeftState(this);

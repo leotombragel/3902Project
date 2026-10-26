@@ -27,7 +27,7 @@ public abstract class Item : IItem
         _sprite = art.Sprite;
         _size = art.Size;
         _restingPosition = center - new Vector2(art.Size.X / 2f, art.Size.Y / 2f);
-        Position = _restingPosition;
+        Position = SnapToPixel(_restingPosition);
         _bodyHurtbox = new BodyHurtbox(this, new Point(0, 0), new Point(_size.X, _size.Y));
     }
 
@@ -58,13 +58,17 @@ public abstract class Item : IItem
 
         _elapsedSeconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
         var bob = MathF.Sin(_elapsedSeconds / BobPeriod * MathHelper.TwoPi) * BobHeight;
-        Position = _restingPosition + new Vector2(0, bob);
+        Position = SnapToPixel(_restingPosition + new Vector2(0, bob));
     }
 
     public virtual void Draw(SpriteBatch spriteBatch)
     {
-        // Round to whole pixels so the sprite stays sharp
-        _sprite.Draw(spriteBatch, new Vector2(MathF.Round(Position.X), MathF.Round(Position.Y)));
+        _sprite.Draw(spriteBatch, Position);
+    }
+
+    private static Vector2 SnapToPixel(Vector2 position)
+    {
+        return new Vector2(MathF.Round(position.X), MathF.Round(position.Y));
     }
 
     public static List<IItem> GetAllItems(Vector2 center, int offsetX = 30)
