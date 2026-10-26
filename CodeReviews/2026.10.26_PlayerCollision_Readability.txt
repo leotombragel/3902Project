@@ -1,0 +1,25 @@
+Code Review Author: Collin White
+Date: 10/26/26
+Sprint 3
+
+Reviewed File(s): PlayerTileCollisionHandler.cs, TileCollisionDetector.cs
+File(s) Author: Jordan Boogaard
+
+Minutes to review: 16
+
+Notes:
+
+--------TileCollisionDetector--------
+- Syntactically correct but no TileCollisionDetector class is slightly confusing to imagine
+- Nitpicky, but the check to see if a playerbox and tilebox intersect can be a helper method, occurs twice
+- Big fan of the enumerated CollisionSides
+- I like how the vertical and horizontal collisions are handled, makes it a lot easier to use than just one that handles all four sides
+- Coniditions for detection is very easy to understand
+
+--------PlayerTileCollisionHandler--------
+- Again no constructor can be confusing
+- Helppful comments for overlap
+- Switch case can also work instead of if else statements
+- Corrections are easy to understand 
+- Big fan of the tile.hitfrombelow, but that means all tiles have to have that method even if they dont do anything in particular
+
