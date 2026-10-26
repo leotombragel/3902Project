@@ -24,7 +24,7 @@ public class FireProjectile : IProjectile
     public bool IsFacingLeft { get; private set; }
     public ICombatActor Owner => _owner!;
     public DamageInfo Damage { get; }
-    public Rectangle Bounds => new(XPosition, YPosition, 16, 48);
+    public Rectangle Bounds => new(XPosition, YPosition, 16, 42);
     public bool IsCollisionEnabled => !IsFinished;
     public int XPosition { get; private set; }
     public int XDisplacement {get; private set; }
