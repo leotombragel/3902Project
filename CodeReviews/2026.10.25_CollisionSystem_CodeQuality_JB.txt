@@ -1,0 +1,19 @@
+CollisionSystem.cs Code Review
+
+Reviewer: Jordan Boogaard
+Date of Review: 10/25/2026
+Sprint: 3
+File: CollisionSystem.cs
+File Author: Uthman Wood
+Time Taken: 12 minutes
+
+Code Quality Comments:
+- Mostly talks to interfaces (IDamageSource, ICombatActor, IHurtbox), so new attacks and enemies work without changing it, and CanDamage() is a clean list of rules with early returns
+- Detection and response are kept apart. This class finds the overlap and the damage source and victim decide what happens (OnHit, TakeDamage)
+- Update() does three different jobs in one method (damage, item pickup, projectiles hitting tiles) in about 55 lines. Three private methods or small classes would be easier to follow
+- Item pickup has four nested loops with casts like ((IUsesItems)source) inside them. OfType<IUsesItems>() and OfType<IItem>() would remove the casts
+- Draw() is debug drawing mixed in with the collision logic, and it builds Rectangles that are copies of ones it already has (lines 117-118 and 130-131)
+- The Update() doc comment leaves out the new tileBounds parameter, and two "Temporary until all entities have hurtboxes" null checks are still there
+
+Hypothetical change:
+Make bombs destroy bricks like in Zelda. This would not be easy to support. OnHitTile() has no parameter and the stage gives this class merged rectangles, so it can't tell which tile was hit. It would need the real tiles passed in, and the stage to remove the one that was hit.
