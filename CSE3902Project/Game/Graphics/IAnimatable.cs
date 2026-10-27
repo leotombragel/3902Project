@@ -5,13 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CSE3902Project.Game.Graphics;
 
 /// <summary>
-/// Interface for objects and entities that can be animated.
+///     Interface for objects and entities that can be animated.
 /// </summary>
 public interface IAnimatable
 {
-    bool IsFacingLeft { get; }
     IState CurrentState { get; }
-    SpriteAnimation Animation { get; set;  }
+    SpriteAnimation Animation { get; set; }
 
     public void Draw(SpriteBatch s);
 

@@ -101,13 +101,20 @@ public sealed class CollisionSystem
         }
 
         //collision between enemies
-        foreach (var enemy1 in actors)
+        var enemies = actors.Where(actor => actor is IEnemy).ToList();
+        var seenCombinations = new HashSet<(ICombatActor, ICombatActor)>();
+        
+        foreach (var enemy1 in enemies)
         {
-            if (enemy1 is not IEnemy) continue;
-
-            foreach (var enemy2 in actors)
+            foreach (var enemy2 in enemies)
             {
-                if (enemy2 is not IEnemy || enemy1.Equals(enemy2)) continue;
+                if (enemy1.Equals(enemy2)) continue;
+                
+                var combination = (enemy1, enemy2);
+                var reverseCombination = (enemy2, enemy1);
+                var isNew = seenCombinations.Add(combination) && seenCombinations.Add(reverseCombination);
+                
+                if (!isNew) continue;
 
                 var collides = false;
 
