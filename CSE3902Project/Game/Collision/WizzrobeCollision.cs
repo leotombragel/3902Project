@@ -1,29 +1,38 @@
-﻿using System.Collections.Generic;
-using CSE3902Project.Game.Entity;
+﻿using CSE3902Project.Game.Entity;
+using CSE3902Project.Game.Entity.State;
 using CSE3902Project.Game.Tiles;
+using System;
+using System.Collections.Generic;
 
-namespace CSE3902Project.Game.Collision;
 
-public class WizzrobeCollision
+namespace CSE3902Project.Game.Collision
 {
-    private readonly TileCollisionDetector _detector = new();
-    private readonly List<ITile> _tiles;
-
-    public WizzrobeCollision(List<ITile> tiles)
+    public class WizzrobeCollision
     {
-        _tiles = tiles;
-    }
+        private readonly List<ITile> _tiles;
+        private readonly TileCollisionDetector _detector = new TileCollisionDetector();
 
-    public bool isInTile(WizzrobeEnemy wizzrobe)
-    {
-        foreach (var tile in _tiles)
-            if (wizzrobe._bodyHurtbox.Bounds.Intersects(tile.Bounds))
-                return true;
-        return false;
-    }
+        public WizzrobeCollision(List<ITile> tiles)
+        {
+            _tiles = tiles;
+        }
 
-    public void CheckForValidPosition(WizzrobeEnemy wizzrobe)
-    {
-        if (isInTile(wizzrobe)) wizzrobe.FlipDirection();
+        public Boolean isInTile(WizzrobeEnemy wizzrobe)
+        {
+            foreach (ITile tile in _tiles)
+            {
+                if (wizzrobe._bodyHurtbox.Bounds.Intersects(tile.Bounds)) return true;
+            }
+            return false;
+        }
+
+        public void CheckForValidPosition(WizzrobeEnemy wizzrobe)
+        {
+            
+            if (isInTile(wizzrobe)){
+                wizzrobe.FlipDirection();
+            }
+        }
+
     }
 }
