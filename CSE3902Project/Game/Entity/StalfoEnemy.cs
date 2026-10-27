@@ -1,11 +1,10 @@
+using System.Collections.Generic;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
 using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
 
 namespace CSE3902Project.Game.Entity;
 
@@ -14,24 +13,14 @@ namespace CSE3902Project.Game.Entity;
 /// </summary>
 public class StalfoEnemy : StatefulEntityBase, IEnemy
 {
-    //movement
-    public Vector2 Position { get; set; }
     private const int StartingPosX = 600; //overridden by csv file
-    private readonly int StartingPosY = 100; //overridden by csv file
-    public Vector2 Velocity { get; set; }
-    public IHurtbox _bodyHurtbox { get; }
-    private StalfoStageCollision _stageCollision;
 
     //animation
     private readonly AnimationController _animationController;
+    private readonly int StartingPosY = 100; //overridden by csv file
+    private StalfoStageCollision _stageCollision;
+    private int deadAnimationBuffer;
     public int FrameBuffer; //Stalfo has no animation, just a frame flipped over the y axis
-    public Sprite Sprite { get; set; }
-    public SpriteAnimation Animation { get; set; }
-
-    //state
-    public bool IsFacingLeft { get; set; }
-    private int deadAnimationBuffer = 0;
-    public bool IsDead { get; set; }
 
     public StalfoEnemy()
     {
@@ -48,8 +37,20 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
         : this()
     {
         Position = spawnPosition;
-
     }
+
+    public Vector2 Velocity { get; set; }
+
+    public Sprite Sprite { get; set; }
+
+    //movement
+    public Vector2 Position { get; set; }
+    public IHurtbox _bodyHurtbox { get; }
+    public SpriteAnimation Animation { get; set; }
+
+    //state
+    public bool IsFacingLeft { get; set; }
+    public bool IsDead { get; set; }
 
     public void TakeDamage(DamageInfo damageInfo)
     {
@@ -75,14 +76,16 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
 
     public virtual void Update(GameTime gameTime)
     {
-        if (CurrentState is not StalfoDeadState){
+        if (CurrentState is not StalfoDeadState)
+        {
             _animationController.Update(gameTime);
             Animation?.Update(gameTime);
             CurrentState.Update(gameTime);
 
             UpdatePosition();
         }
-        else{
+        else
+        {
             if (deadAnimationBuffer < 8)
             {
                 deadAnimationBuffer++;
@@ -90,7 +93,8 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
                 Animation?.Update(gameTime);
                 CurrentState.Update(gameTime);
             }
-            else{
+            else
+            {
                 IsDead = true;
                 //play pop animation
             }
@@ -100,6 +104,12 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     public IEnumerable<IHurtbox> Hurtboxes
     {
         get { yield return _bodyHurtbox; }
+    }
+
+    public void FlipDirection()
+    {
+        Velocity = new Vector2(-Velocity.X, Velocity.Y);
+        IsFacingLeft = !IsFacingLeft;
     }
 
     public void SetStageCollision(StalfoStageCollision stageCollision)
@@ -124,27 +134,5 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
     public void MoveVertical()
     {
         //wait to implement when we get collision
-    }
-
-    public bool MoveHorizontal(bool IsFacingLeft)
-    {
-        if (LeftRightBuffer < 400)
-        {
-            LeftRightBuffer += 1;
-        }
-        else
-        {
-            LeftRightBuffer = 0;
-            FlipDirection();
-        }
-
-        return IsFacingLeft;
-    }
-
-
-    public void FlipDirection()
-    {
-        Velocity = new Vector2(-Velocity.X, Velocity.Y);
-        IsFacingLeft = !IsFacingLeft;
     }
 }
