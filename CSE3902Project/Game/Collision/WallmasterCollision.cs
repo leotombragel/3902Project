@@ -22,7 +22,7 @@ namespace CSE3902Project.Game.Collision
              CollisionSide side = _detector.GetHorizontalSide(wallmaster._bodyHurtbox.Bounds, tile.Bounds);
              if (side != CollisionSide.None)
                 {
-                    wallmaster.flipDirection();
+                    wallmaster.FlipDirection();
                 }
             }
         }

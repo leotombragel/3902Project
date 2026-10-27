@@ -160,7 +160,7 @@ public class AquamentusEnemy : IEnemy
             IsFacingLeft = true;
     }
 
-    public void flipDirection()
+    public void FlipDirection()
     {
         Velocity = new Vector2(-Velocity.X, Velocity.Y);
         IsFacingLeft = !IsFacingLeft;

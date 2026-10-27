@@ -30,7 +30,7 @@ namespace CSE3902Project.Game.Collision
         {
             
             if (isInTile(wizzrobe)){
-                wizzrobe.flipDirection();
+                wizzrobe.FlipDirection();
             }
         }
 

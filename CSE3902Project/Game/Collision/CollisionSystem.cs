@@ -97,81 +97,82 @@ public sealed class CollisionSystem
         var items = actors.Where(actor => actor is IItem);
 
         foreach (var source in itemUsers)
+        foreach (var target in items)
         {
-            foreach (var target in items)
+            if (target.Hurtboxes == null) continue;
+
+            foreach (var itemHurtbox in target.Hurtboxes)
             {
-                if (target.Hurtboxes == null) continue;
+                if (!itemHurtbox.IsEnabled) continue;
 
-                foreach (var itemHurtbox in target.Hurtboxes)
+                foreach (var sourceHurtbox in source.Hurtboxes)
                 {
-                    if (!itemHurtbox.IsEnabled) continue;
+                    if (!sourceHurtbox.IsEnabled) continue;
 
-                    foreach (var sourceHurtbox in source.Hurtboxes)
-                    {
-                        if (!sourceHurtbox.IsEnabled) continue;
-
-                        if (!sourceHurtbox.Bounds.Intersects(itemHurtbox.Bounds)) continue;
-                        ((IUsesItems)source).ChangeItem((IItem)target);
-                        ((IItem)target).IsDead = true;
-
-                        //collision between enemies
-                        foreach (var enemy1 in actors)
-                        {
-                            if (enemy1 is not IEnemy)
-                            {
-                                continue;
-                            }
-
-                            foreach (var enemy2 in actors)
-                            {
-                                if (enemy2 is not IEnemy || enemy1.Equals(enemy2))
-                                {
-                                    continue;
-                                }
-
-                                bool collides = false;
-
-                                if (enemy1.Hurtboxes == null || enemy2.Hurtboxes == null)
-                                {
-                                    continue;
-                                }
-
-                                foreach (var hurtbox1 in enemy1.Hurtboxes)
-                                {
-                                    foreach (var hurtbox2 in enemy2.Hurtboxes)
-                                    {
-                                        if (hurtbox1.Bounds.Intersects(hurtbox2.Bounds))
-                                            collides = true;
-                                    }
-                                }
-
-                                if (collides)
-                                {
-                                    if (enemy1.IsFacingLeft != enemy2.IsFacingLeft)
-                                    {
-                                        enemy1.flipDirection();
-                                        enemy2.flipDirection();
-                                    }
-                                    else if (enemy1.IsFacingLeft)
-                                    {
-                                        enemy2.flipDirection();
-                                    }
-                                    else
-                                        enemy1.flipDirection();
-                                }
-
-                            }
-                        }
-                    }
+                    if (!sourceHurtbox.Bounds.Intersects(itemHurtbox.Bounds)) continue;
+                    ((IUsesItems)source).ChangeItem((IItem)target);
+                    ((IItem)target).IsDead = true;
                 }
             }
         }
 
+        // Collision between projectiles and tiles
+        foreach (var source in damageSources)
+        {
+            if (!source.IsCollisionEnabled || source.IsFinished || source is not IProjectile) continue;
+
+            foreach (var tile in tileBounds)
+                if (source.Bounds.Intersects(tile))
+                    source.OnHitTile();
+        }
+
+        //collision between enemies
+        var enemies = actors.Where(actor => actor is IEnemy).ToList();
+        var seenCombinations = new HashSet<(ICombatActor, ICombatActor)>();
+        
+        foreach (var enemy1 in enemies)
+        {
+            foreach (var enemy2 in enemies)
+            {
+                if (enemy1.Equals(enemy2)) continue;
+                
+                var combination = (enemy1, enemy2);
+                var reverseCombination = (enemy2, enemy1);
+                var isNew = seenCombinations.Add(combination) && seenCombinations.Add(reverseCombination);
+                
+                if (!isNew) continue;
+
+                var collides = false;
+
+                if (enemy1.Hurtboxes == null || enemy2.Hurtboxes == null) continue;
+
+                foreach (var hurtbox1 in enemy1.Hurtboxes)
+                foreach (var hurtbox2 in enemy2.Hurtboxes)
+                    if (hurtbox1.Bounds.Intersects(hurtbox2.Bounds))
+                        collides = true;
+
+                if (collides)
+                {
+                    if (enemy1.IsFacingLeft != enemy2.IsFacingLeft)
+                    {
+                        enemy1.FlipDirection();
+                        enemy2.FlipDirection();
+                    }
+                    else if (enemy1.IsFacingLeft)
+                    {
+                        enemy2.FlipDirection();
+                    }
+                    else
+                    {
+                        enemy1.FlipDirection();
+                    }
+                }
+            }
+        }
     }
 
 
-
-     /// <summary>
+    /// <summary>
     ///     Draws hitbox and hurtbox collision bounds for debugging purposes.
     /// </summary>
     /// <param name="spriteBatch"></param>

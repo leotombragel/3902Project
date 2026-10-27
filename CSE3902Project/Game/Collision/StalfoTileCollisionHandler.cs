@@ -14,12 +14,12 @@ namespace CSE3902Project.Game.Collision
             if (side == CollisionSide.Right)
             {
                 stalfo.Position -= new Vector2(overlap.Width, 0);
-                stalfo.flipDirection();
+                stalfo.FlipDirection();
             }
             else if (side == CollisionSide.Left)
             {
                 stalfo.Position += new Vector2(overlap.Width, 0);
-                stalfo.flipDirection();
+                stalfo.FlipDirection();
             }
         }
     }

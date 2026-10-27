@@ -172,7 +172,7 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
     }
 
 
-    public void flipDirection()
+    public void FlipDirection()
     {
         ChangeState(new WallmasterMovingUpState(this));
     }
