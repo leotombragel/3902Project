@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CSE3902Project.Game.Damage;
@@ -38,6 +39,25 @@ public sealed class CollisionSystem
     }
 
     /// <summary>
+    ///     Checks for collision between player and enemy hurtboxes, specifically when link runs into an enemy.
+    ///     applying damage when collision is detected.
+    /// </summary>
+    /// <param name="actors"></param>
+    /// <param name="enemies"></param>
+    /// <param name="tileBounds"></param>
+    public void Update(Player _player, IReadOnlyList<IEnemy> enemies, IReadOnlyList<Rectangle> tileBounds)
+    {
+        foreach (var enemy in enemies)
+        {
+        if (_player.Hurtboxes.Any(hurtbox => enemy._bodyHurtbox.Bounds.Intersects(hurtbox.Bounds)))
+                {
+                   _player.TakeDamage(new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy)); 
+                }
+        }
+    }
+
+
+    /// <summary>
     ///     Checks for collision between actors (hurtboxes) and damage sources (hitboxes), applying damage when
     ///     collision is detected.
     /// </summary>
@@ -51,10 +71,15 @@ public sealed class CollisionSystem
         {
             if (!source.IsCollisionEnabled || source.IsFinished) continue;
 
+            if (tileBounds.Any(tile => source.Bounds.Intersects(tile)))
+            {
+                source.OnHitTile();
+                continue;
+            }
+
             foreach (var target in actors)
             {
                 if (!CanDamage(source, target)) continue;
-                if (target.Hurtboxes == null) continue; // Temporary until all entities have hurtboxes
 
                 if (target.Hurtboxes.Where(hurtbox => hurtbox.IsEnabled)
                     .Any(hurtbox => source.Bounds.Intersects(hurtbox.Bounds)))
@@ -62,6 +87,7 @@ public sealed class CollisionSystem
                     source.RecordHit(target);
                     target.TakeDamage(source.Damage);
                     source.OnHit(target);
+                    if (source.IsFinished) break;
                 }
             }
         }

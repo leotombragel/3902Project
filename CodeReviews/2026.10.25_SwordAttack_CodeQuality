@@ -1,0 +1,22 @@
+Leo Tombragel
+10/25/2026
+Sprint 3
+SwordAttack.cs
+Uthman Wood
+
+call to damageInfo() uses 1 as a magic number, maybe make a constant for this or add a comment
+-More use of magic numbers in Bounds
+
+the assigning of IsFinished is a pretty slick one-liner, good job
+-same with isCollisionEnabled, this works and is very pretty
+
+-good use of ternary conditionals in Bounds
+
+empty methods onHit and onHitTile are fine, but these could be an opportunity to reevaluate what should be in the 
+interface
+
+overall, there is extremely little fluff and zero major bugs. 
+
+a change we could make would be to make a "clank" effect when the sword interacts with a tile, kinda like
+dark souls when you strike a wall. This would be fairly easy to implement and would be a great opportunity 
+to actually utilize the onHitTile() function.

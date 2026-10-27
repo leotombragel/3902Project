@@ -1,0 +1,22 @@
+Leo Tombragel
+10/25/2026
+Sprint 3
+Game1.cs
+Whole team contribution
+20 minutes
+
+This file has very little complexity and is highly linear, so readability is generally good.
+
+function names are very descriptive and do exactly what the say
+
+update and draw are very similar fuctionally so it's good that they are close to each other
+
+every function regarding enemies are also in a row which is nice
+
+there were some instances of double entering which I removed
+
+for the most part, lines of code that need to be repeated are sectioned together in a block 
+like the foreach loops in Draw() or the clearing of lists in resetGame()
+
+I think it would make more sense for the foreach loops in update() to also occur one after the other
+to really show whats lists are being looped through
