@@ -143,6 +143,11 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     public void TakeDamage(DamageInfo damageInfo)
     {
         Health -= 1;
+        if (CurrentItem is not null)
+        {
+            CurrentItem = null;
+        }
+        
         Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
         Console.WriteLine($"Player health: {Health}");
         _bodyHurtbox.IsEnabled = false;
