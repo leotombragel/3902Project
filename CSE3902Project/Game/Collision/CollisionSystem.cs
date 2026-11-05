@@ -51,7 +51,6 @@ public sealed class CollisionSystem
         {
         if (_player.Hurtboxes.Any(hurtbox => enemy._bodyHurtbox.Bounds.Intersects(hurtbox.Bounds)))
                 {
-                    Console.WriteLine(_player._bodyHurtbox.IsEnabled);
                     if(_player._bodyHurtbox.IsEnabled)
                     {
                         _player.TakeDamage(new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy));
