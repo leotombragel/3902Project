@@ -21,6 +21,11 @@ namespace CSE3902Project.Game.Collision
                 stalfo.Position += new Vector2(overlap.Width, 0);
                 stalfo.FlipDirection();
             }
+            else if (side == CollisionSide.Bottom)
+            {
+                //stalfo.Position += new Vector2(overlap.Width, 0);
+                stalfo.FlipDirection();
+            }
         }
     }
 }

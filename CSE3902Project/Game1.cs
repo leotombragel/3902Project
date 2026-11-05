@@ -240,7 +240,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var item in _items) item.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         foreach (var enemy in _enemies) enemy.Draw(_spriteBatch);
-        //_collisionSystem.Draw(_spriteBatch, _actors, _damageSources);     this displays hit/hurtboxes
+        _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);     //dthis displays hit/hurtboxes
         _spriteBatch.End();
 
         

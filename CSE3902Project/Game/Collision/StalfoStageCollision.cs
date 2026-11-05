@@ -23,10 +23,16 @@ public class StalfoStageCollision
 
         foreach (ITile tile in _tiles)
         {
-             CollisionSide side = _detector.GetHorizontalSide(stalfo._bodyHurtbox.Bounds, tile.Bounds);
-             if (side != CollisionSide.None)
+             CollisionSide HorizontalSide = _detector.GetHorizontalSide(stalfo._bodyHurtbox.Bounds, tile.Bounds);
+             if (HorizontalSide != CollisionSide.None)
              {
-                 _handler.HandleCollision(stalfo, tile, side);
+                 _handler.HandleCollision(stalfo, tile, HorizontalSide);
+             }
+
+             CollisionSide VerticalSide = _detector.GetVerticalSide(stalfo._bodyHurtbox.Bounds, tile.Bounds);
+             if (VerticalSide == CollisionSide.Top)
+             {
+                 _handler.HandleCollision(stalfo, tile, VerticalSide);
              }
         }
     }
