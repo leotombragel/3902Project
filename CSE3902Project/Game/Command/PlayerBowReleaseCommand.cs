@@ -6,7 +6,7 @@ using CSE3902Project.Game.Items;
 
 namespace CSE3902Project.Game.Command;
 
-public sealed class PlayerBowReleaseCommand : ICommand
+public sealed class PlayerBowReleaseCommand : IUseItemCommand
 {
     private readonly Player _player;
     private readonly Action<IProjectile> _spawnProjectile;
@@ -24,6 +24,7 @@ public sealed class PlayerBowReleaseCommand : ICommand
 
     public void Execute()
     {
+        
         if (!_player.IsUsingBow || (_player.CurrentItem is not BowItem && _requiresItem)) return;
 
         if (_player.CurrentState.AnimationName != "PlayerBow") // PlayerBow is for when they are drawing the bow
@@ -37,4 +38,6 @@ public sealed class PlayerBowReleaseCommand : ICommand
 
         _player.ReleaseBow();
     }
+
+    public Type ItemType { get; } = typeof(BowItem);
 }

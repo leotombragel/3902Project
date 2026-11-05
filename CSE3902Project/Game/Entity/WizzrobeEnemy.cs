@@ -30,6 +30,7 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
     public bool IsFacingLeft { get; private set; }
     public bool IsDead { get; set; } // for list culling later
     private int deadAnimationBuffer = 0;
+    private bool active = false; //does not spawn until the player gets close to him
 
     //fireball
     public WizzrobeProjectile fireball;
@@ -82,6 +83,21 @@ public class WizzrobeEnemy : StatefulEntityBase, IEnemy
 
     public virtual void Update(GameTime gameTime)
     {
+        //waits until the player is close to spawn, so wizzrobe just 
+        //doesn't telleport to player's starting position
+        if (!active) 
+        {
+            if (Math.Abs(_player.Position.X - Position.X) < 50)
+            {
+                active = true;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+
         if (CurrentState is not WizzrobeDeadState){
             _animationController.Update(gameTime);
             Animation?.Update(gameTime);

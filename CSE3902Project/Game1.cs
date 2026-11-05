@@ -111,22 +111,22 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
         var fireCommand = new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile));
-        var bowDrawCommand = new PlayerBowDrawCommand(_player);
-        var bowReleaseCommand = new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile));
-        var bowDrawCommandNumber = new PlayerBowDrawCommand(_player, false);
-        var bowReleaseCommandNumber =
-            new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), false);
-        var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand]);
+        var bowDrawCommand = new PlayerBowDrawCommand(_player, true);
+        //var bowDrawCommandNumber = new PlayerBowDrawCommand(_player, false);
+        var bowReleaseCommand = new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), true);
+        //var bowReleaseCommandNumber =
+            //new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), false);
+        var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand, bowDrawCommand, bowReleaseCommand]);
 
         keyboardController.RegisterPressCommand(Keys.K, currentItemCommand);
-        keyboardController.RegisterPressCommand(Keys.K, bowDrawCommand);
         keyboardController.RegisterReleaseCommand(Keys.K, bowReleaseCommand);
+        //keyboardController.RegisterPressCommand(Keys.K, bowDrawCommand);
 
-        keyboardController.RegisterPressCommand(Keys.D1, boomerangCommand);
-        keyboardController.RegisterPressCommand(Keys.D2, bombCommand);
-        keyboardController.RegisterPressCommand(Keys.D3, fireCommand);
-        keyboardController.RegisterPressCommand(Keys.D4, bowDrawCommandNumber);
-        keyboardController.RegisterReleaseCommand(Keys.D4, bowReleaseCommandNumber);
+        //keyboardController.RegisterPressCommand(Keys.D1, boomerangCommand);
+        //keyboardController.RegisterPressCommand(Keys.D2, bombCommand);
+        //keyboardController.RegisterPressCommand(Keys.D3, fireCommand);
+        //keyboardController.RegisterPressCommand(Keys.D4, bowDrawCommandNumber);
+        //keyboardController.RegisterReleaseCommand(Keys.D4, bowReleaseCommandNumber);
 
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
