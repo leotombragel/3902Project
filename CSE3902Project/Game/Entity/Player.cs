@@ -33,9 +33,12 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     // Etc
     private const int StartingPosX = 200;
     private readonly AnimationController _animationController;
+    public int Health { get; set; } = 3;
+    public int Rupees { get; set; } = 0;
 
     // Collision
-    private readonly IHurtbox _bodyHurtbox;
+    public readonly IHurtbox _bodyHurtbox;
+    private int iFramesBuffer = 0; //invincibilty frames
     private readonly List<IItem> _items = new();
     private bool _previouslyFacingRight = true;
     private float _previousSpeed;
@@ -92,6 +95,16 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
 
+        if(_bodyHurtbox.IsEnabled == false) //invincibility frames
+        {
+            iFramesBuffer += 1;
+            if(iFramesBuffer > 60)
+            {
+                _bodyHurtbox.IsEnabled = true;
+                iFramesBuffer = 0;
+            }
+        }
+
         if (ShouldManagePosition)
         {
             // Decelerate the player when not walking
@@ -129,8 +142,15 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        IsDead = true;
+        Health -= 1;
         Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
+        Console.WriteLine($"Player health: {Health}");
+        _bodyHurtbox.IsEnabled = false;
+
+        if (Health <= 0)
+        {
+            IsDead = true;
+        }
     }
 
     public IState CurrentState { get; private set; }
@@ -147,14 +167,42 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public IItem CurrentItem { get; private set; }
 
-    public void ChangeItem(IItem item)
+    public void InteractWithItem(IItem item)
     {
-        if (IsUsingBow)
-        {
-            IsUsingBow = false;
-            SwitchToInactiveState();
+        if (IsUsingBow) 
+        {//state changes get buggy if we switch to a different weapon while player is charging bow
+            if(item is not RupeeItem
+            && item is not HeartItem
+            && item is not KeyItem
+            && item is not ArrowItem
+            && item is not BowItem){
+                IsUsingBow = false;
+                SwitchToInactiveState();
+            }
         }
         
+        //special cases for item interactions
+        if (item is ArrowItem) //need to use bow or arrow item. for now, both give bow item
+        {
+            CurrentItem = new BowItem(item.Position);
+            return;
+        }
+        else if (item is RupeeItem)
+        {
+            Rupees += 1;
+            return;
+        }
+        else if (item is HeartItem)
+        {
+            Health += 1;
+            return;
+        }
+        else if (item is KeyItem)
+        {
+            return; //we have no use for the key yet
+        }
+
+        //item is bomb, boomerang or fire (triforce)
         CurrentItem = item;
     }
 

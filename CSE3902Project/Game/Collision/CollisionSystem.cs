@@ -51,7 +51,12 @@ public sealed class CollisionSystem
         {
         if (_player.Hurtboxes.Any(hurtbox => enemy._bodyHurtbox.Bounds.Intersects(hurtbox.Bounds)))
                 {
-                   _player.TakeDamage(new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy)); 
+                    Console.WriteLine(_player._bodyHurtbox.IsEnabled);
+                    if(_player._bodyHurtbox.IsEnabled)
+                    {
+                        _player.TakeDamage(new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy));
+                    }
+                    
                 }
         }
     }
@@ -100,6 +105,7 @@ public sealed class CollisionSystem
         foreach (var target in items)
         {
             if (target.Hurtboxes == null) continue;
+            if (target.IsDead) continue;
 
             foreach (var itemHurtbox in target.Hurtboxes)
             {
@@ -110,7 +116,7 @@ public sealed class CollisionSystem
                     if (!sourceHurtbox.IsEnabled) continue;
 
                     if (!sourceHurtbox.Bounds.Intersects(itemHurtbox.Bounds)) continue;
-                    ((IUsesItems)source).ChangeItem((IItem)target);
+                    ((IUsesItems)source).InteractWithItem((IItem)target);
                     ((IItem)target).IsDead = true;
                 }
             }

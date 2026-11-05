@@ -10,5 +10,5 @@ public interface IHurtbox
 {
     Rectangle Bounds { get; }
     ICombatActor Owner { get; }
-    bool IsEnabled { get; }
+    bool IsEnabled { get; set; }
 }

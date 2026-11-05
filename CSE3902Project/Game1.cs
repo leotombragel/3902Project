@@ -116,7 +116,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         var bowReleaseCommand = new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), true);
         //var bowReleaseCommandNumber =
             //new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), false);
-        var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand, bowDrawCommand, bowReleaseCommand]);
+        var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand, bowDrawCommand]);
 
         keyboardController.RegisterPressCommand(Keys.K, currentItemCommand);
         keyboardController.RegisterReleaseCommand(Keys.K, bowReleaseCommand);
