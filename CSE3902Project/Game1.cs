@@ -33,6 +33,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private Player _player;
     private SpriteBatch _spriteBatch;
     private Stage _stage;
+    private bool _showHitboxes;
 
 
     public Game1()
@@ -107,6 +108,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         keyboardController.RegisterPressCommand(Keys.Z,
             new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
+        keyboardController.RegisterPressCommand(Keys.S, new EnterPipeCommand(TryEnterPipe));
+        keyboardController.RegisterPressCommand(Keys.F3, new ToggleHitboxesCommand(ToggleHitboxes));
 
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
@@ -224,6 +227,31 @@ public class Game1 : Microsoft.Xna.Framework.Game
         base.Update(gameTime);
     }
 
+    private void ToggleHitboxes()
+    {
+        _showHitboxes = !_showHitboxes;
+    }
+
+    private void TryEnterPipe()
+    {
+        if (!_player.IsOnGround || _player.IsDead)
+        {
+            Console.WriteLine("Player is not on the ground or is dead, cannot enter pipe.");
+            return;
+        }
+
+        var playerHitbox = _player.StageHitbox;
+        if (!playerHitbox.Intersects(_stage.PipeEntranceBounds))
+        {
+            Console.WriteLine("Player is not in the pipe entrance, cannot enter pipe.");
+            Console.WriteLine($"Player hitbox: {playerHitbox}, Pipe entrance bounds: {_stage.PipeEntranceBounds}");
+            Console.WriteLine($"Player bottom: {playerHitbox.Bottom}, Pipe entrance top: {_stage.PipeEntranceBounds.Top}");
+            return;
+        }
+
+        _player.TeleportTo(_stage.PipeExitPosition);
+    }
+
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Gray);
@@ -240,7 +268,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
         foreach (var item in _items) item.Draw(_spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
         foreach (var enemy in _enemies) enemy.Draw(_spriteBatch);
-        //_collisionSystem.Draw(_spriteBatch, _actors, _damageSources);     this displays hit/hurtboxes
+        if (_showHitboxes)
+        {
+            _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
+            _collisionSystem.DrawStageHitboxes(
+                _spriteBatch,
+                _stage.SolidTiles,
+                _player.StageHitbox,
+                _stage.PipeEntranceBounds,
+                new Rectangle((int)_stage.PipeExitPosition.X, (int)_stage.PipeExitPosition.Y, Tile.Size, Tile.Size));
+        }
         _spriteBatch.End();
 
         

@@ -11,6 +11,11 @@ namespace CSE3902Project.Game.Tiles;
 /// The level the player walks around in.
 public class Stage
 {
+    private const int PipeEntranceRow = 6;
+    private const int PipeEntranceFirstColumn = 46;
+    private const int PipeExitColumn = 236;
+    private const int PipeExitRow = 0;
+
     public Stage(int screenHeight)
     {
         var mapPath = Path.Combine(AppContext.BaseDirectory, "Content", "levelFiles", "1-1LevelExcel.csv");
@@ -30,6 +35,12 @@ public class Stage
         var mapHeight = MapRows.Length * Tile.Size;
         var mapTop = Math.Max(0, screenHeight - mapHeight);
         Bounds = new Rectangle(0, 0, mapWidthInTiles * Tile.Size, Math.Max(screenHeight, mapHeight));
+        PipeEntranceBounds = new Rectangle(
+            PipeEntranceFirstColumn * Tile.Size,
+            mapTop + PipeEntranceRow * Tile.Size,
+            2 * Tile.Size,
+            Tile.Size);
+        PipeExitPosition = new Vector2(PipeExitColumn * Tile.Size, mapTop + PipeExitRow * Tile.Size);
         SolidTiles = new List<ITile>();
         GroundY = LoadStageFromCsv(mapTokens, mapTop);
         BuildSolidRectangles();
@@ -37,6 +48,8 @@ public class Stage
 
     public int GroundY { get; }
     public Rectangle Bounds { get; }
+    public Rectangle PipeEntranceBounds { get; }
+    public Vector2 PipeExitPosition { get; }
     public List<ITile> SolidTiles { get; }
     public List<Rectangle> SolidRectangles { get; } = new();
     public List<EnemySpawn> EnemySpawns { get; } = new();

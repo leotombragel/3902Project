@@ -5,6 +5,7 @@ using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Items;
+using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,6 +19,7 @@ public sealed class CollisionSystem
 {
     private readonly Texture2D _debugPixel;
     private readonly Texture2D _debugPixel2;
+    private readonly Texture2D _debugOutlinePixel;
 
     public CollisionSystem(GraphicsDevice graphicsDevice)
     {
@@ -25,6 +27,8 @@ public sealed class CollisionSystem
         _debugPixel.SetData([Color.DarkKhaki * 0.8f]);
         _debugPixel2 = new Texture2D(graphicsDevice, 1, 1);
         _debugPixel2.SetData([Color.DarkGreen * 0.8f]);
+        _debugOutlinePixel = new Texture2D(graphicsDevice, 1, 1);
+        _debugOutlinePixel.SetData([Color.White]);
     }
 
     private static bool CanDamage(IDamageSource source, ICombatActor victim)
@@ -203,5 +207,29 @@ public sealed class CollisionSystem
                 spriteBatch.Draw(_debugPixel2, destination, Color.DarkGreen * 0.8f);
             }
         }
+    }
+
+    public void DrawStageHitboxes(SpriteBatch spriteBatch, IReadOnlyList<ITile> tiles, Rectangle playerHitbox,
+        Rectangle pipeEntrance, Rectangle pipeExit)
+    {
+        foreach (var tile in tiles)
+        {
+            DrawOutline(spriteBatch, tile.Bounds, Color.Red);
+        }
+
+        DrawOutline(spriteBatch, playerHitbox, Color.LimeGreen);
+        DrawOutline(spriteBatch, pipeEntrance, Color.Yellow);
+        DrawOutline(spriteBatch, pipeExit, Color.DeepSkyBlue);
+    }
+
+    private void DrawOutline(SpriteBatch spriteBatch, Rectangle bounds, Color color)
+    {
+        const int thickness = 1;
+        spriteBatch.Draw(_debugOutlinePixel, new Rectangle(bounds.Left, bounds.Top, bounds.Width, thickness), color);
+        spriteBatch.Draw(_debugOutlinePixel,
+            new Rectangle(bounds.Left, bounds.Bottom - thickness, bounds.Width, thickness), color);
+        spriteBatch.Draw(_debugOutlinePixel, new Rectangle(bounds.Left, bounds.Top, thickness, bounds.Height), color);
+        spriteBatch.Draw(_debugOutlinePixel,
+            new Rectangle(bounds.Right - thickness, bounds.Top, thickness, bounds.Height), color);
     }
 }
