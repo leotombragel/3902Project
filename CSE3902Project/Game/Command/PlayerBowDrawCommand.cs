@@ -5,7 +5,7 @@ using CSE3902Project.Game.Items;
 
 namespace CSE3902Project.Game.Command;
 
-public class PlayerBowDrawCommand : ICommand
+public class PlayerBowDrawCommand : IUseItemCommand
 {
     private readonly Player _player;
     private readonly bool _requiresItem;
@@ -22,4 +22,6 @@ public class PlayerBowDrawCommand : ICommand
 
         _player.ChangeState(new PlayerBowState(_player));
     }
+
+    public Type ItemType { get; } = typeof(BowItem);
 }
