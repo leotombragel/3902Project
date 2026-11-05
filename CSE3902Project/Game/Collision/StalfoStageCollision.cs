@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
@@ -26,14 +27,24 @@ public class StalfoStageCollision
              CollisionSide HorizontalSide = _detector.GetHorizontalSide(stalfo._bodyHurtbox.Bounds, tile.Bounds);
              if (HorizontalSide != CollisionSide.None)
              {
+                Console.WriteLine("stalfo collided with tile");
                  _handler.HandleCollision(stalfo, tile, HorizontalSide);
-             }
+             }else{
+                var GroundCheckLeft = new Rectangle(stalfo._bodyHurtbox.Bounds.X - 3, stalfo._bodyHurtbox.Bounds.Y + stalfo._bodyHurtbox.Bounds.Height, 1, 1);
+                CollisionSide GroundCheckLeftSide = _detector.GetHorizontalSide(GroundCheckLeft, tile.Bounds);
+                if (GroundCheckLeftSide != CollisionSide.None)
+                {
+                    stalfo.FlipDirection();
+                }
 
-             CollisionSide VerticalSide = _detector.GetVerticalSide(stalfo._bodyHurtbox.Bounds, tile.Bounds);
-             if (VerticalSide == CollisionSide.Top)
-             {
-                 _handler.HandleCollision(stalfo, tile, VerticalSide);
+                var GroundCheckRight = new Rectangle(stalfo._bodyHurtbox.Bounds.X + stalfo._bodyHurtbox.Bounds.Width + 3, stalfo._bodyHurtbox.Bounds.Y + stalfo._bodyHurtbox.Bounds.Height, 1, 1);
+                CollisionSide GroundCheckRightSide = _detector.GetHorizontalSide(GroundCheckRight, tile.Bounds);
+                if (GroundCheckRightSide != CollisionSide.None)
+                {
+                    stalfo.FlipDirection();
+                }
              }
+        
         }
     }
 }
