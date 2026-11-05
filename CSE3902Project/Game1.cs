@@ -234,7 +234,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _spriteBatch.End();
 
         //everything in the stage gets moved by the camera
-        _spriteBatch.Begin(transformMatrix: _camera.GetTransform());
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransform());
         _stage.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
         foreach (var item in _items) item.Draw(_spriteBatch);
