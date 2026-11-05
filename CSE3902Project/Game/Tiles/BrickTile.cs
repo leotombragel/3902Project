@@ -20,6 +20,12 @@ public class BrickTile : Tile
         _contents = contents;
     }
 
+    public BrickTile(Vector2 position, BlockContents contents, ISprite sprite)
+        : base(TileType.Brick, sprite, position)
+    {
+        _contents = contents;
+    }
+
     public override bool IsBroken
     {
         get { return _isBroken; }

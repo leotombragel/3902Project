@@ -28,7 +28,16 @@ public class TileSpriteFactory
 
     public ISprite CreateGroundSprite() => CreateStaticSprite(0, 0);
 
-    public ISprite CreateBrickSprite() => CreateStaticSprite(1, 0);
+    public ISprite CreateUnderGroundSprite() => CreateMarioTileSprite(1, 1);
+
+    public ISprite CreateBrickSprite() => CreateBrickSprite(Color.White);
+
+    public ISprite CreateBrickSprite(Color tint)
+    {
+        var sprite = CreateStaticSprite(1, 0);
+        sprite.Color = tint;
+        return sprite;
+    }
 
     public ISprite CreateStepSprite() => CreateStaticSprite(2, 0);
 
@@ -36,13 +45,25 @@ public class TileSpriteFactory
 
     public ISprite CreatePipeBodySprite() => CreateStaticSprite(0, 2);
 
-    public ISprite CreatePipeLeftBodySprite() => CreateMarioTileSprite(120, 86);
+    public ISprite CreatePipeLeftUpperBodySprite() => CreateMarioTileSprite(120, 86);
 
-    public ISprite CreatePipeRightBodySprite() => CreateMarioTileSprite(137, 86);
+    public ISprite CreatePipeRightUpperBodySprite() => CreateMarioTileSprite(137, 86);
 
-    public ISprite CreatePipeLeftOpeningSprite() => CreateMarioTileSprite(120, 69);
+    public ISprite CreatePipeLeftUpperOpeningSprite() => CreateMarioTileSprite(120, 69);
 
-    public ISprite CreatePipeRightOpeningSprite() => CreateMarioTileSprite(137, 69);
+    public ISprite CreatePipeRightUpperOpeningSprite() => CreateMarioTileSprite(137, 69);
+
+    public ISprite CreatePipeLeftUpperConnectingBodySprite() => CreateMarioTileSprite(120, 103);
+
+    public ISprite CreatePipeLeftLowerConnectingBodySprite() => CreateMarioTileSprite(120, 120);
+
+    public ISprite CreatePipeLeftFacingUpperBodySprite() => CreateMarioTileSprite(103, 103);
+
+    public ISprite CreatePipeLeftFacingLowerBodySprite() => CreateMarioTileSprite(103, 120);
+
+    public ISprite CreatePipeLeftFacingUpperOpeningSprite() => CreateMarioTileSprite(86, 103);
+
+    public ISprite CreatePipeLeftFacingLowerOpeningSprite() => CreateMarioTileSprite(86, 120);
 
     public ISprite CreateQuestionBlockSprite()
     {
@@ -50,7 +71,7 @@ public class TileSpriteFactory
             QuestionFrameDuration, Border, CellStride + Border, 2 * Border);
     }
 
-    private ISprite CreateStaticSprite(int column, int row)
+    private Sprite CreateStaticSprite(int column, int row)
     {
         var sprite = CreateSheetSprite();
         sprite.SourceRectangle = new Rectangle(column * CellStride + Border, row * CellStride + Border, CellSize,

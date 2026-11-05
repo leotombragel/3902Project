@@ -100,7 +100,8 @@ public class Stage
             }
 
             SolidTiles.Add(tile);
-            if (cellType == StageCellType.Ground && groundY < 0) groundY = (int)position.Y;
+            if ((cellType is StageCellType.Ground or StageCellType.UnderGround) && groundY < 0)
+                groundY = (int)position.Y;
         }
 
         if (groundY < 0) throw new InvalidDataException("The stage CSV does not contain any ground tiles.");
@@ -133,38 +134,7 @@ public class Stage
 
     private ITile CreateTile(StageCellType cellType, Vector2 position)
     {
-        switch (cellType)
-        {
-            case StageCellType.Ground:
-                return TileFactory.Create(TileType.Ground, position);
-            case StageCellType.Breakable:
-                return TileFactory.Create(TileType.Brick, position);
-            case StageCellType.BreakableWithCoin:
-                return new BrickTile(position, new BlockContents(StageCellType.RupeeItem, PoppedItems));
-            case StageCellType.BreakableWithBomb:
-                return new BrickTile(position, new BlockContents(StageCellType.BombItem, PoppedItems));
-            case StageCellType.Stair:
-                return TileFactory.Create(TileType.Step, position);
-            case StageCellType.QuestionBlock:
-                return new QuestionBlockTile(position, new BlockContents(StageCellType.RupeeItem, PoppedItems));
-            case StageCellType.QuestionBlockWithBoomerang:
-                return new QuestionBlockTile(position,
-                    new BlockContents(StageCellType.BoomerangItem, PoppedItems));
-            case StageCellType.HiddenBlockWithFire:
-                return TileFactory.Create(TileType.QuestionBlock, position);
-            case StageCellType.PipeLeftBody:
-                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeLeftBodySprite());
-            case StageCellType.PipeRightBody:
-                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeRightBodySprite());
-            case StageCellType.PipeLeftOpening:
-                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeLeftOpeningSprite());
-            case StageCellType.PipeRightOpening:
-                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeRightOpeningSprite());
-            case StageCellType.Air:
-                return null;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(cellType), cellType, "Unknown stage cell type.");
-        }
+        return TileFactory.Create(cellType, position, PoppedItems);
     }
 
     //removes broken bricks from both lists
