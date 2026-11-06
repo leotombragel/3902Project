@@ -23,7 +23,7 @@ public sealed class BodyHurtbox : IHurtbox
 
     public ICombatActor Owner { get; }
 
-    public bool IsEnabled => !Owner.IsDead;
+    public bool IsEnabled { get; set; } = true; //=> !Owner.IsDead;
 
     public Rectangle Bounds => new(
         (int)Owner.Position.X + _offset.X,

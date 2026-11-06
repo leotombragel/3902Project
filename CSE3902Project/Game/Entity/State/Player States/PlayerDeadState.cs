@@ -56,6 +56,7 @@ public class PlayerDeadState : IState
         // Reset player once he falls off the screen. Later we can also do things like subtracting lives.
         if (_player.Position.Y > 1000)
         {
+            _player.Health = 3;
             _player.ShouldManagePosition = true;
             _player.IsDead = false;
             _player.ChangeState(new PlayerIdleState(_player));

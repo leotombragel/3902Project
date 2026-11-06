@@ -13,7 +13,7 @@ public interface IItem : ICombatActor
     Vector2 Position { get; }
 
     /// The area the item takes up. Meant for picking up items later.
-    Rectangle Bounds { get; }
+    Rectangle Bounds { get;}
 
     void Update(GameTime gameTime);
     void Draw(SpriteBatch spriteBatch);
