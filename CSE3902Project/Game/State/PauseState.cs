@@ -10,6 +10,7 @@ public class PauseState : IGameState
 {
     private readonly GraphicsDevice _graphicsDevice;
     private readonly KeyboardController _keyboardController;
+    private readonly Texture2D _blackTexture;
 
     public PauseState(GraphicsDevice graphics, StateManager stateManager, Game1 game)
     {
@@ -18,10 +19,15 @@ public class PauseState : IGameState
 
         _keyboardController.RegisterPressCommand(Keys.Escape, new ResumeCommand(stateManager));
         _keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(game));
+        
+        _blackTexture = new Texture2D(_graphicsDevice, 1, 1);
+        Color[] colorData = { Color.Black };
+        _blackTexture.SetData(colorData);
     }
 
     public void Enter()
     {
+        _keyboardController.SyncState();
     }
 
     public void Exit()
@@ -35,12 +41,8 @@ public class PauseState : IGameState
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        Color[] colorData = { Color.Black };
-        var blackTexture = new Texture2D(_graphicsDevice, 1, 1);
-        blackTexture.SetData(colorData);
-        
         spriteBatch.Begin();
-        spriteBatch.Draw(blackTexture,
+        spriteBatch.Draw(_blackTexture,
             new Rectangle(0, 0, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height), Color.White * 0.5f);
         spriteBatch.End();
     }
