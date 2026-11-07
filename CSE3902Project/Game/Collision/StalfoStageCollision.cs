@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
@@ -23,11 +24,27 @@ public class StalfoStageCollision
 
         foreach (ITile tile in _tiles)
         {
-             CollisionSide side = _detector.GetHorizontalSide(stalfo._bodyHurtbox.Bounds, tile.Bounds);
-             if (side != CollisionSide.None)
+             CollisionSide HorizontalSide = _detector.GetHorizontalSide(stalfo._bodyHurtbox.Bounds, tile.Bounds);
+             if (HorizontalSide != CollisionSide.None)
              {
-                 _handler.HandleCollision(stalfo, tile, side);
+                 _handler.HandleCollision(stalfo, tile, HorizontalSide);
+             }else{
+                //make a little box that check if stalfo is about to try and cross a gap, if so flip direction
+                var GroundCheckLeft = new Rectangle(stalfo._bodyHurtbox.Bounds.X - 3, stalfo._bodyHurtbox.Bounds.Y + stalfo._bodyHurtbox.Bounds.Height, 1, 1);
+                CollisionSide GroundCheckLeftSide = _detector.GetHorizontalSide(GroundCheckLeft, tile.Bounds);
+                if (GroundCheckLeftSide != CollisionSide.None)
+                {
+                    stalfo.FlipDirection();
+                }
+                //make a little box that check if stalfo is about to try and cross a gap, if so flip direction
+                var GroundCheckRight = new Rectangle(stalfo._bodyHurtbox.Bounds.X + stalfo._bodyHurtbox.Bounds.Width + 3, stalfo._bodyHurtbox.Bounds.Y + stalfo._bodyHurtbox.Bounds.Height, 1, 1);
+                CollisionSide GroundCheckRightSide = _detector.GetHorizontalSide(GroundCheckRight, tile.Bounds);
+                if (GroundCheckRightSide != CollisionSide.None)
+                {
+                    stalfo.FlipDirection();
+                }
              }
+        
         }
     }
 }

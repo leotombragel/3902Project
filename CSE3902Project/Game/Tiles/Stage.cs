@@ -137,6 +137,7 @@ public class Stage
         {
             case StageCellType.Ground:
                 return TileFactory.Create(TileType.Ground, position);
+                return new BrickTile(position, new BlockContents(StageCellType.RupeeItem, PoppedItems));
             case StageCellType.Breakable:
                 return TileFactory.Create(TileType.Brick, position);
             case StageCellType.BreakableWithCoin:
