@@ -1,5 +1,6 @@
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.State;
+using Gum;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -23,6 +24,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void Initialize()
     {
+        GumService.Default.Initialize(this);
         base.Initialize();
     }
 
@@ -43,6 +45,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         _stateManager.Update(gameTime);
+        GumService.Default.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -52,6 +55,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.Gray);
 
         _stateManager.Draw(gameTime, _spriteBatch);
+        GumService.Default.Draw();
         
         base.Draw(gameTime);
     }
