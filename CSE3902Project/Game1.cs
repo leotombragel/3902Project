@@ -9,7 +9,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private StateManager _stageManager;
+    private StateManager _stateManager;
     
     public Game1()
     {
@@ -35,14 +35,14 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ItemSpriteFactory.Instance.LoadAllAssets(Content); // Item sprites
         BackgroundSpriteFactory.Instance.LoadAllAssets(Content); // Background image
 
-        _stageManager = new StateManager();
-        var gameplayState = new GameplayState(GraphicsDevice, _stageManager, this);
-        _stageManager.ChangeState(gameplayState);
+        _stateManager = new StateManager();
+        var gameplayState = new GameplayState(GraphicsDevice, _stateManager, this);
+        _stateManager.Push(gameplayState);
     }
 
     protected override void Update(GameTime gameTime)
     {
-        _stageManager.Update(gameTime);
+        _stateManager.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -51,7 +51,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDevice.Clear(Color.Gray);
 
-        _stageManager.Draw(gameTime, _spriteBatch);
+        _stateManager.Draw(gameTime, _spriteBatch);
         
         base.Draw(gameTime);
     }

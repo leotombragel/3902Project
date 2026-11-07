@@ -17,42 +17,110 @@ namespace CSE3902Project.Game.State;
 
 public class GameplayState : IGameState
 {
-    private readonly StateManager _stateManager;
-    private readonly Func<IGameState> _pauseFactory;
-    private readonly GraphicsDevice _graphicsDevice;
-    private readonly Game1 _game;
-    
     // Stage element collections
     private readonly List<ICombatActor> _actors = new();
     private readonly List<IAttack> _attacks = new();
     private readonly List<IDamageSource> _damageSources = new();
     private readonly List<IEnemy> _enemies = new();
+    private readonly Game1 _game;
+    private readonly GraphicsDevice _graphicsDevice;
     private readonly List<IProjectile> _projectiles = new();
-    private List<IItem> _items = new();
-    
-    // Standalone stage elements
-    private Player _player;
-    private Stage _stage;
+    private readonly StateManager _stateManager;
     private Background _background;
-    
+
     // Other systems in the stage
     private Camera _camera;
     private CameraFollowPlayer _cameraFollowPlayer;
-    private CollisionSystem _collisionSystem;
-    
+    private readonly CollisionSystem _collisionSystem;
+
     private List<IController> _controllers;
+    private List<IItem> _items = new();
+
+    // Standalone stage elements
+    private Player _player;
+    private Stage _stage;
+    
+    // Other
+    private readonly PauseState _pauseState;
 
     public GameplayState(GraphicsDevice graphics, StateManager stateManager, Game1 game)
     {
         _stateManager = stateManager;
-        _pauseFactory = () => new PauseState(graphics, _stateManager, game, this);
         _graphicsDevice = graphics;
         _game = game;
-        
+
         _collisionSystem = new CollisionSystem(graphics);
+        _pauseState = new PauseState(graphics, stateManager, game);
         ResetGame();
     }
-    
+
+    public void Enter()
+    {
+    }
+
+    public void Exit()
+    {
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        foreach (var controller in _controllers) controller.Update();
+        _player.Update(gameTime);
+        foreach (var attack in _attacks) attack.Update(gameTime);
+
+        _cameraFollowPlayer.Update();
+        _stage.Update(gameTime);
+
+        //turn the items that popped out into real items
+        foreach (var spawn in _stage.PoppedItems)
+        {
+            var poppedItem = CreateItem(spawn);
+            _items.Add(poppedItem);
+            _actors.Add(poppedItem);
+        }
+
+        _stage.PoppedItems.Clear();
+
+        foreach (var item in _items) item.Update(gameTime);
+        foreach (var projectile in _projectiles) projectile.Update(gameTime);
+        foreach (var enemy in _enemies) enemy.Update(gameTime);
+
+        _damageSources.Clear();
+        _damageSources.AddRange(_projectiles);
+        _damageSources.AddRange(_attacks);
+
+        _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
+        _collisionSystem.Update(_player, _enemies, _stage.SolidRectangles);
+
+        _projectiles.RemoveAll(projectile => projectile.IsFinished);
+        _attacks.RemoveAll(attack => attack.IsFinished);
+        _enemies.RemoveAll(enemy => enemy.IsDead);
+        _items.RemoveAll(item => item.IsDead);
+        _damageSources.RemoveAll(damageSource => damageSource.IsFinished);
+    }
+
+    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    {
+        //background stays still on the screen
+        spriteBatch.Begin();
+        _background.Draw(spriteBatch);
+        spriteBatch.End();
+
+        //everything in the stage gets moved by the camera
+        spriteBatch.Begin(transformMatrix: _camera.GetTransform());
+        _stage.Draw(spriteBatch);
+        _player.Draw(spriteBatch);
+        foreach (var item in _items) item.Draw(spriteBatch);
+        foreach (var projectile in _projectiles) projectile.Draw(spriteBatch);
+        foreach (var enemy in _enemies) enemy.Draw(spriteBatch);
+        //_collisionSystem.Draw(_spriteBatch, _actors, _damageSources);     //dthis displays hit/hurtboxes
+        spriteBatch.End();
+
+
+        spriteBatch.Begin();
+        spriteBatch.End();
+    }
+
     public void ResetGame()
     {
         var keyboardController = new KeyboardController();
@@ -100,12 +168,13 @@ public class GameplayState : IGameState
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
         var fireCommand = new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile));
-        var bowDrawCommand = new PlayerBowDrawCommand(_player, true);
+        var bowDrawCommand = new PlayerBowDrawCommand(_player);
         //var bowDrawCommandNumber = new PlayerBowDrawCommand(_player, false);
-        var bowReleaseCommand = new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), true);
+        var bowReleaseCommand = new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile));
         //var bowReleaseCommandNumber =
-            //new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), false);
-        var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand, bowDrawCommand]);
+        //new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), false);
+        var currentItemCommand =
+            new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand, bowDrawCommand]);
 
         keyboardController.RegisterPressCommand(Keys.K, currentItemCommand);
         keyboardController.RegisterReleaseCommand(Keys.K, bowReleaseCommand);
@@ -119,10 +188,11 @@ public class GameplayState : IGameState
 
         keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(_game));
         keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
+        keyboardController.RegisterPressCommand(Keys.Escape, new PauseCommand(_pauseState, _stateManager));
 
         _controllers = new List<IController> { keyboardController, mouseController };
     }
-    
+
     private IEnemy CreateEnemy(EnemySpawn spawn)
     {
         return spawn.Type switch
@@ -172,74 +242,5 @@ public class GameplayState : IGameState
             StageCellType.HeartItem => new HeartItem(center),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported item spawn type.")
         };
-    }
-    
-    public void Enter()
-    {
-        
-    }
-
-    public void Exit()
-    {
-        
-    }
-
-    public void Update(GameTime gameTime)
-    {
-        foreach (var controller in _controllers) controller.Update();
-        _player.Update(gameTime);
-        foreach (var attack in _attacks) attack.Update(gameTime);
-
-        _cameraFollowPlayer.Update();
-        _stage.Update(gameTime);
-
-        //turn the items that popped out into real items
-        foreach (ItemSpawn spawn in _stage.PoppedItems)
-        {
-            IItem poppedItem = CreateItem(spawn);
-            _items.Add(poppedItem);
-            _actors.Add(poppedItem);
-        }
-
-        _stage.PoppedItems.Clear();
-
-        foreach (var item in _items) item.Update(gameTime);
-        foreach (var projectile in _projectiles) projectile.Update(gameTime);
-        foreach (var enemy in _enemies) enemy.Update(gameTime);
-
-        _damageSources.Clear();
-        _damageSources.AddRange(_projectiles);
-        _damageSources.AddRange(_attacks);
-
-        _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
-        _collisionSystem.Update(_player, _enemies, _stage.SolidRectangles);
-
-        _projectiles.RemoveAll(projectile => projectile.IsFinished);
-        _attacks.RemoveAll(attack => attack.IsFinished);
-        _enemies.RemoveAll(enemy => enemy.IsDead);
-        _items.RemoveAll(item => item.IsDead);
-        _damageSources.RemoveAll(damageSource => damageSource.IsFinished);
-    }
-
-    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-    {
-        //background stays still on the screen
-        spriteBatch.Begin();
-        _background.Draw(spriteBatch);
-        spriteBatch.End();
-
-        //everything in the stage gets moved by the camera
-        spriteBatch.Begin(transformMatrix: _camera.GetTransform());
-        _stage.Draw(spriteBatch);
-        _player.Draw(spriteBatch);
-        foreach (var item in _items) item.Draw(spriteBatch);
-        foreach (var projectile in _projectiles) projectile.Draw(spriteBatch);
-        foreach (var enemy in _enemies) enemy.Draw(spriteBatch);
-        //_collisionSystem.Draw(_spriteBatch, _actors, _damageSources);     //dthis displays hit/hurtboxes
-        spriteBatch.End();
-
-        
-        spriteBatch.Begin();
-        spriteBatch.End();
     }
 }
