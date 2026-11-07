@@ -18,8 +18,6 @@ public class PlayerDeadState : IState
 
     public void Enter()
     {
-        // Get rid of the player's hitbox
-
         // Sets player velocity to upwards and to some random horizontal direction.
         // This class's Update method adds extra gravity so he falls off the screen quickly, and we let Player.Decelerate
         // handle the horizontal deceleration.
@@ -28,6 +26,8 @@ public class PlayerDeadState : IState
             Y = (float)(Random.Shared.NextDouble() * -5d), X = (float)(Random
                 .Shared.NextDouble() * 14d - 7d)
         };
+
+        _player.AcceptsStateChanges = false;
     }
 
     public void Update(GameTime gameTime)
@@ -59,6 +59,7 @@ public class PlayerDeadState : IState
             _player.Health = 3;
             _player.ShouldManagePosition = true;
             _player.IsDead = false;
+            _player.AcceptsStateChanges = true;
             _player.ChangeState(new PlayerIdleState(_player));
         }
     }
@@ -67,5 +68,6 @@ public class PlayerDeadState : IState
     {
         _player.Position = new Vector2(200, _player.StartingPosY);
         _player.Velocity = new Vector2(0, 0);
+        _player.AcceptsStateChanges = true;
     }
 }

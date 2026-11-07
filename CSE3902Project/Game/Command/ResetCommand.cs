@@ -1,9 +1,11 @@
+using CSE3902Project.Game.State;
+
 namespace CSE3902Project.Game.Command;
 
 public class ResetCommand : ICommand
 {
-    private readonly Game1 _game;
-    public ResetCommand(Game1 game)
+    private readonly GameplayState _game;
+    public ResetCommand(GameplayState game)
     {
         _game = game;
 
