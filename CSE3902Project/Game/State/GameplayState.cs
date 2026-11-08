@@ -6,6 +6,7 @@ using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
+using CSE3902Project.Game.Hud;
 using CSE3902Project.Game.Input;
 using CSE3902Project.Game.Items;
 using CSE3902Project.Game.Tiles;
@@ -27,6 +28,7 @@ public class GameplayState : IGameState
     private readonly List<IProjectile> _projectiles = new();
     private readonly StateManager _stateManager;
     private Background _background;
+    private Hud.Hud _hud;
 
     // Other systems in the stage
     private Camera _camera;
@@ -69,6 +71,7 @@ public class GameplayState : IGameState
         foreach (var attack in _attacks) attack.Update(gameTime);
 
         _cameraFollowPlayer.Update();
+        _hud.Update(gameTime);
         _stage.Update(gameTime);
 
         //turn the items that popped out into real items
@@ -117,7 +120,9 @@ public class GameplayState : IGameState
         spriteBatch.End();
 
 
-        spriteBatch.Begin();
+        //hud stays still on the screen (point sampling keeps the pixel art sharp)
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _hud.Draw(spriteBatch);
         spriteBatch.End();
     }
 
@@ -136,6 +141,7 @@ public class GameplayState : IGameState
         _player.SetStageCollision(new PlayerStageCollision(_stage.SolidTiles, _stage.Bounds));
 
         _camera = new Camera(viewport.Width, viewport.Height);
+        _hud = new Hud.Hud(_player, viewport.Width);
         _cameraFollowPlayer = new CameraFollowPlayer(_camera, _player, _stage.Bounds);
 
         _enemies.Clear();

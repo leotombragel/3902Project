@@ -36,6 +36,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         TileSpriteFactory.Instance.LoadAllAssets(Content); // Tile sprites
         ItemSpriteFactory.Instance.LoadAllAssets(Content); // Item sprites
         BackgroundSpriteFactory.Instance.LoadAllAssets(Content); // Background image
+        HudSpriteFactory.Instance.LoadAllAssets(Content, GraphicsDevice); // Hud hearts and rupee
+        TextCreator.Initialize(Content); // Font for the hud numbers
 
         _stateManager = new StateManager();
         var gameplayState = new GameplayState(GraphicsDevice, _stateManager, this);

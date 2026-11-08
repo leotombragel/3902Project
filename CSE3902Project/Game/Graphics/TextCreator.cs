@@ -18,6 +18,12 @@ public class TextCreator
         spriteBatch.DrawString(_font, text, position, Color.Black);
     }
 
+    //same thing but you pick the color
+    public static void CreateText(string text, Vector2 position, SpriteBatch spriteBatch, Color color)
+    {
+        spriteBatch.DrawString(_font, text, position, color);
+    }
+
     public static void CreateSprint0Text(GameWindow window, SpriteBatch spriteBatch)
     {
         CreateText(
