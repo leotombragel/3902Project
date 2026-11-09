@@ -1,0 +1,8 @@
+hearts.png is "Sprite Sheet.png" from the "Pixel Hearts" pack.
+
+Artwork created by TokyoGeisha
+Source: https://opengameart.org/content/pixel-hearts
+License: CC0 (public domain). The author says "Feel free to use it anyway you want. No credit necessary."
+
+The sheet has 3 hearts (full, half, empty), each 36x32 pixels with 2 pixels of spacing. The game uses the full
+heart and the empty heart.
