@@ -222,6 +222,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _attacks.RemoveAll(attack => attack.IsFinished);
         _enemies.RemoveAll(enemy => enemy.IsDead);
         _items.RemoveAll(item => item.IsDead);
+        _actors.RemoveAll(actor => actor.IsDead);
         _damageSources.RemoveAll(damageSource => damageSource.IsFinished);
 
         base.Update(gameTime);

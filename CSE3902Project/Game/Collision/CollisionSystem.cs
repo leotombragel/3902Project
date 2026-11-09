@@ -51,16 +51,14 @@ public sealed class CollisionSystem
     /// <param name="tileBounds"></param>
     public void Update(Player _player, IReadOnlyList<IEnemy> enemies, IReadOnlyList<Rectangle> tileBounds)
     {
+        if (_player.IsDead) return;
+
         foreach (var enemy in enemies)
         {
-        if (_player.Hurtboxes.Any(hurtbox => enemy._bodyHurtbox.Bounds.Intersects(hurtbox.Bounds)))
-                {
-                    if(_player._bodyHurtbox.IsEnabled)
-                    {
-                        _player.TakeDamage(new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy));
-                    }
-                    
-                }
+            if (!_player._bodyHurtbox.IsEnabled || enemy.IsDead || !enemy._bodyHurtbox.IsEnabled) continue;
+
+            if (enemy._bodyHurtbox.Bounds.Intersects(_player._bodyHurtbox.Bounds))
+                _player.TakeDamage(new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy));
         }
     }
 
@@ -141,8 +139,11 @@ public sealed class CollisionSystem
         
         foreach (var enemy1 in enemies)
         {
+            if (enemy1.IsDead) continue;
+
             foreach (var enemy2 in enemies)
             {
+                if (enemy2.IsDead) continue;
                 if (enemy1.Equals(enemy2)) continue;
                 
                 var combination = (enemy1, enemy2);
