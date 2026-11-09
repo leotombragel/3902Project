@@ -39,6 +39,7 @@ public class GameplayState : IGameState
 
     private List<IController> _controllers;
     private List<IItem> _items = new();
+    private bool _showHitboxes;
 
     // Standalone stage elements
     private Player _player;
@@ -118,7 +119,18 @@ public class GameplayState : IGameState
         foreach (var item in _items) item.Draw(spriteBatch);
         foreach (var projectile in _projectiles) projectile.Draw(spriteBatch);
         foreach (var enemy in _enemies) enemy.Draw(spriteBatch);
-        //_collisionSystem.Draw(_spriteBatch, _actors, _damageSources);     //dthis displays hit/hurtboxes
+
+        if (_showHitboxes)
+        {
+            _collisionSystem.Draw(spriteBatch, _actors, _damageSources);
+            _collisionSystem.DrawStageHitboxes(
+                spriteBatch,
+                _stage.SolidTiles,
+                _player.StageHitbox,
+                _stage.PipeEntranceBounds,
+                new Rectangle((int)_stage.PipeExitPosition.X, (int)_stage.PipeExitPosition.Y, Tile.Size, Tile.Size));
+        }
+
         spriteBatch.End();
 
 
@@ -126,6 +138,26 @@ public class GameplayState : IGameState
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _hud.Draw(spriteBatch);
         spriteBatch.End();
+    }
+
+    private void TryEnterPipe()
+    {
+        if (!_player.IsOnGround || _player.IsDead)
+        {
+            Console.WriteLine("Player is not on the ground or is dead, cannot enter pipe.");
+            return;
+        }
+
+        var playerHitbox = _player.StageHitbox;
+        if (!playerHitbox.Intersects(_stage.PipeEntranceBounds))
+        {
+            Console.WriteLine("Player is not in the pipe entrance, cannot enter pipe.");
+            Console.WriteLine($"Player hitbox: {playerHitbox}, Pipe entrance bounds: {_stage.PipeEntranceBounds}");
+            Console.WriteLine($"Player bottom: {playerHitbox.Bottom}, Pipe entrance top: {_stage.PipeEntranceBounds.Top}");
+            return;
+        }
+
+        _player.TeleportTo(_stage.PipeExitPosition);
     }
 
     public void ResetGame()
@@ -174,6 +206,8 @@ public class GameplayState : IGameState
             new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
         keyboardController.RegisterPressCommand(Keys.M, new ToggleMusicCommand(_backgroundMusic));
+        keyboardController.RegisterPressCommand(Keys.S, new EnterPipeCommand(TryEnterPipe));
+        keyboardController.RegisterPressCommand(Keys.F3, new ToggleHitboxesCommand(() => _showHitboxes = !_showHitboxes));
 
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
