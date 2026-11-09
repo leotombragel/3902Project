@@ -23,6 +23,7 @@ public enum StageCellType
     PipeLeftFacingLowerOpening,
     PipeLeftUpperConnectingBody,
     PipeLeftLowerConnectingBody,
+    PipeEntrance,
     Aquamentus,
     Keese,
     Stalfo,

@@ -8,7 +8,11 @@ namespace CSE3902Project.Game.Tiles;
 /// Creates the tile that matches a stage cell type.
 public static class TileFactory
 {
-    public static ITile Create(StageCellType cellType, Vector2 position, List<ItemSpawn> poppedItems)
+    public static ITile Create(
+        StageCellType cellType,
+        Vector2 position,
+        List<ItemSpawn> poppedItems,
+        PipeSignature pipeSignature = null)
     {
         ArgumentNullException.ThrowIfNull(poppedItems);
 
@@ -50,6 +54,10 @@ public static class TileFactory
                 new PipeTile(position, TileSpriteFactory.Instance.CreatePipeLeftFacingUpperOpeningSprite()),
             StageCellType.PipeLeftFacingLowerOpening =>
                 new PipeTile(position, TileSpriteFactory.Instance.CreatePipeLeftFacingLowerOpeningSprite()),
+            StageCellType.PipeEntrance => pipeSignature is null
+                ? throw new ArgumentNullException(nameof(pipeSignature),
+                    "A pipe entrance requires its parsed signature.")
+                : new PipeEntranceTile(position, pipeSignature),
             _ => throw new ArgumentOutOfRangeException(nameof(cellType), cellType, "Unknown stage cell type.")
         };
     }

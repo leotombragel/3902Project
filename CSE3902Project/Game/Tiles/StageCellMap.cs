@@ -55,6 +55,14 @@ public static class StageCellMap
             return false;
         }
 
-        return CellTypes.TryGetValue(token.Trim().TrimStart('\uFEFF'), out cellType);
+        token = token.Trim().TrimStart('\uFEFF');
+        
+        if (token.StartsWith("pipestart|"))
+        {
+            cellType = StageCellType.PipeEntrance;
+            return true;
+        }
+
+        return CellTypes.TryGetValue(token, out cellType);
     }
 }

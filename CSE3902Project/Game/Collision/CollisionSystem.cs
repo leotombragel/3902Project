@@ -216,7 +216,7 @@ public sealed class CollisionSystem
     }
 
     public void DrawStageHitboxes(SpriteBatch spriteBatch, IReadOnlyList<ITile> tiles, Rectangle playerHitbox,
-        Rectangle pipeEntrance, Rectangle pipeExit)
+        IReadOnlyList<Rectangle> pipeEntrances, IReadOnlyList<Rectangle> pipeExits)
     {
         foreach (var tile in tiles)
         {
@@ -224,8 +224,15 @@ public sealed class CollisionSystem
         }
 
         DrawOutline(spriteBatch, playerHitbox, Color.LimeGreen);
-        DrawOutline(spriteBatch, pipeEntrance, Color.Yellow);
-        DrawOutline(spriteBatch, pipeExit, Color.DeepSkyBlue);
+        foreach (var pipeEntrance in pipeEntrances)
+        {
+            DrawOutline(spriteBatch, pipeEntrance, Color.Yellow);
+        }
+
+        foreach (var pipeExit in pipeExits)
+        {
+            DrawOutline(spriteBatch, pipeExit, Color.DeepSkyBlue);
+        }
     }
 
     private void DrawOutline(SpriteBatch spriteBatch, Rectangle bounds, Color color)

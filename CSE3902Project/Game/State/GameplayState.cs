@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CSE3902Project.Game.Cameras;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Command;
@@ -128,7 +129,7 @@ public class GameplayState : IGameState
                 _stage.SolidTiles,
                 _player.StageHitbox,
                 _stage.PipeEntranceBounds,
-                new Rectangle((int)_stage.PipeExitPosition.X, (int)_stage.PipeExitPosition.Y, Tile.Size, Tile.Size));
+                _stage.PipeExitBounds);
         }
 
         spriteBatch.End();
@@ -149,15 +150,16 @@ public class GameplayState : IGameState
         }
 
         var playerHitbox = _player.StageHitbox;
-        if (!playerHitbox.Intersects(_stage.PipeEntranceBounds))
+        var entrance = _stage.PipeEntrances
+            .FirstOrDefault(pipe => playerHitbox.Intersects(pipe.InteractionBounds));
+        if (entrance is null)
         {
             Console.WriteLine("Player is not in the pipe entrance, cannot enter pipe.");
-            Console.WriteLine($"Player hitbox: {playerHitbox}, Pipe entrance bounds: {_stage.PipeEntranceBounds}");
-            Console.WriteLine($"Player bottom: {playerHitbox.Bottom}, Pipe entrance top: {_stage.PipeEntranceBounds.Top}");
+            Console.WriteLine($"Player hitbox: {playerHitbox}");
             return;
         }
 
-        _player.TeleportTo(_stage.PipeExitPosition);
+        _player.TeleportTo(_stage.GetPipeExitPosition(entrance));
     }
 
     public void ResetGame()

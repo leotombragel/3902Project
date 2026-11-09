@@ -11,10 +11,11 @@ namespace CSE3902Project.Game.Tiles;
 /// The level the player walks around in.
 public class Stage
 {
-    private const int PipeEntranceRow = 6;
-    private const int PipeEntranceFirstColumn = 46;
-    private const int PipeExitColumn = 236;
-    private const int PipeExitRow = 0;
+    private static readonly PipeSignature LegacyPipeSignature =
+        new(2, 1, PipeDirection.Down, 236, 0, 1, 1, PipeDirection.Up, false);
+    private const int LegacyPipeEntranceColumn = 46;
+    private const int LegacyPipeEntranceRow = 6;
+    private readonly int _mapTop;
 
     public Stage(int screenHeight)
     {
@@ -34,22 +35,29 @@ public class Stage
 
         var mapHeight = MapRows.Length * Tile.Size;
         var mapTop = Math.Max(0, screenHeight - mapHeight);
+        _mapTop = mapTop;
         Bounds = new Rectangle(0, 0, mapWidthInTiles * Tile.Size, Math.Max(screenHeight, mapHeight));
-        PipeEntranceBounds = new Rectangle(
-            PipeEntranceFirstColumn * Tile.Size,
-            mapTop + PipeEntranceRow * Tile.Size,
-            2 * Tile.Size,
-            Tile.Size);
-        PipeExitPosition = new Vector2(PipeExitColumn * Tile.Size, mapTop + PipeExitRow * Tile.Size);
         SolidTiles = new List<ITile>();
         GroundY = LoadStageFromCsv(mapTokens, mapTop);
+        if (PipeEntrances.Count == 0)
+        {
+            PipeEntrances.Add((PipeEntranceTile)TileFactory.Create(
+                StageCellType.PipeEntrance,
+                new Vector2(LegacyPipeEntranceColumn * Tile.Size, mapTop + LegacyPipeEntranceRow * Tile.Size),
+                PoppedItems,
+                LegacyPipeSignature));
+        }
+
         BuildSolidRectangles();
     }
 
     public int GroundY { get; }
     public Rectangle Bounds { get; }
-    public Rectangle PipeEntranceBounds { get; }
-    public Vector2 PipeExitPosition { get; }
+    public List<PipeEntranceTile> PipeEntrances { get; } = new();
+    public List<Rectangle> PipeEntranceBounds =>
+        PipeEntrances.Select(entrance => entrance.InteractionBounds).ToList();
+    public List<Rectangle> PipeExitBounds =>
+        PipeEntrances.Select(GetPipeExitBounds).ToList();
     public List<ITile> SolidTiles { get; }
     public List<Rectangle> SolidRectangles { get; } = new();
     public List<EnemySpawn> EnemySpawns { get; } = new();
@@ -87,6 +95,25 @@ public class Stage
             }
 
             var position = new Vector2(column * Tile.Size, mapTop + row * Tile.Size);
+            if (cellType == StageCellType.PipeEntrance)
+            {
+                try
+                {
+                    PipeEntrances.Add((PipeEntranceTile)CreateTile(
+                        cellType,
+                        position,
+                        PipeSignature.Parse(token)));
+                }
+                catch (FormatException exception)
+                {
+                    throw new InvalidDataException(
+                        $"Invalid pipe signature at row {row + 1}, column {column + 1}: {exception.Message}",
+                        exception);
+                }
+
+                continue;
+            }
+
             if (cellType == StageCellType.PlayerSpawn)
             {
                 PlayerSpawnPosition = position;
@@ -124,6 +151,24 @@ public class Stage
         return groundY;
     }
 
+    public Vector2 GetPipeExitPosition(PipeEntranceTile entrance)
+    {
+        ArgumentNullException.ThrowIfNull(entrance);
+        return new Vector2(
+            entrance.Signature.ExitColumn * Tile.Size,
+            _mapTop + entrance.Signature.ExitRow * Tile.Size);
+    }
+
+    private Rectangle GetPipeExitBounds(PipeEntranceTile entrance)
+    {
+        var position = GetPipeExitPosition(entrance);
+        return new Rectangle(
+            (int)position.X,
+            (int)position.Y,
+            entrance.Signature.ExitWidth * Tile.Size,
+            entrance.Signature.ExitHeight * Tile.Size);
+    }
+
     private static bool IsEnemy(StageCellType cellType)
     {
         return cellType is StageCellType.Aquamentus
@@ -145,9 +190,9 @@ public class Stage
             or StageCellType.HeartItem;
     }
 
-    private ITile CreateTile(StageCellType cellType, Vector2 position)
+    private ITile CreateTile(StageCellType cellType, Vector2 position, PipeSignature pipeSignature = null)
     {
-        return TileFactory.Create(cellType, position, PoppedItems);
+        return TileFactory.Create(cellType, position, PoppedItems, pipeSignature);
     }
 
     //removes broken bricks from both lists
