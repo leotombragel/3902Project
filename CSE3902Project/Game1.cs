@@ -1,40 +1,16 @@
-using CSE3902Project.Game.Cameras;
-using CSE3902Project.Game.Collision;
-using CSE3902Project.Game.Command;
-using CSE3902Project.Game.Damage;
-using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
-using CSE3902Project.Game.Input;
-using CSE3902Project.Game.Items;
-using CSE3902Project.Game.Tiles;
+using CSE3902Project.Game.State;
+using Gum;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
 
 namespace CSE3902Project;
 
 public class Game1 : Microsoft.Xna.Framework.Game
 {
-    private readonly List<ICombatActor> _actors = new();
-    private readonly List<IAttack> _attacks = new();
-    private readonly List<IDamageSource> _damageSources = new();
-
-    private readonly List<IEnemy> _enemies = new();
-    private readonly List<IProjectile> _projectiles = new();
-    private Background _background;
-    private Camera _camera;
-    private CameraFollowPlayer _cameraFollowPlayer;
-    private CollisionSystem _collisionSystem;
-    private List<IController> _controllers;
-    private GraphicsDeviceManager _graphics;
-    private List<IItem> _items = new();
-    private Player _player;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Stage _stage;
-    private bool _showHitboxes;
-
+    private StateManager _stateManager;
 
     public Game1()
     {
@@ -48,244 +24,40 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void Initialize()
     {
+        GumService.Default.Initialize(this);
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice); // Texture rendering
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        SpriteFactory.Instance.LoadAllAssets(Content); // Player sprites
-        TileSpriteFactory.Instance.LoadAllAssets(Content); // Tile sprites
-        ItemSpriteFactory.Instance.LoadAllAssets(Content); // Item sprites
-        BackgroundSpriteFactory.Instance.LoadAllAssets(Content); // Background image
+        SpriteFactory.Instance.LoadAllAssets(Content);
+        TileSpriteFactory.Instance.LoadAllAssets(Content);
+        ItemSpriteFactory.Instance.LoadAllAssets(Content);
+        BackgroundSpriteFactory.Instance.LoadAllAssets(Content);
+        HudSpriteFactory.Instance.LoadAllAssets(Content, GraphicsDevice);
+        TextCreator.Initialize(Content);
+        MusicFactory.Instance.LoadAllMusic(Content);
 
-        _collisionSystem = new CollisionSystem(GraphicsDevice);
-
-        ResetGame();
-    }
-
-    public void ResetGame()
-    {
-        var keyboardController = new KeyboardController();
-        var mouseController = new MouseController();
-
-        var viewport = GraphicsDevice.Viewport;
-        _background = new Background(viewport.Width, viewport.Height);
-        _stage = new Stage(viewport.Height);
-        _items = new List<IItem>();
-
-        _player = new Player(_stage.GroundY);
-        _player.Position = _stage.PlayerSpawnPosition;
-        _player.SetStageCollision(new PlayerStageCollision(_stage.SolidTiles, _stage.Bounds));
-
-        _camera = new Camera(viewport.Width, viewport.Height);
-        _cameraFollowPlayer = new CameraFollowPlayer(_camera, _player, _stage.Bounds);
-
-        _enemies.Clear();
-        _projectiles.Clear();
-        _actors.Clear();
-        _damageSources.Clear();
-
-        _actors.Add(_player);
-        foreach (var spawn in _stage.EnemySpawns)
-        {
-            var enemy = CreateEnemy(spawn);
-            _enemies.Add(enemy);
-            _actors.Add(enemy);
-        }
-
-        foreach (var item in _stage.ItemSpawns) _items.Add(CreateItem(item));
-
-        _actors.AddRange(_items);
-
-        // Bind commands to button presses
-        keyboardController.RegisterCommand(Keys.D, new PlayerMoveRightCommand(_player));
-        keyboardController.RegisterCommand(Keys.A, new PlayerMoveLeftCommand(_player));
-        keyboardController.RegisterPressCommand(Keys.Space, new PlayerJumpCommand(_player));
-        keyboardController.RegisterPressCommand(Keys.N,
-            new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
-        keyboardController.RegisterPressCommand(Keys.Z,
-            new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
-        keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
-        keyboardController.RegisterPressCommand(Keys.S, new EnterPipeCommand(TryEnterPipe));
-        keyboardController.RegisterPressCommand(Keys.F3, new ToggleHitboxesCommand(ToggleHitboxes));
-
-        var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
-        var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
-        var fireCommand = new PlayerShootFireCommand(_player, projectile => _projectiles.Add(projectile));
-        var bowDrawCommand = new PlayerBowDrawCommand(_player, true);
-        //var bowDrawCommandNumber = new PlayerBowDrawCommand(_player, false);
-        var bowReleaseCommand = new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), true);
-        //var bowReleaseCommandNumber =
-            //new PlayerBowReleaseCommand(_player, projectile => _projectiles.Add(projectile), false);
-        var currentItemCommand = new PlayerUseCurrentItemCommand(_player, [boomerangCommand, bombCommand, fireCommand, bowDrawCommand]);
-
-        keyboardController.RegisterPressCommand(Keys.K, currentItemCommand);
-        keyboardController.RegisterReleaseCommand(Keys.K, bowReleaseCommand);
-        //keyboardController.RegisterPressCommand(Keys.K, bowDrawCommand);
-
-        //keyboardController.RegisterPressCommand(Keys.D1, boomerangCommand);
-        //keyboardController.RegisterPressCommand(Keys.D2, bombCommand);
-        //keyboardController.RegisterPressCommand(Keys.D3, fireCommand);
-        //keyboardController.RegisterPressCommand(Keys.D4, bowDrawCommandNumber);
-        //keyboardController.RegisterReleaseCommand(Keys.D4, bowReleaseCommandNumber);
-
-        keyboardController.RegisterPressCommand(Keys.Q, new ExitCommand(this));
-        keyboardController.RegisterPressCommand(Keys.R, new ResetCommand(this));
-
-        _controllers = new List<IController> { keyboardController, mouseController };
-    }
-
-    private IEnemy CreateEnemy(EnemySpawn spawn)
-    {
-        return spawn.Type switch
-        {
-            StageCellType.Aquamentus => new AquamentusEnemy(_player, _projectiles, spawn.Position),
-            StageCellType.Keese => new KeeseEnemy(_stage.GroundY, spawn.Position),
-            StageCellType.Stalfo => CreateStalfoEnemy(spawn.Position),
-            StageCellType.Wizzrobe => CreateWizzrobeEnemy(_player, _projectiles, spawn.Position),
-            StageCellType.WallMaster => CreateWallmasterEnemy(_player, spawn.Position),
-            _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported enemy spawn type.")
-        };
-    }
-
-    private StalfoEnemy CreateStalfoEnemy(Vector2 spawnPosition)
-    {
-        var stalfo = new StalfoEnemy(spawnPosition);
-        stalfo.SetStageCollision(new StalfoStageCollision(_stage.SolidTiles));
-        return stalfo;
-    }
-
-    private WizzrobeEnemy CreateWizzrobeEnemy(Player player, List<IProjectile> projectiles, Vector2 spawnPosition)
-    {
-        var wizzrobe = new WizzrobeEnemy(player, projectiles, spawnPosition);
-        wizzrobe.SetCollision(new WizzrobeCollision(_stage.SolidTiles));
-        return wizzrobe;
-    }
-
-    private WallmasterEnemy CreateWallmasterEnemy(Player player, Vector2 spawnPosition)
-    {
-        var wallmaster = new WallmasterEnemy(player, spawnPosition);
-        wallmaster.SetStageCollision(new WallmasterStageCollision(_stage.SolidTiles));
-        return wallmaster;
-    }
-
-    private static IItem CreateItem(ItemSpawn spawn)
-    {
-        var center = spawn.Position + new Vector2(Tile.Size / 2f);
-        return spawn.Type switch
-        {
-            StageCellType.BoomerangItem => new BoomerangItem(center),
-            StageCellType.BowItem => new BowItem(center),
-            StageCellType.ArrowItem => new ArrowItem(center),
-            StageCellType.BombItem => new BombItem(center),
-            StageCellType.RupeeItem => new RupeeItem(center),
-            StageCellType.TriforceItem => new TriforceItem(center),
-            StageCellType.KeyItem => new KeyItem(center),
-            StageCellType.HeartItem => new HeartItem(center),
-            _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported item spawn type.")
-        };
+        _stateManager = new StateManager();
+        _stateManager.Push(new GameplayState(GraphicsDevice, _stateManager, this));
     }
 
     protected override void Update(GameTime gameTime)
     {
-        foreach (var controller in _controllers) controller.Update();
-        _player.Update(gameTime);
-        foreach (var attack in _attacks) attack.Update(gameTime);
-
-        _cameraFollowPlayer.Update();
-        _stage.Update(gameTime);
-
-        //turn the items that popped out into real items
-        foreach (ItemSpawn spawn in _stage.PoppedItems)
-        {
-            IItem poppedItem = CreateItem(spawn);
-            _items.Add(poppedItem);
-            _actors.Add(poppedItem);
-        }
-
-        _stage.PoppedItems.Clear();
-
-        foreach (var item in _items) item.Update(gameTime);
-        foreach (var projectile in _projectiles) projectile.Update(gameTime);
-        foreach (var enemy in _enemies) enemy.Update(gameTime);
-
-        _damageSources.Clear();
-        _damageSources.AddRange(_projectiles);
-        _damageSources.AddRange(_attacks);
-
-        _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
-        _collisionSystem.Update(_player, _enemies, _stage.SolidRectangles);
-
-        _projectiles.RemoveAll(projectile => projectile.IsFinished);
-        _attacks.RemoveAll(attack => attack.IsFinished);
-        _enemies.RemoveAll(enemy => enemy.IsDead);
-        _items.RemoveAll(item => item.IsDead);
-        _actors.RemoveAll(actor => actor.IsDead);
-        _damageSources.RemoveAll(damageSource => damageSource.IsFinished);
+        _stateManager.Update(gameTime);
+        GumService.Default.Update(gameTime);
 
         base.Update(gameTime);
-    }
-
-    private void ToggleHitboxes()
-    {
-        _showHitboxes = !_showHitboxes;
-    }
-
-    private void TryEnterPipe()
-    {
-        if (!_player.IsOnGround || _player.IsDead)
-        {
-            Console.WriteLine("Player is not on the ground or is dead, cannot enter pipe.");
-            return;
-        }
-
-        var playerHitbox = _player.StageHitbox;
-        if (!playerHitbox.Intersects(_stage.PipeEntranceBounds))
-        {
-            Console.WriteLine("Player is not in the pipe entrance, cannot enter pipe.");
-            Console.WriteLine($"Player hitbox: {playerHitbox}, Pipe entrance bounds: {_stage.PipeEntranceBounds}");
-            Console.WriteLine($"Player bottom: {playerHitbox.Bottom}, Pipe entrance top: {_stage.PipeEntranceBounds.Top}");
-            return;
-        }
-
-        _player.TeleportTo(_stage.PipeExitPosition);
     }
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Gray);
 
-        //background stays still on the screen
-        _spriteBatch.Begin();
-        _background.Draw(_spriteBatch);
-        _spriteBatch.End();
-
-        //everything in the stage gets moved by the camera
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransform());
-        _stage.Draw(_spriteBatch);
-        _player.Draw(_spriteBatch);
-        foreach (var item in _items) item.Draw(_spriteBatch);
-        foreach (var projectile in _projectiles) projectile.Draw(_spriteBatch);
-        foreach (var enemy in _enemies) enemy.Draw(_spriteBatch);
-
-        if (_showHitboxes)
-        {
-            _collisionSystem.Draw(_spriteBatch, _actors, _damageSources);
-            _collisionSystem.DrawStageHitboxes(
-                _spriteBatch,
-                _stage.SolidTiles,
-                _player.StageHitbox,
-                _stage.PipeEntranceBounds,
-                new Rectangle((int)_stage.PipeExitPosition.X, (int)_stage.PipeExitPosition.Y, Tile.Size, Tile.Size));
-        }
-
-        _spriteBatch.End();
-
-        
-        _spriteBatch.Begin();
-        _spriteBatch.End();
+        _stateManager.Draw(gameTime, _spriteBatch);
+        GumService.Default.Draw();
 
         base.Draw(gameTime);
     }

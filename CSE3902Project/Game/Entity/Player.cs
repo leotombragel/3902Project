@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
@@ -65,6 +64,8 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     /// </summary>
     public bool ShouldManagePosition { get; set; } = true;
 
+    public bool AcceptsStateChanges { get; set; } = true;
+
     public bool IsWalking { get; set; }
     public bool IsJumping { get; set; }
     public bool IsOnGround { get; set; }
@@ -85,17 +86,16 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     public bool IsUsingBow { get; set; }
 
     public SpriteAnimation Animation { get; set; }
-    public bool IsFacingLeft { get; private set; }
 
     public virtual void Update(GameTime gameTime)
     {
-        bool wasOnGround = IsOnGround;
-        
+        var wasOnGround = IsOnGround;
+
         _animationController.Update(gameTime);
         Animation?.Update(gameTime);
         CurrentState.Update(gameTime);
 
-        if(_bodyHurtbox.IsEnabled == false) //invincibility frames
+        if(!_bodyHurtbox.IsEnabled) //invincibility frames
         {
             iFramesBuffer += 1;
             if(iFramesBuffer > 60)
@@ -112,23 +112,19 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
             ApplyGravity();
         }
 
-        if (IsDead)
-        {
-          ChangeState(new PlayerDeadState(this));  
-        }
+        if (IsDead) ChangeState(new PlayerDeadState(this));
 
         UpdatePosition();
-        
-        if (!wasOnGround && IsOnGround)
-        {
-            IsFacingLeft = !_previouslyFacingRight;
-        }
+
+        if (!wasOnGround && IsOnGround) IsFacingLeft = !_previouslyFacingRight;
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         _animationController.Draw(spriteBatch, Position, IsFacingLeft);
     }
+
+    public bool IsFacingLeft { get; private set; }
 
     public IEnumerable<IHurtbox> Hurtboxes
     {
@@ -158,12 +154,18 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         }
     }
 
+    public void FlipDirection()
+    {
+        Velocity = new Vector2(-Velocity.X, Velocity.Y);
+        IsFacingLeft = !IsFacingLeft;
+    }
+
     public IState CurrentState { get; private set; }
 
     public void ChangeState(IState newState)
     {
         // Ignore state change if re-entering the current state
-        if (newState.GetType() == CurrentState.GetType()) return;
+        if (newState.GetType() == CurrentState.GetType() || !AcceptsStateChanges) return;
 
         CurrentState?.Exit();
         CurrentState = newState;
@@ -219,7 +221,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     public void MoveHorizontal(bool isToTheRight)
     {
         var directionChanged = isToTheRight != _previouslyFacingRight;
-        
+
         // Update speed
         if (Math.Abs(Velocity.X) < MaxSpeed)
         {
@@ -231,11 +233,8 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
                 Velocity = Velocity with { X = Velocity.X - MoveSpeed };
         }
 
-        if (IsOnGround && directionChanged)
-        {
-            IsFacingLeft = !isToTheRight;
-        }
-        
+        if (IsOnGround && directionChanged) IsFacingLeft = !isToTheRight;
+
         _previouslyFacingRight = isToTheRight;
         _previousSpeed = Velocity.X;
     }
@@ -282,11 +281,9 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     private void ApplyGravity()
     {
         //no gravity while standing on something
-        if (IsOnGround){
-            if(CurrentState is PlayerFallingState or PlayerBowFallState)
-            {
-                SwitchToInactiveState();
-            }
+        if (IsOnGround)
+        {
+            if (CurrentState is PlayerFallingState or PlayerBowFallState) SwitchToInactiveState();
             return;
         }
 
@@ -312,7 +309,6 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     public void SwitchToInactiveState()
     {
         if (IsUsingBow)
-        {
             switch (Velocity.Y)
             {
                 case > 0:
@@ -325,7 +321,6 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
                     ChangeState(new PlayerBowIdleState(this));
                     return;
             }
-        }
 
         switch (Velocity.Y)
         {
@@ -355,11 +350,5 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         }
 
         _stageCollision.MovePlayer(this);
-    }
-
-    public void FlipDirection()
-    {
-        Velocity = new Vector2(-Velocity.X, Velocity.Y);
-        IsFacingLeft = !IsFacingLeft;
     }
 }

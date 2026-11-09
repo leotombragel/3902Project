@@ -68,4 +68,9 @@ public class KeyboardController : IController
     {
         _keyBindings.Remove(key);
     }
+    
+    public void SyncState()
+    {
+        _previousState = Keyboard.GetState();
+    }
 }
