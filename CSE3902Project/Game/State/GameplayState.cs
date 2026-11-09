@@ -13,6 +13,7 @@ using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace CSE3902Project.Game.State;
 
@@ -29,6 +30,7 @@ public class GameplayState : IGameState
     private readonly StateManager _stateManager;
     private Background _background;
     private Hud.Hud _hud;
+    private MusicFactory _backgroundMusic = MusicFactory.Instance;
 
     // Other systems in the stage
     private Camera _camera;
@@ -128,6 +130,7 @@ public class GameplayState : IGameState
 
     public void ResetGame()
     {
+        _backgroundMusic.PlayOverworldMusic();
         var keyboardController = new KeyboardController();
         var mouseController = new MouseController();
 
@@ -170,6 +173,7 @@ public class GameplayState : IGameState
         keyboardController.RegisterPressCommand(Keys.Z,
             new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
+        keyboardController.RegisterPressCommand(Keys.M, new ToggleMusicCommand(_backgroundMusic));
 
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));

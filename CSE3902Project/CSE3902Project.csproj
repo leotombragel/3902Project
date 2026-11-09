@@ -11,8 +11,8 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="Icon.ico"/>
-        <None Remove="Icon.bmp"/>
+        <None Remove="Icon.ico" />
+        <None Remove="Icon.bmp" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Icon.ico">
@@ -29,7 +29,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Gum.MonoGame" Version="2026.11.5.1-preview.1" />
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.*"/>
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*"/>
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.*" />
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*" />
     </ItemGroup>
 </Project>

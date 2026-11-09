@@ -21,6 +21,58 @@
 /processorParam:Version=3.8.5.1
 /build:fonts/game.spritefont
 
+#begin images/background.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:images/background.png
+
+#begin images/DungeonBossesCUT.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:images/DungeonBossesCUT.png
+
+#begin images/DungeonEnemiesCUT2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:images/DungeonEnemiesCUT2.png
+
+#begin images/fire_sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:images/fire_sheet.png
+
 #begin images/idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -33,6 +85,45 @@
 /processorParam:TextureFormat=Color
 /processorParam:Version=3.8.5.1
 /build:images/idle.png
+
+#begin images/link_items_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:images/link_items_spritesheet.png
+
+#begin images/MarioTiles.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=27,89,153,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:images/MarioTiles.png
+
+#begin images/pickups.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:images/pickups.png
 
 #begin images/player.png
 /importer:TextureImporter
@@ -86,80 +177,21 @@
 /processorParam:Version=3.8.5.1
 /build:images/tiles.png
 
-#begin images/MarioTiles.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=27,89,153,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
+#begin music/zOverworld.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
 /processorParam:Version=3.8.5.1
-/build:images/MarioTiles.png
+/build:music/zOverworld.mp3
 
-#begin images/DungeonEnemiesCUT2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/DungeonEnemiesCUT2.png
-
-#begin images/DungeonBossesCUT.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/DungeonBossesCUT.png
-
-#begin images/link_items_spritesheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/link_items_spritesheet.png
-
-#begin images/fire_sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/fire_sheet.png
-
-#begin images/pickups.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
+#begin music/zOverworld.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
 /processorParam:Version=3.8.5.1
-/build:images/pickups.png
+/build:music/zOverworld.mp3
 
+<<<<<<< HEAD
 #begin images/hearts.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -183,5 +215,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+=======
+#begin music/zOverworld.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+>>>>>>> Audio
 /processorParam:Version=3.8.5.1
-/build:images/background.png
+/build:music/zOverworld.mp3
+
+#begin music/zOverworld.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:music/zOverworld.mp3
+

@@ -3,6 +3,7 @@ using CSE3902Project.Game.State;
 using Gum;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace CSE3902Project;
 
@@ -11,6 +12,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private StateManager _stateManager;
+    private Song backgroundMusic;
+
     
     public Game1()
     {
@@ -38,6 +41,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         BackgroundSpriteFactory.Instance.LoadAllAssets(Content); // Background image
         HudSpriteFactory.Instance.LoadAllAssets(Content, GraphicsDevice); // Hud hearts and rupee
         TextCreator.Initialize(Content); // Font for the hud numbers
+        MusicFactory.Instance.LoadAllMusic(Content);
 
         _stateManager = new StateManager();
         var gameplayState = new GameplayState(GraphicsDevice, _stateManager, this);
