@@ -11,6 +11,12 @@ namespace CSE3902Project.Game.Tiles;
 /// The level the player walks around in.
 public class Stage
 {
+    private static readonly PipeSignature LegacyPipeSignature =
+        new(2, 1, PipeDirection.Down, 236, 0, 1, 1, PipeDirection.Up, false);
+    private const int LegacyPipeEntranceColumn = 46;
+    private const int LegacyPipeEntranceRow = 6;
+    private readonly int _mapTop;
+
     public Stage(int screenHeight)
     {
         var mapPath = Path.Combine(AppContext.BaseDirectory, "Content", "levelFiles", "1-1LevelExcel.csv");
@@ -29,14 +35,29 @@ public class Stage
 
         var mapHeight = MapRows.Length * Tile.Size;
         var mapTop = Math.Max(0, screenHeight - mapHeight);
+        _mapTop = mapTop;
         Bounds = new Rectangle(0, 0, mapWidthInTiles * Tile.Size, Math.Max(screenHeight, mapHeight));
         SolidTiles = new List<ITile>();
         GroundY = LoadStageFromCsv(mapTokens, mapTop);
+        if (PipeEntrances.Count == 0)
+        {
+            PipeEntrances.Add((PipeEntranceTile)TileFactory.Create(
+                StageCellType.PipeEntrance,
+                new Vector2(LegacyPipeEntranceColumn * Tile.Size, mapTop + LegacyPipeEntranceRow * Tile.Size),
+                PoppedItems,
+                LegacyPipeSignature));
+        }
+
         BuildSolidRectangles();
     }
 
     public int GroundY { get; }
     public Rectangle Bounds { get; }
+    public List<PipeEntranceTile> PipeEntrances { get; } = new();
+    public List<Rectangle> PipeEntranceBounds =>
+        PipeEntrances.Select(entrance => entrance.InteractionBounds).ToList();
+    public List<Rectangle> PipeExitBounds =>
+        PipeEntrances.Select(GetPipeExitBounds).ToList();
     public List<ITile> SolidTiles { get; }
     public List<Rectangle> SolidRectangles { get; } = new();
     public List<EnemySpawn> EnemySpawns { get; } = new();
@@ -74,6 +95,25 @@ public class Stage
             }
 
             var position = new Vector2(column * Tile.Size, mapTop + row * Tile.Size);
+            if (cellType == StageCellType.PipeEntrance)
+            {
+                try
+                {
+                    PipeEntrances.Add((PipeEntranceTile)CreateTile(
+                        cellType,
+                        position,
+                        PipeSignature.Parse(token)));
+                }
+                catch (FormatException exception)
+                {
+                    throw new InvalidDataException(
+                        $"Invalid pipe signature at row {row + 1}, column {column + 1}: {exception.Message}",
+                        exception);
+                }
+
+                continue;
+            }
+
             if (cellType == StageCellType.PlayerSpawn)
             {
                 PlayerSpawnPosition = position;
@@ -100,7 +140,8 @@ public class Stage
             }
 
             SolidTiles.Add(tile);
-            if (cellType == StageCellType.Ground && groundY < 0) groundY = (int)position.Y;
+            if ((cellType is StageCellType.Ground or StageCellType.UnderGround) && groundY < 0)
+                groundY = (int)position.Y;
         }
 
         if (groundY < 0) throw new InvalidDataException("The stage CSV does not contain any ground tiles.");
@@ -108,6 +149,24 @@ public class Stage
         if (!hasPlayerSpawn) throw new InvalidDataException("The stage CSV does not contain a player spawn.");
 
         return groundY;
+    }
+
+    public Vector2 GetPipeExitPosition(PipeEntranceTile entrance)
+    {
+        ArgumentNullException.ThrowIfNull(entrance);
+        return new Vector2(
+            entrance.Signature.ExitColumn * Tile.Size,
+            _mapTop + entrance.Signature.ExitRow * Tile.Size);
+    }
+
+    private Rectangle GetPipeExitBounds(PipeEntranceTile entrance)
+    {
+        var position = GetPipeExitPosition(entrance);
+        return new Rectangle(
+            (int)position.X,
+            (int)position.Y,
+            entrance.Signature.ExitWidth * Tile.Size,
+            entrance.Signature.ExitHeight * Tile.Size);
     }
 
     private static bool IsEnemy(StageCellType cellType)
@@ -131,41 +190,9 @@ public class Stage
             or StageCellType.HeartItem;
     }
 
-    private ITile CreateTile(StageCellType cellType, Vector2 position)
+    private ITile CreateTile(StageCellType cellType, Vector2 position, PipeSignature pipeSignature = null)
     {
-        switch (cellType)
-        {
-            case StageCellType.Ground:
-                return TileFactory.Create(TileType.Ground, position);
-                return new BrickTile(position, new BlockContents(StageCellType.RupeeItem, PoppedItems));
-            case StageCellType.Breakable:
-                return TileFactory.Create(TileType.Brick, position);
-            case StageCellType.BreakableWithCoin:
-                return new BrickTile(position, new BlockContents(StageCellType.RupeeItem, PoppedItems));
-            case StageCellType.BreakableWithBomb:
-                return new BrickTile(position, new BlockContents(StageCellType.BombItem, PoppedItems));
-            case StageCellType.Stair:
-                return TileFactory.Create(TileType.Step, position);
-            case StageCellType.QuestionBlock:
-                return new QuestionBlockTile(position, new BlockContents(StageCellType.RupeeItem, PoppedItems));
-            case StageCellType.QuestionBlockWithBoomerang:
-                return new QuestionBlockTile(position,
-                    new BlockContents(StageCellType.BoomerangItem, PoppedItems));
-            case StageCellType.HiddenBlockWithFire:
-                return TileFactory.Create(TileType.QuestionBlock, position);
-            case StageCellType.PipeLeftBody:
-                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeLeftBodySprite());
-            case StageCellType.PipeRightBody:
-                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeRightBodySprite());
-            case StageCellType.PipeLeftOpening:
-                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeLeftOpeningSprite());
-            case StageCellType.PipeRightOpening:
-                return new PipeTile(position, TileSpriteFactory.Instance.CreatePipeRightOpeningSprite());
-            case StageCellType.Air:
-                return null;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(cellType), cellType, "Unknown stage cell type.");
-        }
+        return TileFactory.Create(cellType, position, PoppedItems, pipeSignature);
     }
 
     //removes broken bricks from both lists

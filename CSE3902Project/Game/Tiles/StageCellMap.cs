@@ -10,18 +10,26 @@ public static class StageCellMap
         {
             [""] = StageCellType.Air,
             ["g"] = StageCellType.Ground,
+            ["gug"] = StageCellType.UnderGround,
             ["b"] = StageCellType.Breakable,
+            ["bug"] = StageCellType.BreakableUnderGround,
             ["s"] = StageCellType.Stair,
             ["bc"] = StageCellType.BreakableWithCoin,
             ["bb"] = StageCellType.BreakableWithBomb,
             ["q"] = StageCellType.QuestionBlock,
             ["qb"] = StageCellType.QuestionBlockWithBoomerang,
             ["hb"] = StageCellType.HiddenBlockWithFire,
-            ["pipelb"] = StageCellType.PipeLeftBody,
-            ["piperd"] = StageCellType.PipeRightBody,
-            ["piperb"] = StageCellType.PipeRightBody,
-            ["pipelo"] = StageCellType.PipeLeftOpening,
-            ["pipero"] = StageCellType.PipeRightOpening,
+            ["pipelb"] = StageCellType.PipeLeftUpperBody,
+            ["piperd"] = StageCellType.PipeRightUpperBody,
+            ["piperb"] = StageCellType.PipeRightUpperBody,
+            ["pipelo"] = StageCellType.PipeLeftUpperOpening,
+            ["pipero"] = StageCellType.PipeRightUpperOpening,
+            ["pipelbuc"] = StageCellType.PipeLeftUpperConnectingBody,
+            ["pipelblc"] = StageCellType.PipeLeftLowerConnectingBody,
+            ["pipelfub"] = StageCellType.PipeLeftFacingUpperBody,
+            ["pipelflb"] = StageCellType.PipeLeftFacingLowerBody,
+            ["pipelfuo"] = StageCellType.PipeLeftFacingUpperOpening,
+            ["pipelflo"] = StageCellType.PipeLeftFacingLowerOpening,
             ["aq"] = StageCellType.Aquamentus,
             ["k"] = StageCellType.Keese,
             ["se"] = StageCellType.Stalfo,
@@ -35,7 +43,8 @@ public static class StageCellMap
             ["tri"] = StageCellType.TriforceItem,
             ["kyi"] = StageCellType.KeyItem,
             ["hri"] = StageCellType.HeartItem,
-            ["spawn"] = StageCellType.PlayerSpawn
+            ["spawn"] = StageCellType.PlayerSpawn,
+            ["dz"] = StageCellType.DeathZone
         };
 
     public static bool TryGetCellType(string token, out StageCellType cellType)
@@ -46,6 +55,14 @@ public static class StageCellMap
             return false;
         }
 
-        return CellTypes.TryGetValue(token.Trim().TrimStart('\uFEFF'), out cellType);
+        token = token.Trim().TrimStart('\uFEFF');
+        
+        if (token.StartsWith("pipestart|"))
+        {
+            cellType = StageCellType.PipeEntrance;
+            return true;
+        }
+
+        return CellTypes.TryGetValue(token, out cellType);
     }
 }

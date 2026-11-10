@@ -269,6 +269,15 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         Velocity = Velocity with { Y = -VerticalMoveSpeed };
     }
 
+    public void TeleportTo(Vector2 position)
+    {
+        Position = position;
+        Velocity = Vector2.Zero;
+        IsOnGround = false;
+        IsJumping = false;
+        SwitchToInactiveState();
+    }
+
     private void ApplyGravity()
     {
         //no gravity while standing on something

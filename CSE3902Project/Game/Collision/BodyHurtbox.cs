@@ -10,6 +10,7 @@ public sealed class BodyHurtbox : IHurtbox
 {
     private readonly Point _offset;
     private readonly Point _size;
+    private bool _isEnabled = true;
 
     public BodyHurtbox(
         ICombatActor owner,
@@ -23,7 +24,11 @@ public sealed class BodyHurtbox : IHurtbox
 
     public ICombatActor Owner { get; }
 
-    public bool IsEnabled { get; set; } = true; //=> !Owner.IsDead;
+    public bool IsEnabled
+    {
+        get => _isEnabled && !Owner.IsDead;
+        set => _isEnabled = value;
+    }
 
     public Rectangle Bounds => new(
         (int)Owner.Position.X + _offset.X,

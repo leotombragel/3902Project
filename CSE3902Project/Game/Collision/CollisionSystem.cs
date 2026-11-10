@@ -5,6 +5,7 @@ using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Items;
+using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,6 +19,7 @@ public sealed class CollisionSystem
 {
     private readonly Texture2D _debugPixel;
     private readonly Texture2D _debugPixel2;
+    private readonly Texture2D _debugOutlinePixel;
 
     public CollisionSystem(GraphicsDevice graphicsDevice)
     {
@@ -25,6 +27,8 @@ public sealed class CollisionSystem
         _debugPixel.SetData([Color.DarkKhaki * 0.8f]);
         _debugPixel2 = new Texture2D(graphicsDevice, 1, 1);
         _debugPixel2.SetData([Color.DarkGreen * 0.8f]);
+        _debugOutlinePixel = new Texture2D(graphicsDevice, 1, 1);
+        _debugOutlinePixel.SetData([Color.White]);
     }
 
     private static bool CanDamage(IDamageSource source, ICombatActor victim)
@@ -47,16 +51,14 @@ public sealed class CollisionSystem
     /// <param name="tileBounds"></param>
     public void Update(Player _player, IReadOnlyList<IEnemy> enemies, IReadOnlyList<Rectangle> tileBounds)
     {
+        if (_player.IsDead) return;
+
         foreach (var enemy in enemies)
         {
-        if (_player.Hurtboxes.Any(hurtbox => enemy._bodyHurtbox.Bounds.Intersects(hurtbox.Bounds)))
-                {
-                    if(_player._bodyHurtbox.IsEnabled)
-                    {
-                        _player.TakeDamage(new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy));
-                    }
-                    
-                }
+            if (!_player._bodyHurtbox.IsEnabled || enemy.IsDead || !enemy._bodyHurtbox.IsEnabled) continue;
+
+            if (enemy._bodyHurtbox.Bounds.Intersects(_player._bodyHurtbox.Bounds))
+                _player.TakeDamage(new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Enemy));
         }
     }
 
@@ -137,8 +139,11 @@ public sealed class CollisionSystem
         
         foreach (var enemy1 in enemies)
         {
+            if (enemy1.IsDead) continue;
+
             foreach (var enemy2 in enemies)
             {
+                if (enemy2.IsDead) continue;
                 if (enemy1.Equals(enemy2)) continue;
                 
                 var combination = (enemy1, enemy2);
@@ -208,5 +213,36 @@ public sealed class CollisionSystem
                 spriteBatch.Draw(_debugPixel2, destination, Color.DarkGreen * 0.8f);
             }
         }
+    }
+
+    public void DrawStageHitboxes(SpriteBatch spriteBatch, IReadOnlyList<ITile> tiles, Rectangle playerHitbox,
+        IReadOnlyList<Rectangle> pipeEntrances, IReadOnlyList<Rectangle> pipeExits)
+    {
+        foreach (var tile in tiles)
+        {
+            DrawOutline(spriteBatch, tile.Bounds, Color.Red);
+        }
+
+        DrawOutline(spriteBatch, playerHitbox, Color.LimeGreen);
+        foreach (var pipeEntrance in pipeEntrances)
+        {
+            DrawOutline(spriteBatch, pipeEntrance, Color.Yellow);
+        }
+
+        foreach (var pipeExit in pipeExits)
+        {
+            DrawOutline(spriteBatch, pipeExit, Color.DeepSkyBlue);
+        }
+    }
+
+    private void DrawOutline(SpriteBatch spriteBatch, Rectangle bounds, Color color)
+    {
+        const int thickness = 1;
+        spriteBatch.Draw(_debugOutlinePixel, new Rectangle(bounds.Left, bounds.Top, bounds.Width, thickness), color);
+        spriteBatch.Draw(_debugOutlinePixel,
+            new Rectangle(bounds.Left, bounds.Bottom - thickness, bounds.Width, thickness), color);
+        spriteBatch.Draw(_debugOutlinePixel, new Rectangle(bounds.Left, bounds.Top, thickness, bounds.Height), color);
+        spriteBatch.Draw(_debugOutlinePixel,
+            new Rectangle(bounds.Right - thickness, bounds.Top, thickness, bounds.Height), color);
     }
 }
