@@ -114,7 +114,7 @@ public class GameplayState : IGameState
         spriteBatch.End();
 
         //everything in the stage gets moved by the camera
-        spriteBatch.Begin(transformMatrix: _camera.GetTransform());
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransform());
         _stage.Draw(spriteBatch);
         _player.Draw(spriteBatch);
         foreach (var item in _items) item.Draw(spriteBatch);
@@ -141,21 +141,20 @@ public class GameplayState : IGameState
         spriteBatch.End();
     }
 
-    private void TryEnterPipe()
+    private void TryEnterPipe(PipeDirection inputDirection)
     {
         if (!_player.IsOnGround || _player.IsDead)
         {
-            Console.WriteLine("Player is not on the ground or is dead, cannot enter pipe.");
             return;
         }
 
         var playerHitbox = _player.StageHitbox;
         var entrance = _stage.PipeEntrances
-            .FirstOrDefault(pipe => playerHitbox.Intersects(pipe.InteractionBounds));
+            .FirstOrDefault(pipe =>
+                pipe.Signature.EntranceDirection == inputDirection &&
+                playerHitbox.Intersects(pipe.InteractionBounds));
         if (entrance is null)
         {
-            Console.WriteLine("Player is not in the pipe entrance, cannot enter pipe.");
-            Console.WriteLine($"Player hitbox: {playerHitbox}");
             return;
         }
 
@@ -208,7 +207,14 @@ public class GameplayState : IGameState
             new PlayerAttackCommand(_player, attack => _attacks.Add(attack)));
         keyboardController.RegisterPressCommand(Keys.E, new PlayerDamageCommand(_player));
         keyboardController.RegisterPressCommand(Keys.M, new ToggleMusicCommand(_backgroundMusic));
-        keyboardController.RegisterPressCommand(Keys.S, new EnterPipeCommand(TryEnterPipe));
+        keyboardController.RegisterCommand(Keys.S,
+            new EnterPipeCommand(() => TryEnterPipe(PipeDirection.Down)));
+        keyboardController.RegisterCommand(Keys.A,
+            new EnterPipeCommand(() => TryEnterPipe(PipeDirection.Left)));
+        keyboardController.RegisterCommand(Keys.D,
+            new EnterPipeCommand(() => TryEnterPipe(PipeDirection.Right)));
+        keyboardController.RegisterCommand(Keys.W,
+            new EnterPipeCommand(() => TryEnterPipe(PipeDirection.Up)));
         keyboardController.RegisterPressCommand(Keys.F3, new ToggleHitboxesCommand(() => _showHitboxes = !_showHitboxes));
 
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
