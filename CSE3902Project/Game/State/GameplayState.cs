@@ -7,14 +7,12 @@ using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity;
 using CSE3902Project.Game.Graphics;
-using CSE3902Project.Game.Hud;
 using CSE3902Project.Game.Input;
 using CSE3902Project.Game.Items;
 using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace CSE3902Project.Game.State;
 
@@ -23,31 +21,31 @@ public class GameplayState : IGameState
     // Stage element collections
     private readonly List<ICombatActor> _actors = new();
     private readonly List<IAttack> _attacks = new();
+    private readonly CollisionSystem _collisionSystem;
     private readonly List<IDamageSource> _damageSources = new();
     private readonly List<IEnemy> _enemies = new();
     private readonly Game1 _game;
     private readonly GraphicsDevice _graphicsDevice;
+
+    // Other
+    private readonly PauseState _pauseState;
     private readonly List<IProjectile> _projectiles = new();
     private readonly StateManager _stateManager;
     private Background _background;
-    private Hud.Hud _hud;
-    private MusicFactory _backgroundMusic = MusicFactory.Instance;
+    private readonly MusicFactory _backgroundMusic = MusicFactory.Instance;
 
     // Other systems in the stage
     private Camera _camera;
     private CameraFollowPlayer _cameraFollowPlayer;
-    private readonly CollisionSystem _collisionSystem;
 
     private List<IController> _controllers;
+    private Hud.Hud _hud;
     private List<IItem> _items = new();
-    private bool _showHitboxes;
 
     // Standalone stage elements
     private Player _player;
+    private bool _showHitboxes;
     private Stage _stage;
-    
-    // Other
-    private readonly PauseState _pauseState;
 
     public GameplayState(GraphicsDevice graphics, StateManager stateManager, Game1 game)
     {
@@ -143,20 +141,14 @@ public class GameplayState : IGameState
 
     private void TryEnterPipe(PipeDirection inputDirection)
     {
-        if (!_player.IsOnGround || _player.IsDead)
-        {
-            return;
-        }
+        if (!_player.IsOnGround || _player.IsDead) return;
 
         var playerHitbox = _player.StageHitbox;
         var entrance = _stage.PipeEntrances
             .FirstOrDefault(pipe =>
                 pipe.Signature.EntranceDirection == inputDirection &&
                 playerHitbox.Intersects(pipe.InteractionBounds));
-        if (entrance is null)
-        {
-            return;
-        }
+        if (entrance is null) return;
 
         _player.TeleportTo(_stage.GetPipeExitPosition(entrance));
     }
@@ -215,7 +207,8 @@ public class GameplayState : IGameState
             new EnterPipeCommand(() => TryEnterPipe(PipeDirection.Right)));
         keyboardController.RegisterCommand(Keys.W,
             new EnterPipeCommand(() => TryEnterPipe(PipeDirection.Up)));
-        keyboardController.RegisterPressCommand(Keys.F3, new ToggleHitboxesCommand(() => _showHitboxes = !_showHitboxes));
+        keyboardController.RegisterPressCommand(Keys.F3,
+            new ToggleHitboxesCommand(() => _showHitboxes = !_showHitboxes));
 
         var boomerangCommand = new PlayerThrowBoomerangCommand(_player, projectile => _projectiles.Add(projectile));
         var bombCommand = new PlayerThrowBombCommand(_player, projectile => _projectiles.Add(projectile));
@@ -292,6 +285,7 @@ public class GameplayState : IGameState
             StageCellType.TriforceItem => new TriforceItem(center),
             StageCellType.KeyItem => new KeyItem(center),
             StageCellType.HeartItem => new HeartItem(center),
+            StageCellType.TorchItem => new TorchItem(center),
             _ => throw new ArgumentOutOfRangeException(nameof(spawn), spawn.Type, "Unsupported item spawn type.")
         };
     }

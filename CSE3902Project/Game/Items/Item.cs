@@ -43,8 +43,6 @@ public abstract class Item : IItem
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        // TODO Make it take damage when ran into instead of attacked
-        Console.WriteLine($"{Type} took damage. Source: {damageInfo.Source}");
         IsDead = true;
     }
 
@@ -66,6 +64,10 @@ public abstract class Item : IItem
         _sprite.Draw(spriteBatch, Position);
     }
 
+    public void FlipDirection()
+    {
+    }
+
     private static Vector2 SnapToPixel(Vector2 position)
     {
         return new Vector2(MathF.Round(position.X), MathF.Round(position.Y));
@@ -77,9 +79,5 @@ public abstract class Item : IItem
         foreach (var type in Enum.GetValues<ItemType>())
             items.Add(ItemFactory.Create(type, center + new Vector2(offsetX * items.Count, 0)));
         return items;
-    }
-
-    public void FlipDirection()
-    {
     }
 }

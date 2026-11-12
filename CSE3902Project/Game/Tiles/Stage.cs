@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,10 +10,12 @@ namespace CSE3902Project.Game.Tiles;
 /// The level the player walks around in.
 public class Stage
 {
-    private static readonly PipeSignature LegacyPipeSignature =
-        new(2, 1, PipeDirection.Down, 236, 0, 1, 1, PipeDirection.Up, false);
     private const int LegacyPipeEntranceColumn = 46;
     private const int LegacyPipeEntranceRow = 6;
+
+    private static readonly PipeSignature LegacyPipeSignature =
+        new(2, 1, PipeDirection.Down, 236, 0, 1, 1, PipeDirection.Up, false);
+
     private readonly int _mapTop;
 
     public Stage(int screenHeight)
@@ -40,13 +41,11 @@ public class Stage
         SolidTiles = new List<ITile>();
         GroundY = LoadStageFromCsv(mapTokens, mapTop);
         if (PipeEntrances.Count == 0)
-        {
             PipeEntrances.Add((PipeEntranceTile)TileFactory.Create(
                 StageCellType.PipeEntrance,
                 new Vector2(LegacyPipeEntranceColumn * Tile.Size, mapTop + LegacyPipeEntranceRow * Tile.Size),
                 PoppedItems,
                 LegacyPipeSignature));
-        }
 
         BuildSolidRectangles();
     }
@@ -54,17 +53,20 @@ public class Stage
     public int GroundY { get; }
     public Rectangle Bounds { get; }
     public List<PipeEntranceTile> PipeEntrances { get; } = new();
+
     public List<Rectangle> PipeEntranceBounds =>
         PipeEntrances.Select(entrance => entrance.InteractionBounds).ToList();
+
     public List<Rectangle> PipeExitBounds =>
         PipeEntrances.Select(GetPipeExitBounds).ToList();
+
     public List<ITile> SolidTiles { get; }
     public List<Rectangle> SolidRectangles { get; } = new();
     public List<EnemySpawn> EnemySpawns { get; } = new();
     public List<ItemSpawn> ItemSpawns { get; } = new();
 
     //items that popped out of blocks, the game turns these into real items
-    public List<ItemSpawn> PoppedItems { get; } = new List<ItemSpawn>();
+    public List<ItemSpawn> PoppedItems { get; } = new();
     public string[] MapRows { get; }
     public Vector2 PlayerSpawnPosition { get; private set; }
 
@@ -134,13 +136,10 @@ public class Stage
             }
 
             var tile = CreateTile(cellType, position);
-            if (tile is null)
-            {
-                continue;
-            }
+            if (tile is null) continue;
 
             SolidTiles.Add(tile);
-            if ((cellType is StageCellType.Ground or StageCellType.UnderGround) && groundY < 0)
+            if (cellType is StageCellType.Ground or StageCellType.UnderGround && groundY < 0)
                 groundY = (int)position.Y;
         }
 
@@ -187,7 +186,8 @@ public class Stage
             or StageCellType.RupeeItem
             or StageCellType.TriforceItem
             or StageCellType.KeyItem
-            or StageCellType.HeartItem;
+            or StageCellType.HeartItem
+            or StageCellType.TorchItem;
     }
 
     private ITile CreateTile(StageCellType cellType, Vector2 position, PipeSignature pipeSignature = null)
@@ -198,21 +198,16 @@ public class Stage
     //removes broken bricks from both lists
     private void RemoveBrokenTiles()
     {
-        bool removedAny = false;
+        var removedAny = false;
 
-        for (int i = SolidTiles.Count - 1; i >= 0; i--)
-        {
+        for (var i = SolidTiles.Count - 1; i >= 0; i--)
             if (SolidTiles[i].IsBroken)
             {
                 SolidTiles.RemoveAt(i);
                 removedAny = true;
             }
-        }
 
-        if (removedAny)
-        {
-            BuildSolidRectangles();
-        }
+        if (removedAny) BuildSolidRectangles();
     }
 
     private void BuildSolidRectangles()
