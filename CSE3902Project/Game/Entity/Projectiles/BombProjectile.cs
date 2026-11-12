@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using CSE3902Project.Game.Graphics;
 using System.Runtime.CompilerServices;
 using CSE3902Project.Game.Damage;
+using Microsoft.Xna.Framework.Audio;
+using CSE3902Project.Game.Audio;
 
 namespace CSE3902Project.Game.Entity;
 
@@ -28,9 +30,11 @@ public class BombProjectile : IProjectile
 
     public Sprite Sprite { get; set; }
     public SpriteAnimation Animation { get; set; }
+    public SoundEffectFactory Sound = SoundEffectFactory.Instance;
 
     public bool IsReturning = false;
     public bool IsExploding { get; private set; }
+    public bool HasExploded = false;
     private readonly ICombatActor _owner;
 
     public ICombatActor Owner => _owner!;
@@ -76,6 +80,7 @@ public class BombProjectile : IProjectile
         _owner = owner;
         Damage = new DamageInfo(this, 1, Vector2.Zero, DamageTeam.Player);
 
+
         Sprite = SpriteFactory.Instance.CreateItemsSheet();
         Sprite.SourceRectangle = GetFrameRectangle(BombIdleFrame);
     }
@@ -110,11 +115,18 @@ public class BombProjectile : IProjectile
             return;
         }
 
+        if (!HasExploded)
+        {
+            HasExploded = true;
+            Sound.PlayExplosionSFX();
+        }
+
         Animation?.Update(gameTime);
         if (Animation?.LoopCount > 0)
         {
             IsFinished = true;
         }
+   
     }
     
     public void Draw(SpriteBatch s)

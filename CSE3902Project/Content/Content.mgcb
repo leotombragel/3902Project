@@ -73,6 +73,19 @@
 /processorParam:Version=3.8.5.1
 /build:images/fire_sheet.png
 
+#begin images/hearts.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/processorParam:Version=3.8.5.1
+/build:images/hearts.png
+
 #begin images/idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -184,22 +197,10 @@
 /processorParam:Version=3.8.5.1
 /build:music/zOverworld.mp3
 
-#begin music/zOverworld.mp3
+#begin sound effects/explosion.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /processorParam:Version=3.8.5.1
-/build:music/zOverworld.mp3
+/build:sound effects/explosion.mp3
 
-#begin images/hearts.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/processorParam:Version=3.8.5.1
-/build:images/hearts.png

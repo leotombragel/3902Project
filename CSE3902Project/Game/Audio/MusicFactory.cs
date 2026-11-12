@@ -22,7 +22,7 @@ public class MusicFactory
     public void PlayOverworldMusic()
     {
         MediaPlayer.IsRepeating = true;
-        MediaPlayer.Volume = 0.5f;
+        MediaPlayer.Volume = 1f;
         MediaPlayer.Play(_overworld);
     }
 
@@ -30,7 +30,7 @@ public class MusicFactory
     {
         if(MediaPlayer.Volume == 0.0f)
         {
-            MediaPlayer.Volume = 0.5f;
+            MediaPlayer.Volume = 1f;
         }
         else
         {

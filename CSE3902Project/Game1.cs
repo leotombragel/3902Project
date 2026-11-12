@@ -1,3 +1,4 @@
+using CSE3902Project.Game.Audio;
 using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.State;
 using Gum;
@@ -39,6 +40,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
         HudSpriteFactory.Instance.LoadAllAssets(Content, GraphicsDevice);
         TextCreator.Initialize(Content);
         MusicFactory.Instance.LoadAllMusic(Content);
+        SoundEffectFactory.Instance.LoadAllContent(Content);
 
         _stateManager = new StateManager();
         _stateManager.Push(new GameplayState(GraphicsDevice, _stateManager, this));
