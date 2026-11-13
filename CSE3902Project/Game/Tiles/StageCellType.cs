@@ -34,9 +34,10 @@ public enum StageCellType
     ArrowItem,
     BombItem,
     RupeeItem,
-    TriforceItem,  
+    TriforceItem,
     KeyItem,
     HeartItem,
     PlayerSpawn,
-    DeathZone
+    DeathZone,
+    TorchItem
 }

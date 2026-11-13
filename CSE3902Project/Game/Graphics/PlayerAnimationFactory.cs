@@ -111,7 +111,16 @@ public class PlayerAnimationFactory : IAnimationFactory
             1,
             0.08f,
             32 * 7,
-            32 * 4)
+            32 * 4
+        ),
+        ["PlayerTriforce"] = () => new SpriteAnimation(SpriteFactory.Instance.CreateLinkSprite(),
+            32,
+            32,
+            6,
+            0.2f,
+            32 * 0,
+            32 * 2
+        )
     };
 
     public ISprite Create(string animationName)

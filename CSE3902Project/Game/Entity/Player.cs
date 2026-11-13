@@ -34,10 +34,11 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     private readonly AnimationController _animationController;
     public int Health { get; set; } = 3;
     public int Rupees { get; set; } = 0;
+    public bool FinishedLevel { get; set; }
 
     // Collision
     public readonly IHurtbox _bodyHurtbox;
-    private int iFramesBuffer = 0; //invincibilty frames
+    private int _iFramesBuffer = 0; //invincibilty frames
     private readonly List<IItem> _items = new();
     private bool _previouslyFacingRight = true;
     private float _previousSpeed;
@@ -97,11 +98,11 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
         if(!_bodyHurtbox.IsEnabled) //invincibility frames
         {
-            iFramesBuffer += 1;
-            if(iFramesBuffer > 60)
+            _iFramesBuffer += 1;
+            if(_iFramesBuffer > 60)
             {
                 _bodyHurtbox.IsEnabled = true;
-                iFramesBuffer = 0;
+                _iFramesBuffer = 0;
             }
         }
 
@@ -187,30 +188,30 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
                 SwitchToInactiveState();
             }
         }
-        
-        //special cases for item interactions
-        if (item is ArrowItem) //need to use bow or arrow item. for now, both give bow item
-        {
-            CurrentItem = new BowItem(item.Position);
-            return;
-        }
-        else if (item is RupeeItem)
-        {
-            Rupees += 1;
-            return;
-        }
-        else if (item is HeartItem)
-        {
-            Health += 1;
-            return;
-        }
-        else if (item is KeyItem)
-        {
-            return; //we have no use for the key yet
-        }
 
-        //item is bomb, boomerang or fire (triforce)
-        CurrentItem = item;
+        switch (item)
+        {
+            //special cases for item interactions
+            //need to use bow or arrow item. for now, both give bow item
+            case ArrowItem:
+                CurrentItem = new BowItem(item.Position);
+                return;
+            case RupeeItem:
+                Rupees += 1;
+                return;
+            case HeartItem:
+                Health += 1;
+                return;
+            case KeyItem:
+                return; //we have no use for the key yet
+            case TriforceItem:
+                ChangeState(new PlayerTriforceState(this));
+                return;
+            default:
+                //item is bomb, boomerang or fire
+                CurrentItem = item;
+                break;
+        }
     }
 
     public void SetStageCollision(PlayerStageCollision stageCollision)

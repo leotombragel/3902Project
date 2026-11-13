@@ -26,7 +26,7 @@ public class MusicFactory
         MediaPlayer.Play(_overworld);
     }
 
-    public void toggleMusic()
+    public void ToggleMusic()
     {
         if(MediaPlayer.Volume == 0.0f)
         {
@@ -36,7 +36,10 @@ public class MusicFactory
         {
             MediaPlayer.Volume = 0.0f;
         }
-
-         
+    }
+    
+    public static void StopMusic()
+    {
+        MediaPlayer.Stop();
     }
 }

@@ -12,9 +12,9 @@ public class ItemSpriteFactory
     private const int CellSize = 16;
     private const float DrawScale = 2.0f;
 
-    public static ItemSpriteFactory Instance { get; } = new ItemSpriteFactory();
-
     private Texture2D _pickupSheet;
+
+    public static ItemSpriteFactory Instance { get; } = new();
 
     public void LoadAllAssets(ContentManager content)
     {
@@ -23,6 +23,12 @@ public class ItemSpriteFactory
 
     //link items sheet
 
+    public ItemArt CreateTorchArt()
+    {
+        var animation = new SpriteAnimation(SpriteFactory.Instance.CreateTorchSprite(), 12, 30, 6, 0.2f);
+        return new ItemArt(animation, new Point(12 * 2, 30 * 2));
+    }
+
     public ItemArt CreateBoomerangArt()
     {
         // same frames as the thrown boomerang
@@ -30,21 +36,42 @@ public class ItemSpriteFactory
         return new ItemArt(animation, new Point(12 * 2, 12 * 2));
     }
 
-    public ItemArt CreateBowArt() => CreateLinkSheetArt(new Rectangle(32, 156, 8, 16));
+    public ItemArt CreateBowArt()
+    {
+        return CreateLinkSheetArt(new Rectangle(32, 156, 8, 16));
+    }
 
-    public ItemArt CreateArrowArt() => CreateLinkSheetArt(new Rectangle(32, 132, 7, 16));
+    public ItemArt CreateArrowArt()
+    {
+        return CreateLinkSheetArt(new Rectangle(32, 132, 7, 16));
+    }
 
-    public ItemArt CreateBombArt() => CreateLinkSheetArt(new Rectangle(102, 108, 14, 16));
+    public ItemArt CreateBombArt()
+    {
+        return CreateLinkSheetArt(new Rectangle(102, 108, 14, 16));
+    }
 
     //pickup sheet
 
-    public ItemArt CreateRupeeArt() => CreatePickupArt(frameCount: 4, frameDuration: 0.15f, column: 0, row: 0);
+    public ItemArt CreateRupeeArt()
+    {
+        return CreatePickupArt(4, 0.15f, 0, 0);
+    }
 
-    public ItemArt CreateTriforceArt() => CreatePickupArt(frameCount: 4, frameDuration: 0.2f, column: 0, row: 1);
+    public ItemArt CreateTriforceArt()
+    {
+        return CreatePickupArt(4, 0.2f, 0, 1);
+    }
 
-    public ItemArt CreateKeyArt() => CreatePickupArt(frameCount: 2, frameDuration: 0.4f, column: 0, row: 2);
+    public ItemArt CreateKeyArt()
+    {
+        return CreatePickupArt(2, 0.4f, 0, 2);
+    }
 
-    public ItemArt CreateHeartArt() => CreatePickupArt(frameCount: 2, frameDuration: 0.35f, column: 2, row: 2);
+    public ItemArt CreateHeartArt()
+    {
+        return CreatePickupArt(2, 0.35f, 2, 2);
+    }
 
     private static ItemArt CreateLinkSheetArt(Rectangle source)
     {

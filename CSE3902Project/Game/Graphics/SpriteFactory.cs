@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,25 +5,26 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CSE3902Project.Game.Graphics;
 
 /// <summary>
-/// Loads sprites for the game.
+///     Loads sprites for the game.
 /// </summary>
 public class SpriteFactory
 {
-    public static SpriteFactory Instance { get; } = new SpriteFactory();
+    private Texture2D _auqamentusSheet;
+    private Texture2D _fireSheet;
 
     private Texture2D _idlePlayerSprite;
-    private Texture2D _walkingPlayerSprite;
-    private Texture2D _rockingPlayerSprite;
-
-    private Texture2D _linkSheet;
-    private Texture2D _keeseSheet;
-    private Texture2D _stalfoSheet;
-    private Texture2D _wizzrobeSheet;
-    private Texture2D _fireSheet;
-    private Texture2D _auqamentusSheet;
-    private Texture2D _wallmasterSheet;
 
     private Texture2D _itemsSheet;
+    private Texture2D _keeseSheet;
+
+    private Texture2D _linkSheet;
+    private Texture2D _rockingPlayerSprite;
+    private Texture2D _stalfoSheet;
+    private Texture2D _torchSheet;
+    private Texture2D _walkingPlayerSprite;
+    private Texture2D _wallmasterSheet;
+    private Texture2D _wizzrobeSheet;
+    public static SpriteFactory Instance { get; } = new();
 
     public void LoadAllAssets(ContentManager content)
     {
@@ -39,6 +39,7 @@ public class SpriteFactory
         _wizzrobeSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
         _auqamentusSheet = content.Load<Texture2D>("images/DungeonBossesCUT");
         _wallmasterSheet = content.Load<Texture2D>("images/DungeonEnemiesCUT2");
+        _torchSheet = content.Load<Texture2D>("images/torch");
     }
 
     public Sprite CreateIdlePlayerSprite()
@@ -112,16 +113,23 @@ public class SpriteFactory
         return sprite;
     }
 
-     public Sprite CreateAquamentusProjectileSprite()
+    public Sprite CreateAquamentusProjectileSprite()
     {
         var sprite = new Sprite(_wizzrobeSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);
         return sprite;
     }
 
-        public Sprite CreateWallmasterSprite()
+    public Sprite CreateWallmasterSprite()
     {
         var sprite = new Sprite(_wallmasterSheet);
+        sprite.Scale = new Vector2(2.0f, 2.0f);
+        return sprite;
+    }
+
+    public Sprite CreateTorchSprite()
+    {
+        var sprite = new Sprite(_torchSheet);
         sprite.Scale = new Vector2(2.0f, 2.0f);
         return sprite;
     }

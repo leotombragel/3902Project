@@ -29,5 +29,5 @@ public class PlayerShootFireCommand : IUseItemCommand
             _player));
     }
 
-    public Type ItemType { get; } = typeof(TriforceItem); // There is no fire item, so this will be a placeholder.
+    public Type ItemType { get; } = typeof(TorchItem);
 }
