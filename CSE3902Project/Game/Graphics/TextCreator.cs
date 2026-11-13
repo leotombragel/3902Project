@@ -7,10 +7,12 @@ namespace CSE3902Project.Game.Graphics;
 public class TextCreator
 {
     private static SpriteFont _font;
+    private static SpriteFont _hyliaSerif;
     
     public static void Initialize(ContentManager content)
     {
         _font = content.Load<SpriteFont>("fonts/game");
+        _hyliaSerif = content.Load<SpriteFont>("fonts/HyliaSerifBeta-Regular");
     }
     
     public static void CreateText(string text, Vector2 position, SpriteBatch spriteBatch)
@@ -22,6 +24,11 @@ public class TextCreator
     public static void CreateText(string text, Vector2 position, SpriteBatch spriteBatch, Color color)
     {
         spriteBatch.DrawString(_font, text, position, color);
+    }
+
+    public static void CreateHyliaSerifText(string text, Vector2 position, SpriteBatch spriteBatch, Color color)
+    {
+        spriteBatch.DrawString(_hyliaSerif, text, position, color);
     }
 
     public static void CreateSprint0Text(GameWindow window, SpriteBatch spriteBatch)

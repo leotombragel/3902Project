@@ -18,6 +18,7 @@ public static class ItemFactory
             ItemType.Triforce => new TriforceItem(center),
             ItemType.Key => new KeyItem(center),
             ItemType.Heart => new HeartItem(center),
+            ItemType.Torch => new TorchItem(center),
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unknown item type")
         };
     }

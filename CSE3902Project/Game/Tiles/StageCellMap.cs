@@ -44,7 +44,8 @@ public static class StageCellMap
             ["kyi"] = StageCellType.KeyItem,
             ["hri"] = StageCellType.HeartItem,
             ["spawn"] = StageCellType.PlayerSpawn,
-            ["dz"] = StageCellType.DeathZone
+            ["dz"] = StageCellType.DeathZone,
+            ["toi"] = StageCellType.TorchItem
         };
 
     public static bool TryGetCellType(string token, out StageCellType cellType)
@@ -56,7 +57,7 @@ public static class StageCellMap
         }
 
         token = token.Trim().TrimStart('\uFEFF');
-        
+
         if (token.StartsWith("pipestart|"))
         {
             cellType = StageCellType.PipeEntrance;

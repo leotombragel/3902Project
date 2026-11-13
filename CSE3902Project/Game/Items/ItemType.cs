@@ -9,5 +9,6 @@ public enum ItemType
     Rupee,
     Triforce,
     Key,
-    Heart
+    Heart,
+    Torch
 }
