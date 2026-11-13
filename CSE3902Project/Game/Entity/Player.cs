@@ -34,11 +34,11 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     private readonly AnimationController _animationController;
     public int Health { get; set; } = 3;
     public int Rupees { get; set; } = 0;
-    public bool FinishedLevel { get; private set; } = false;
+    public bool FinishedLevel { get; set; }
 
     // Collision
     public readonly IHurtbox _bodyHurtbox;
-    private int iFramesBuffer = 0; //invincibilty frames
+    private int _iFramesBuffer = 0; //invincibilty frames
     private readonly List<IItem> _items = new();
     private bool _previouslyFacingRight = true;
     private float _previousSpeed;
@@ -98,11 +98,11 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
         if(!_bodyHurtbox.IsEnabled) //invincibility frames
         {
-            iFramesBuffer += 1;
-            if(iFramesBuffer > 60)
+            _iFramesBuffer += 1;
+            if(_iFramesBuffer > 60)
             {
                 _bodyHurtbox.IsEnabled = true;
-                iFramesBuffer = 0;
+                _iFramesBuffer = 0;
             }
         }
 
@@ -205,7 +205,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
             case KeyItem:
                 return; //we have no use for the key yet
             case TriforceItem:
-                FinishedLevel = true;
+                ChangeState(new PlayerTriforceState(this));
                 return;
             default:
                 //item is bomb, boomerang or fire
