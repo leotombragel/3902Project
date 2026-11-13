@@ -18,6 +18,6 @@ public class ToggleMusicCommand : ICommand
 
     public void Execute()
     {
-        _music.toggleMusic();
+        _music.ToggleMusic();
     }
 }

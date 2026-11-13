@@ -13,17 +13,14 @@ namespace CSE3902Project.Game.State;
 public class PlayerStatusChecker
 {
     private readonly Dictionary<Func<bool>, ICommand> _conditions;
-    private readonly Player _player;
 
     public PlayerStatusChecker(Player player, StateManager stateManager, GameplayState gameplayState,
         GraphicsDevice device)
     {
-        _player = player;
-
         _conditions = new Dictionary<Func<bool>, ICommand>
         {
-            { () => _player.IsDead, new ResetCommand(gameplayState) },
-            { () => _player.FinishedLevel, new VictoryCommand(new VictoryState(gameplayState, device), stateManager) }
+            { () => player.IsDead, new ResetCommand(gameplayState) },
+            { () => player.FinishedLevel, new VictoryCommand(new VictoryState(gameplayState, device, stateManager), stateManager) }
         };
     }
 

@@ -13,13 +13,27 @@ public class VictoryState : IGameState
 {
     private readonly GameplayState _gameplayState;
     private readonly GraphicsDevice _graphicsDevice;
-    private readonly StackPanel _menu;
-    private readonly RectangleRuntime _overlay;
+    private readonly StateManager _stateManager;
+    
+    private StackPanel _menu;
+    private RectangleRuntime _overlay;
 
-    public VictoryState(GameplayState gameplayState, GraphicsDevice graphicsDevice)
+    public VictoryState(GameplayState gameplayState, GraphicsDevice graphicsDevice, StateManager stateManager)
     {
         _gameplayState = gameplayState;
         _graphicsDevice = graphicsDevice;
+        _stateManager = stateManager;
+        SetupUi();
+    }
+
+    private void HandlePlayAgain()
+    {
+        _gameplayState.ResetGame();
+        _stateManager.Pop();
+    }
+
+    private void SetupUi()
+    {
         _menu = new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -33,6 +47,15 @@ public class VictoryState : IGameState
         };
         label.Anchor(Anchor.Center);
 
+        var button = new Button
+        {
+            Text = "Play Again",
+            Width = 200,
+            Height = 50
+        };
+        button.Anchor(Anchor.Center);
+        button.Click += (_, _) => HandlePlayAgain();
+
         _overlay = new RectangleRuntime
         {
             IsFilled = true,
@@ -44,10 +67,12 @@ public class VictoryState : IGameState
         };
         
         _menu.AddChild(label);
+        _menu.AddChild(button);
     }
     
     public void Enter()
     {
+        MusicFactory.StopMusic();
         _overlay.AddToRoot();
         _menu.AddToRoot();
     }
