@@ -187,30 +187,30 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
                 SwitchToInactiveState();
             }
         }
-        
-        //special cases for item interactions
-        if (item is ArrowItem) //need to use bow or arrow item. for now, both give bow item
-        {
-            CurrentItem = new BowItem(item.Position);
-            return;
-        }
-        else if (item is RupeeItem)
-        {
-            Rupees += 1;
-            return;
-        }
-        else if (item is HeartItem)
-        {
-            Health += 1;
-            return;
-        }
-        else if (item is KeyItem)
-        {
-            return; //we have no use for the key yet
-        }
 
-        //item is bomb, boomerang or fire (triforce)
-        CurrentItem = item;
+        switch (item)
+        {
+            //special cases for item interactions
+            //need to use bow or arrow item. for now, both give bow item
+            case ArrowItem:
+                CurrentItem = new BowItem(item.Position);
+                return;
+            case RupeeItem:
+                Rupees += 1;
+                return;
+            case HeartItem:
+                Health += 1;
+                return;
+            case KeyItem:
+                return; //we have no use for the key yet
+            case TriforceItem:
+                // Win level move onto next if there is one
+                return;
+            default:
+                //item is bomb, boomerang or fire
+                CurrentItem = item;
+                break;
+        }
     }
 
     public void SetStageCollision(PlayerStageCollision stageCollision)
