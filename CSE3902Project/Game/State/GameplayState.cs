@@ -41,6 +41,7 @@ public class GameplayState : IGameState
     private List<IController> _controllers;
     private Hud.Hud _hud;
     private List<IItem> _items = new();
+    private PlayerStatusChecker _playerStatusChecker;
 
     // Standalone stage elements
     private Player _player;
@@ -76,6 +77,8 @@ public class GameplayState : IGameState
         _hud.Update(gameTime);
         _stage.Update(gameTime);
 
+        _playerStatusChecker.Update();
+
         //turn the items that popped out into real items
         foreach (var spawn in _stage.PoppedItems)
         {
@@ -96,6 +99,8 @@ public class GameplayState : IGameState
 
         _collisionSystem.Update(_actors, _damageSources, _stage.SolidRectangles);
         _collisionSystem.Update(_player, _enemies, _stage.SolidRectangles);
+        
+        
 
         _projectiles.RemoveAll(projectile => projectile.IsFinished);
         _attacks.RemoveAll(attack => attack.IsFinished);
@@ -236,6 +241,8 @@ public class GameplayState : IGameState
         keyboardController.RegisterPressCommand(Keys.Escape, new PauseCommand(_pauseState, _stateManager));
 
         _controllers = new List<IController> { keyboardController, mouseController };
+        
+        _playerStatusChecker = new PlayerStatusChecker(_player, _stateManager, this, _graphicsDevice);
     }
 
     private IEnemy CreateEnemy(EnemySpawn spawn)

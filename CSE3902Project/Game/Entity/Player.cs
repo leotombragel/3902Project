@@ -34,6 +34,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     private readonly AnimationController _animationController;
     public int Health { get; set; } = 3;
     public int Rupees { get; set; } = 0;
+    public bool FinishedLevel { get; private set; } = false;
 
     // Collision
     public readonly IHurtbox _bodyHurtbox;
@@ -204,7 +205,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
             case KeyItem:
                 return; //we have no use for the key yet
             case TriforceItem:
-                // Win level move onto next if there is one
+                FinishedLevel = true;
                 return;
             default:
                 //item is bomb, boomerang or fire
