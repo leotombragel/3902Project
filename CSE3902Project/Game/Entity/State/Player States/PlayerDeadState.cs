@@ -28,6 +28,11 @@ public class PlayerDeadState : IState
         };
 
         _player.AcceptsStateChanges = false;
+        _player.ShouldManagePosition = false;
+        foreach (var hurtbox in _player.Hurtboxes)
+        {
+            hurtbox.IsEnabled = false;
+        }
     }
 
     public void Update(GameTime gameTime)
@@ -66,8 +71,6 @@ public class PlayerDeadState : IState
 
     public void Exit()
     {
-        _player.Position = new Vector2(200, _player.StartingPosY);
-        _player.Velocity = new Vector2(0, 0);
-        _player.AcceptsStateChanges = true;
+        _player.IsDead = true;
     }
 }
