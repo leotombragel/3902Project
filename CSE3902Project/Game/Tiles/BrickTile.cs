@@ -1,3 +1,4 @@
+using CSE3902Project.Game.Audio;
 using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -34,6 +35,8 @@ public class BrickTile : Tile
     //breaks when hit from below, anything inside pops out
     public override void HitFromBelow()
     {
+        SoundEffectFactory Sound = SoundEffectFactory.Instance;
+        Sound.PlayBlockBreakingSFX();
         _contents.PopOut(Position);
         _isBroken = true;
     }

@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
+using CSE3902Project.Game.Audio;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
 using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace CSE3902Project.Game.Entity;
 
@@ -107,6 +108,8 @@ public class AquamentusEnemy : IEnemy
             }
             else{
                 if (health == 0){
+                    SoundEffectFactory Sound = SoundEffectFactory.Instance;
+                    Sound.PlayEnemyDeathSFX();
                     IsDead = true;
                     //play pop animation
                 }
@@ -184,9 +187,22 @@ public class AquamentusEnemy : IEnemy
         return false;
     }
 
+    private Boolean isOnScreen()
+    {
+        if (_player.Position.X < Position.X - 1000 || (_player.Position.X > Position.X + 1000))
+            return false;
+        else
+            return true;
+    }
+
     private void ThrowFireball()
     {
-        
+        SoundEffectFactory Sound = SoundEffectFactory.Instance;
+
+        if (isOnScreen())
+        {
+            Sound.PlayFireballSFX();
+        }
         fireball1 = new AquamentusProjectile(Position.X, Position.Y, IsFacingLeft, MathHelper.ToRadians(25), this);
         _projectiles.Add(fireball1);
 

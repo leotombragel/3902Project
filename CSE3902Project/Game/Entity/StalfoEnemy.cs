@@ -1,3 +1,4 @@
+using CSE3902Project.Game.Audio;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
@@ -91,6 +92,8 @@ public class StalfoEnemy : StatefulEntityBase, IEnemy
                 CurrentState.Update(gameTime);
             }
             else{
+                SoundEffectFactory Sound = SoundEffectFactory.Instance;
+                Sound.PlayEnemyDeathSFX();
                 IsDead = true;
                 //play pop animation
             }

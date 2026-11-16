@@ -1,3 +1,4 @@
+using CSE3902Project.Game.Audio;
 using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -28,6 +29,8 @@ public class QuestionBlockTile : Tile
             return;
         }
 
+        SoundEffectFactory Sound = SoundEffectFactory.Instance;
+        Sound.PlayOpenBlockSFX();
         _contents.PopOut(Position);
         _isUsed = true;
         ChangeSprite(TileSpriteFactory.Instance.CreateStepSprite());

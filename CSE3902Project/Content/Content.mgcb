@@ -218,12 +218,33 @@
 /processorParam:Version=3.8.5.1
 /build:music/zOverworld.mp3
 
-#begin music/zOverworld.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
+#begin sound effects/blockBreaking.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /processorParam:Version=3.8.5.1
-/build:music/zOverworld.mp3
+/build:sound effects/blockBreaking.wav
+
+#begin sound effects/bowShot.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/bowShot.mp3
+
+#begin sound effects/collectRupee.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/collectRupee.wav
+
+#begin sound effects/enemyStomp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/enemyStomp.wav;sound effects/enemyDeath.wav
 
 #begin sound effects/explosion.mp3
 /importer:Mp3Importer
@@ -231,4 +252,60 @@
 /processorParam:Quality=Best
 /processorParam:Version=3.8.5.1
 /build:sound effects/explosion.mp3
+
+#begin sound effects/fireball.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/fireball.wav
+
+#begin sound effects/jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/jump.wav
+
+#begin sound effects/openBlock.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/openBlock.wav
+
+#begin sound effects/pipeTravel.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/pipeTravel.wav
+
+#begin sound effects/playerDeath.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/playerDeath.mp3
+
+#begin sound effects/playerHit.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/playerHit.mp3
+
+#begin sound effects/swordAttack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/swordAttack.wav
+
+#begin sound effects/triforce.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/processorParam:Version=3.8.5.1
+/build:sound effects/triforce.mp3
 

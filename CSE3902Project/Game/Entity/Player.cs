@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using CSE3902Project.Game.Audio;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
@@ -8,6 +7,8 @@ using CSE3902Project.Game.Graphics;
 using CSE3902Project.Game.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace CSE3902Project.Game.Entity;
 
@@ -88,6 +89,8 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public SpriteAnimation Animation { get; set; }
 
+    public SoundEffectFactory Sound = SoundEffectFactory.Instance;
+
     public virtual void Update(GameTime gameTime)
     {
         var wasOnGround = IsOnGround;
@@ -139,6 +142,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public void TakeDamage(DamageInfo damageInfo)
     {
+        Sound.PlayPlayerHitSFX();
         Health -= 1;
         if (CurrentItem is not null)
         {
@@ -151,6 +155,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
         if (Health <= 0)
         {
+            Sound.PlayPlayerDeathSFX();
             IsDead = true;
         }
     }
@@ -197,6 +202,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
                 CurrentItem = new BowItem(item.Position);
                 return;
             case RupeeItem:
+                Sound.PlayCollectRupeeSFX();
                 Rupees += 1;
                 return;
             case HeartItem:
@@ -205,6 +211,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
             case KeyItem:
                 return; //we have no use for the key yet
             case TriforceItem:
+                Sound.PlayTriforceSFX();
                 ChangeState(new PlayerTriforceState(this));
                 return;
             default:
@@ -259,6 +266,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         //can only jump when standing on something
         if (!IsOnGround) return;
 
+        Sound.PlayJumpSFX();
         IsOnGround = false;
         IsJumping = true;
         if (!IsUsingBow)
@@ -299,6 +307,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
 
     public void ReleaseBow()
     {
+        Sound.PlayBowShotSFX();
         IsUsingBow = false;
         SwitchToInactiveState();
     }

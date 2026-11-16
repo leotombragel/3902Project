@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
+using CSE3902Project.Game.Audio;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Damage;
 using CSE3902Project.Game.Entity.State;
 using CSE3902Project.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace CSE3902Project.Game.Entity;
 
@@ -83,6 +84,8 @@ public class WallmasterEnemy : StatefulEntityBase, IEnemy
                 CurrentState.Update(gameTime);
             }
             else{
+                SoundEffectFactory Sound = SoundEffectFactory.Instance;
+                Sound.PlayEnemyDeathSFX();
                 IsDead = true;
                 //play pop animation here
             }

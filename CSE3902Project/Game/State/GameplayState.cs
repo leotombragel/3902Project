@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using CSE3902Project.Game.Audio;
 using CSE3902Project.Game.Cameras;
 using CSE3902Project.Game.Collision;
 using CSE3902Project.Game.Command;
@@ -13,6 +11,9 @@ using CSE3902Project.Game.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CSE3902Project.Game.State;
 
@@ -26,6 +27,8 @@ public class GameplayState : IGameState
     private readonly List<IEnemy> _enemies = new();
     private readonly Game1 _game;
     private readonly GraphicsDevice _graphicsDevice;
+
+    private SoundEffectFactory Sound = SoundEffectFactory.Instance;
 
     // Other
     private readonly PauseState _pauseState;
@@ -155,6 +158,7 @@ public class GameplayState : IGameState
                 playerHitbox.Intersects(pipe.InteractionBounds));
         if (entrance is null) return;
 
+        Sound.PlayPipeTravelSFX();
         _player.TeleportTo(_stage.GetPipeExitPosition(entrance));
     }
 
