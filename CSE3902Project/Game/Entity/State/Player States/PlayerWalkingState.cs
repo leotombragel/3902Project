@@ -16,6 +16,8 @@ public class PlayerWalkingState : StateBase
 
     public override void Update(GameTime gameTime)
     {
+        if (_player.IsDead) return;
+        
         if (_player.Velocity.Y > 0)
         {
             _player.ChangeState(new PlayerFallingState(_player));

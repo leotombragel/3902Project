@@ -116,8 +116,6 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
             ApplyGravity();
         }
 
-        if (IsDead) ChangeState(new PlayerDeadState(this));
-
         UpdatePosition();
 
         if (!wasOnGround && IsOnGround) IsFacingLeft = !_previouslyFacingRight;
@@ -156,7 +154,7 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         if (Health <= 0)
         {
             Sound.PlayPlayerDeathSFX();
-            IsDead = true;
+            ChangeState(new PlayerDeadState(this));
         }
     }
 
