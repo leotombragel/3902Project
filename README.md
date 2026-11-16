@@ -15,4 +15,4 @@ Composed in MuseScore, based on music from Mario and The Legend of Zelda series 
 Sound effects taken from:
 - The Legend of Zelda Series - Nintendo (https://noproblo.dayjo.org/zeldasounds/)
 - Super Mario World - Nintendo (https://themushroomkingdom.net/media/smw/wav)
-- Miencraft - Mojang (https://minecraft.wiki/w/Category:Sound_effects)
+- Minecraft - Mojang (https://minecraft.wiki/w/Category:Sound_effects)
