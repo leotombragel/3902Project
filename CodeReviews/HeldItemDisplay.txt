@@ -1,0 +1,10 @@
+Reviewer: Spencer Talarzyk
+Date of Review: 11/16/2026
+Sprint: 4
+File: HeldItemDisplay.cs
+File Author: Jordan Boogaard
+Time Taken: 5 minutes
+
+- Code is easy to understand.
+- Update method sets the display to empty by default, and changes it based on the held item.
+- Item is drawn in the display if one is being held, and removed if there is no held item.

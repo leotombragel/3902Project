@@ -7,3 +7,12 @@ repository for the 3902 project hybrid Mario/Zelda game
 
 # Image Credits #
 Mario base tiles - Jon Gandee
+
+# Music Credits #
+Composed in MuseScore, based on music from Mario and The Legend of Zelda series - Koji Kondo
+
+# Sound Effect Credits #
+Sound effects taken from:
+- The Legend of Zelda Series - Nintendo (https://noproblo.dayjo.org/zeldasounds/)
+- Super Mario World - Nintendo (https://themushroomkingdom.net/media/smw/wav)
+- Minecraft - Mojang (https://minecraft.wiki/w/Category:Sound_effects)

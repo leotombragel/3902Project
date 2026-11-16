@@ -9,20 +9,25 @@ using RectangleRuntime = Gum.GueDeriving.RectangleRuntime;
 
 namespace CSE3902Project.Game.State;
 
-public class VictoryState : IGameState
+public class GameOverState : IGameState
 {
     private readonly GameplayState _gameplayState;
     private readonly GraphicsDevice _graphicsDevice;
     private readonly StateManager _stateManager;
     
+    private readonly Color _bgColor;
+    private readonly string _titleText;
+    
     private StackPanel _menu;
     private RectangleRuntime _overlay;
 
-    public VictoryState(GameplayState gameplayState, GraphicsDevice graphicsDevice, StateManager stateManager)
+    public GameOverState(GameplayState gameplayState, GraphicsDevice graphicsDevice, StateManager stateManager, Color bgColor, string titleText)
     {
         _gameplayState = gameplayState;
         _graphicsDevice = graphicsDevice;
         _stateManager = stateManager;
+        _bgColor = bgColor;
+        _titleText = titleText;
         SetupUi();
     }
 
@@ -43,7 +48,7 @@ public class VictoryState : IGameState
 
         var label = new Label
         {
-            Text = "Victory",
+            Text = _titleText,
         };
         label.Anchor(Anchor.Center);
 
@@ -59,7 +64,7 @@ public class VictoryState : IGameState
         _overlay = new RectangleRuntime
         {
             IsFilled = true,
-            FillColor = Color.Chartreuse * 0.9f,
+            FillColor = _bgColor * 0.9f,
             WidthUnits = DimensionUnitType.PercentageOfParent,
             HeightUnits = DimensionUnitType.PercentageOfParent,
             Width = 100f,
