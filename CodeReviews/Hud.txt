@@ -1,0 +1,11 @@
+Reviewer: Spencer Talarzyk
+Date of Review: 11/16/2026
+Sprint: 4
+File: Hud.cs
+File Author: Jordan Boogaard
+Time Taken: 5 minutes
+
+- Code is readable.
+- The three main components of the hud; HeartsDisplay, RuppeeCounter, and Hud Display are initialized as variables.s
+- The Hud takes in parameters player and screenwidth, and creates the three components based on those.
+- The Draw method draws all of the components on the screen.
