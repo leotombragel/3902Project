@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CSE3902Project.Game.Command;
 using CSE3902Project.Game.Entity;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CSE3902Project.Game.State;
@@ -19,8 +20,16 @@ public class PlayerStatusChecker
     {
         _conditions = new Dictionary<Func<bool>, ICommand>
         {
-            { () => player.IsDead, new ResetCommand(gameplayState) },
-            { () => player.FinishedLevel, new VictoryCommand(new VictoryState(gameplayState, device, stateManager), stateManager) }
+            {
+                () => player.IsDead, new GameOverCommand(
+                    new GameOverState(gameplayState, device, stateManager, Color.Crimson, "Game Over"),
+                    stateManager)
+            },
+            {
+                () => player.FinishedLevel,
+                new GameOverCommand(new GameOverState(gameplayState, device, stateManager, Color.Chartreuse, "Victory"),
+                    stateManager)
+            }
         };
     }
 
