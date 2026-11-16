@@ -36,7 +36,7 @@ public class PauseState : IGameState
         {
             Text = "Paused"
         };
-        label.Anchor(Anchor.Center);
+        label.Anchor(Anchor.Top);
 
         var resumeButton = new Button
         {
