@@ -1,0 +1,21 @@
+Leo Tombragel
+11/16/2026
+Sprint 4
+SoundEffectFactory.cs
+Spencer
+15 minutes
+
+-plenty of unused imports at the beginning of the file add needless complexity on the eyes
+
+-nitpick: fix extra entered lines on line 28 and 49
+
+-instead of usig magic numbers for the pitch and volume, we should extract these into constants
+For the ones that remain 0.0f, we can just use NORMAL_PITCH = 0.0f or something
+For the volume, we can split them into variables like MAJOR_SFX_VOLUME and MINOR_SFX_VOLUME
+or we could just do a quiet, normal, loud version
+
+-when listing the playSoundEffect fucntions, there doesn't seem to be any order.
+reordering these into player sounds, item sounds, and world sounds would make it easier to read
+as long as there were small comments distinguishing them
+
+we could also split them up into volume levels using the designations I mentioned above

@@ -165,8 +165,14 @@ public class AquamentusEnemy : IEnemy
 
     public void FlipDirection()
     {
-        Velocity = new Vector2(-Velocity.X, Velocity.Y);
-        IsFacingLeft = !IsFacingLeft;
+        if(LeftRightBuffer > 100)
+        {
+            LeftRightBuffer -= 100;
+        }
+        else if(LeftRightBuffer < 100)
+        {
+            LeftRightBuffer += 100;
+        } 
     }
 
     private bool CheckFireballBuffer()
