@@ -1,0 +1,27 @@
+Leo Tombragel
+11/16/2026
+Sprint 4
+MusicFactory.cs
+Spencer
+
+- at the beginning of the file, there are 7 unused imports. This doesn't impact anything, 
+but they're unnecessary. These were probably just copied from another file
+
+- nitpick: there's two entered lines between the first two public fields
+
+-using magic numbers for the volume is bad practice. It would probably be best to make a 
+constant for these
+
+-overall, code is very conscise and contains no uneeded methods
+
+-having a toggle function is great because it stops us from having to provide logic to turn
+on and off specifically
+
+-one change we could make would be adding a function that takes in desired volume as a variable.
+This would be good for decreasing volume to play another sound effect then setting it back to 
+its original volume
+for example: 
+-pickup triforce
+-decrease volume to 75 percent
+-play triforce pickup jingle over the song
+-increase volume back to 100 percent

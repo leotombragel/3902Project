@@ -50,7 +50,7 @@ public class GameOverState : IGameState
         {
             Text = _titleText,
         };
-        label.Anchor(Anchor.Center);
+        label.Anchor(Anchor.Top);
 
         var button = new Button
         {

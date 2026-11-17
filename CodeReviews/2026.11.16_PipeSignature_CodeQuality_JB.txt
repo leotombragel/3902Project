@@ -1,0 +1,18 @@
+PipeSignature.cs Code Review
+
+Reviewer: Jordan Boogaard
+Date of Review: 11/16/2026
+Sprint: 4
+File: PipeSignature.cs
+File Author: Collin White
+Time Taken: 12 minutes
+
+Code Quality Comments:
+- It is a record, so a pipe's settings are read only and can't be changed by accident after the level loads. Parse() does all the checking in one place, so a bad level file fails at load time with a message that says what is wrong, instead of a pipe acting strange in the middle of the game
+- The small helpers each do one job and ParsePositiveInt reuses ParseNonNegativeInt, so the number checking is not copied
+- Parse() is about 35 lines and does the splitting, the column:row split and every field check in one method. The exit cell could be its own small method like the other helpers, and the "Y/N" switch could be a ParseYesNo helper so Parse() only reads as a list of steps
+- The format is position based (pipestart|2|2|down|10:5|2|2|up|Y). Anyone editing the CSV has to remember what the 6th field is, and nothing in the code says what the order means except the error message text. The field count 9 and the indexes fields[1] to fields[8] are magic numbers that have to match the record by hand
+- ExitDirection and HasExitAnimation are parsed and validated but nothing in the project reads them yet (only ExitColumn, ExitRow, ExitWidth and ExitHeight are used in Stage). Either they are for something unfinished or they are dead data that every level author still has to type in
+
+Hypothetical change:
+Add a locked pipe that needs the key before Link can enter. This would not be easy to support. It would be a 10th field, so the count check, the error message and every pipe token in the level file would all have to change at once.

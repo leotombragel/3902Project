@@ -1,0 +1,14 @@
+Author: Uthman Wood
+Date: Nov. 16, 2026
+Sprint 4
+CS file: Entity/Projectiles/WizzrobeProjectile.cs
+CS file authors: Leo Tombragel, collision logic added by Uthman Wood
+Number of minutes taken: 13
+Comments:
+- The class comes in at 107 lines of code, making it one of the shorter projectile classes.
+- The file is well-organized.
+- The longest method is the constructor, which is mostly due to defining the sprite animation. Most classes use a factory to do this, so this section could be made into a ProjectileFactory class to improve consistency and make this class smaller.
+- No other methods are long and it is easy to tell what each one does.
+- This class is declared to be in the CSE3902Project.Game.Entity namespace, but it is actually found in CSE3902Project.Game.Entity.Projectiles. All other projectiles except for ArrowProjectile have the same issue. This could be confusing to someone reading the code.
+- There are many magic numbers in this class. The class already has two constant private fields, ThrowSpeed and MaxOutboundDistance. Adding additional such fields would improve readability.
+- Each of the ICombatActor methods are only one line long. This appears to be the case for other projectiles as well, like FireProjectile. We could move this logic into its own class with a name like Projectile or ProjectileBase and have WizzrobeProjectile inherit from this class. This would reduce how much duplicated code exists in our project.

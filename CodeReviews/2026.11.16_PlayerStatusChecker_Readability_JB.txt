@@ -1,0 +1,17 @@
+PlayerStatusChecker.cs Code Review
+
+Reviewer: Jordan Boogaard
+Date of Review: 11/16/2026
+Sprint: 4
+File: PlayerStatusChecker.cs
+File Author: Uthman Wood
+Time Taken: 8 minutes
+
+Readability Comments:
+- The class is short and the name says what it does.
+- Using the Command pattern here reads well. Each rule is a pair of "what to check" and "what to do" (IsDead -> ResetCommand, FinishedLevel -> VictoryCommand), so adding a rule is one new line in the constructor
+- The collection is a Dictionary<Func<bool>, ICommand> but it is used like a list of rules. Nobody looks anything up by key, and a Func as a key is hard to follow at first. A small list of (condition, command) pairs or a tiny Rule class would show that more clearly
+- Update() uses break after the first rule that is true, so the order of the rules decides what happens if the player is dead and finished at the same time. That matters but nothing says it, and a Dictionary does not promise an order, so a comment or a list would make the priority clear
+- The VictoryCommand line is long and builds a new VictoryState inside the dictionary setup. That means the victory screen (and its Gum buttons and overlay) is built every time the checker is created, even if the player never wins. Creating it in the command when it is needed would be easier to read and cheaper
+- The constructor takes four things (player, state manager, gameplay state, graphics device) and the graphics device is only passed along to VictoryState, so this class never uses it itself
+- The FinishedLevel line is hard to read in one go because of its length. Breaking it up and naming the commands (var resetCommand = ...) would help

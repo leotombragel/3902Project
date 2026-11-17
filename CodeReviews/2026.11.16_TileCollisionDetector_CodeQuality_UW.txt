@@ -1,0 +1,15 @@
+Author: Uthman Wood
+Date: Nov. 16, 2026
+Sprint 4
+CS file: Collision/TileCollisionDetector.cs
+CS authors: Jordan Boogaard
+Comments:
+- This is a simple class containing two methods which each return a CollisionSide value and take 2 rectangles as input.
+- The class does not implement any interfaces or inherit from any other class.
+- The class uses the CollisionSide enum to communicate collision information. We currently don't need more information than can be supplied by an enum, but this class could easily be expanded if CollisionSide was refactored into a class.
+- The class stores no fields or properties.
+- The class is minimal, cohesive, and has a single purpose which can be easily discerned.
+
+Hypothetical changes:
+- This class could be refactored to be made static. This way, the entity collision classes such as WizzrobeCollision and PlayerStateCollision would not need to store private references to this class.
+    - The same change could be made to PlayerTileCollisionHandler, another class in the same namespace.
