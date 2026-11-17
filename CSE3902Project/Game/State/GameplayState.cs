@@ -80,6 +80,7 @@ public class GameplayState : IGameState
         _cameraFollowPlayer.Update();
         _hud.Update(gameTime);
         _stage.Update(gameTime);
+        CheckDeathZoneCollision();
 
         _playerStatusChecker.Update();
 
@@ -165,6 +166,12 @@ public class GameplayState : IGameState
         var pipeIndex = _stage.PipeEntrances.IndexOf(entrance);
         if (pipeIndex == 0) _isInBlackBackground = true;
         else if (pipeIndex == 1) _isInBlackBackground = false;
+    }
+
+    private void CheckDeathZoneCollision()
+    {
+        if (_stage.DeathZoneBounds.Any(bounds => bounds.Intersects(_player.StageHitbox)))
+            _player.Die();
     }
 
     public void ResetGame()

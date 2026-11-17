@@ -73,6 +73,7 @@ public class Stage
 
     public List<ITile> SolidTiles { get; }
     public List<Rectangle> SolidRectangles { get; } = new();
+    public List<Rectangle> DeathZoneBounds { get; } = new();
     public List<EnemySpawn> EnemySpawns { get; } = new();
     public List<ItemSpawn> ItemSpawns { get; } = new();
 
@@ -197,6 +198,16 @@ public class Stage
         if (isItem(cellType))
         {
             ItemSpawns.Add(new ItemSpawn(cellType, position));
+            return;
+        }
+
+        if (cellType == StageCellType.DeathZone)
+        {
+            DeathZoneBounds.Add(new Rectangle(
+                (int)position.X,
+                (int)position.Y,
+                Tile.Size,
+                Tile.Size));
             return;
         }
 
