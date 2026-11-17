@@ -154,10 +154,18 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         _bodyHurtbox.IsEnabled = false;
 
         if (Health <= 0)
-        {
-            Sound.PlayPlayerDeathSFX();
-            ChangeState(new PlayerDeadState(this));
-        }
+            Die();
+    }
+
+    public void Die()
+    {
+        if (IsDead || CurrentState is PlayerDeadState) return;
+
+        Health = 0;
+        CurrentItem = null;
+        CancelBow();
+        Sound.PlayPlayerDeathSFX();
+        ChangeState(new PlayerDeadState(this));
     }
 
     public void FlipDirection()

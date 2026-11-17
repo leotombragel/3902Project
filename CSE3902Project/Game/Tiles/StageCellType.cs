@@ -3,6 +3,8 @@ namespace CSE3902Project.Game.Tiles;
 public enum StageCellType
 {
     Air,
+    AirBlock,
+    CameraBoundsMarker,
     Ground,
     UnderGround,
     Breakable,

@@ -1,0 +1,14 @@
+Author: Collin White
+Date: Nov. 16, 2026
+Sprint 4
+CS file: GameOverState.cs
+CS authors: Uthman Wood,
+Comments:
+- The Music currently stops after death, which feels jarring and unnatural to the player
+- The UI elements are well defined, names nad are mainly self explanatory
+- Using a stack for the state manager seems sub optimal, i.e. we know we will only be switching between a few distinct states that will only go two deep, meaning a stack is
+a bit of overkill for our needs. I think it is fine, just something to think about.
+- "Gum" is confusing - I dont know what Gum does and wether or not it is used correctly / where it is used. Note this is only a concern if this is a custom library, as you cant do much for a public one.
+
+Hypothetical changes:
+- Changing the death menu to be more pixelated to fit the theme of our game more would be very nice. In addition I think having a red overlay is overkill, A smaller window that leaves some edges untouched makes it feel more polished.
