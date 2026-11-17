@@ -146,6 +146,8 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
         {
             CurrentItem = null;
         }
+
+        CancelBow();
         
         Console.WriteLine($"Player took damage. Source: {damageInfo.Source}");
         Console.WriteLine($"Player health: {Health}");
@@ -177,19 +179,16 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
     }
 
     public IItem CurrentItem { get; private set; }
-
+    
     public void InteractWithItem(IItem item)
     {
-        if (IsUsingBow) 
-        {//state changes get buggy if we switch to a different weapon while player is charging bow
-            if(item is not RupeeItem
-            && item is not HeartItem
-            && item is not KeyItem
-            && item is not ArrowItem
-            && item is not BowItem){
-                IsUsingBow = false;
-                SwitchToInactiveState();
-            }
+        if(item is not RupeeItem
+        && item is not HeartItem
+        && item is not KeyItem
+        && item is not ArrowItem
+        && item is not BowItem)
+        {
+            CancelBow();
         }
 
         switch (item)
@@ -217,6 +216,13 @@ public class Player : IStatefulEntity, IAnimatable, ICombatActor, IUsesItems
                 CurrentItem = item;
                 break;
         }
+    }
+    
+    private void CancelBow()
+    {
+        if (!IsUsingBow) return;
+        IsUsingBow = false;
+        SwitchToInactiveState();
     }
 
     public void SetStageCollision(PlayerStageCollision stageCollision)
