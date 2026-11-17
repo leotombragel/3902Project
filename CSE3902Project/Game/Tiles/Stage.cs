@@ -30,7 +30,7 @@ public class Stage
         var mapWidthInTiles = 0;
         for (var row = 0; row < MapRows.Length; row++)
         {
-            mapTokens[row] = MapRows[row].Split(',');
+            mapTokens[row] = MapRows[row].Split(',').Select(NormalizeCsvCell).ToArray();
             mapWidthInTiles = Math.Max(mapWidthInTiles, mapTokens[row].Length);
         }
 
@@ -50,6 +50,14 @@ public class Stage
                 LegacyPipeSignature));
 
         BuildSolidRectangles();
+    }
+
+    private static string NormalizeCsvCell(string cell)
+    {
+        cell = cell.Trim().TrimStart('\uFEFF');
+        return cell.Length >= 2 && cell[0] == '"' && cell[^1] == '"'
+            ? cell[1..^1]
+            : cell;
     }
 
     public int GroundY { get; }
