@@ -28,6 +28,13 @@ public class TileSpriteFactory
 
     public ISprite CreateGroundSprite() => CreateStaticSprite(0, 0);
 
+    public ISprite CreateAirBlockSprite()
+    {
+        var sprite = CreateStaticSprite(0, 0);
+        sprite.Color = new Color(0, 0, 0, 0);
+        return sprite;
+    }
+
     public ISprite CreateUnderGroundSprite() => CreateMarioTileSprite(1, 1);
 
     public ISprite CreateBrickSprite() => CreateBrickSprite(Color.White);

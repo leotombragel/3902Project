@@ -39,7 +39,9 @@ public class Stage
         _mapTop = mapTop;
         Bounds = new Rectangle(0, 0, mapWidthInTiles * Tile.Size, Math.Max(screenHeight, mapHeight));
         SolidTiles = new List<ITile>();
-        GroundY = LoadStageFromCsv(mapTokens, mapTop);
+        var cameraBoundsMarkers = new Dictionary<string, List<Point>>(StringComparer.Ordinal);
+        GroundY = LoadStageFromCsv(mapTokens, mapTop, cameraBoundsMarkers);
+        CameraBounds = BuildCameraBounds(cameraBoundsMarkers);
         if (PipeEntrances.Count == 0)
             PipeEntrances.Add((PipeEntranceTile)TileFactory.Create(
                 StageCellType.PipeEntrance,
@@ -52,6 +54,7 @@ public class Stage
 
     public int GroundY { get; }
     public Rectangle Bounds { get; }
+    public IReadOnlyList<CameraBoundsArea> CameraBounds { get; }
     public List<PipeEntranceTile> PipeEntrances { get; } = new();
 
     public List<Rectangle> PipeEntranceBounds =>
@@ -81,66 +84,27 @@ public class Stage
         foreach (var tile in SolidTiles) tile.Draw(spriteBatch);
     }
 
-    private int LoadStageFromCsv(string[][] mapTokens, int mapTop)
+    private int LoadStageFromCsv(
+        string[][] mapTokens,
+        int mapTop,
+        Dictionary<string, List<Point>> cameraBoundsMarkers)
     {
         var groundY = -1;
         var hasPlayerSpawn = false;
         for (var row = 0; row < mapTokens.Length; row++)
         for (var column = 0; column < mapTokens[row].Length; column++)
         {
-            var token = mapTokens[row][column].Trim().TrimStart('\uFEFF');
-            if (!StageCellMap.TryGetCellType(token, out var cellType))
-            {
-                Console.WriteLine(
-                    $"Unknown stage token '{token}' at row {row + 1}, column {column + 1}; treating it as air.");
-                cellType = StageCellType.Air;
-            }
-
             var position = new Vector2(column * Tile.Size, mapTop + row * Tile.Size);
-            if (cellType == StageCellType.PipeEntrance)
-            {
-                try
-                {
-                    PipeEntrances.Add((PipeEntranceTile)CreateTile(
-                        cellType,
-                        position,
-                        PipeSignature.Parse(token)));
-                }
-                catch (FormatException exception)
-                {
-                    throw new InvalidDataException(
-                        $"Invalid pipe signature at row {row + 1}, column {column + 1}: {exception.Message}",
-                        exception);
-                }
-
-                continue;
-            }
-
-            if (cellType == StageCellType.PlayerSpawn)
-            {
-                PlayerSpawnPosition = position;
-                hasPlayerSpawn = true;
-                continue;
-            }
-
-            if (IsEnemy(cellType))
-            {
-                EnemySpawns.Add(new EnemySpawn(cellType, position));
-                continue;
-            }
-
-            if (isItem(cellType))
-            {
-                ItemSpawns.Add(new ItemSpawn(cellType, position));
-                continue;
-            }
-
-            var tile = CreateTile(cellType, position);
-            if (tile is null) continue;
-
-            SolidTiles.Add(tile);
-            if (cellType is StageCellType.Ground or StageCellType.UnderGround && groundY < 0)
-                groundY = (int)position.Y;
+            var cellTokens = mapTokens[row][column].Split(new[] { "//" }, StringSplitOptions.None);
+            foreach (var cellToken in cellTokens)
+                LoadStageCellToken(
+                    cellToken.Trim().TrimStart('\uFEFF'),
+                    row,
+                    column,
+                    position,
+                    cameraBoundsMarkers,
+                    ref groundY,
+                    ref hasPlayerSpawn);
         }
 
         if (groundY < 0) throw new InvalidDataException("The stage CSV does not contain any ground tiles.");
@@ -148,6 +112,119 @@ public class Stage
         if (!hasPlayerSpawn) throw new InvalidDataException("The stage CSV does not contain a player spawn.");
 
         return groundY;
+    }
+
+    private void LoadStageCellToken(
+        string token,
+        int row,
+        int column,
+        Vector2 position,
+        Dictionary<string, List<Point>> cameraBoundsMarkers,
+        ref int groundY,
+        ref bool hasPlayerSpawn)
+    {
+        if (!StageCellMap.TryGetCellType(token, out var cellType))
+        {
+            Console.WriteLine(
+                $"Unknown stage token '{token}' at row {row + 1}, column {column + 1}; treating it as air.");
+            return;
+        }
+
+        if (cellType == StageCellType.CameraBoundsMarker)
+        {
+            string id;
+            try
+            {
+                id = StageCellMap.ParseCameraBoundsId(token);
+            }
+            catch (FormatException exception)
+            {
+                throw new InvalidDataException(
+                    $"Invalid camera bounds marker at row {row + 1}, column {column + 1}: {exception.Message}",
+                    exception);
+            }
+
+            if (!cameraBoundsMarkers.TryGetValue(id, out var markers))
+            {
+                markers = new List<Point>();
+                cameraBoundsMarkers.Add(id, markers);
+            }
+
+            markers.Add(new Point((int)position.X, (int)position.Y));
+            return;
+        }
+
+        if (cellType == StageCellType.PipeEntrance)
+        {
+            try
+            {
+                PipeEntrances.Add((PipeEntranceTile)CreateTile(
+                    cellType,
+                    position,
+                    PipeSignature.Parse(token)));
+            }
+            catch (FormatException exception)
+            {
+                throw new InvalidDataException(
+                    $"Invalid pipe signature at row {row + 1}, column {column + 1}: {exception.Message}",
+                    exception);
+            }
+
+            return;
+        }
+
+        if (cellType == StageCellType.PlayerSpawn)
+        {
+            PlayerSpawnPosition = position;
+            hasPlayerSpawn = true;
+            return;
+        }
+
+        if (IsEnemy(cellType))
+        {
+            EnemySpawns.Add(new EnemySpawn(cellType, position));
+            return;
+        }
+
+        if (isItem(cellType))
+        {
+            ItemSpawns.Add(new ItemSpawn(cellType, position));
+            return;
+        }
+
+        var tile = CreateTile(cellType, position);
+        if (tile is null) return;
+
+        SolidTiles.Add(tile);
+        if (cellType is StageCellType.Ground or StageCellType.UnderGround && groundY < 0)
+            groundY = (int)position.Y;
+    }
+
+    private static IReadOnlyList<CameraBoundsArea> BuildCameraBounds(
+        Dictionary<string, List<Point>> cameraBoundsMarkers)
+    {
+        var areas = new List<CameraBoundsArea>();
+        foreach (var (id, markers) in cameraBoundsMarkers)
+        {
+            if (markers.Count != 2)
+                throw new InvalidDataException(
+                    $"Camera bounds area '{id}' must have exactly two corner markers; found {markers.Count}.");
+
+            var left = Math.Min(markers[0].X, markers[1].X);
+            var top = Math.Min(markers[0].Y, markers[1].Y);
+            var right = Math.Max(markers[0].X, markers[1].X) + Tile.Size;
+            var bottom = Math.Max(markers[0].Y, markers[1].Y) + Tile.Size;
+            var area = new CameraBoundsArea(id, new Rectangle(left, top, right - left, bottom - top));
+
+            var overlappingArea = areas.FirstOrDefault(existing => existing.Bounds.Intersects(area.Bounds));
+            if (overlappingArea.Id is not null)
+                throw new InvalidDataException(
+                    $"Camera bounds areas '{overlappingArea.Id}' and '{id}' overlap.");
+
+            areas.Add(area);
+        }
+
+        return areas;
     }
 
     public Vector2 GetPipeExitPosition(PipeEntranceTile entrance)

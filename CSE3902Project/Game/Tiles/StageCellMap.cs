@@ -9,6 +9,7 @@ public static class StageCellMap
         new Dictionary<string, StageCellType>(StringComparer.Ordinal)
         {
             [""] = StageCellType.Air,
+            ["ab"] = StageCellType.AirBlock,
             ["g"] = StageCellType.Ground,
             ["gug"] = StageCellType.UnderGround,
             ["b"] = StageCellType.Breakable,
@@ -64,6 +65,21 @@ public static class StageCellMap
             return true;
         }
 
+        if (token == "cambounds" || token.StartsWith("cambounds|", StringComparison.Ordinal))
+        {
+            cellType = StageCellType.CameraBoundsMarker;
+            return true;
+        }
+
         return CellTypes.TryGetValue(token, out cellType);
+    }
+
+    public static string ParseCameraBoundsId(string token)
+    {
+        var parts = token.Split('|');
+        if (parts.Length != 2 || parts[0] != "cambounds" || string.IsNullOrWhiteSpace(parts[1]))
+            throw new FormatException("Expected a camera bounds marker in the form 'cambounds|<area-id>'.");
+
+        return parts[1].Trim();
     }
 }

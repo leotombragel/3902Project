@@ -18,7 +18,8 @@ public static class TileFactory
 
         return cellType switch
         {
-            StageCellType.Air or StageCellType.DeathZone => null,
+            StageCellType.Air or StageCellType.DeathZone or StageCellType.CameraBoundsMarker => null,
+            StageCellType.AirBlock => new AirBlockTile(position),
             StageCellType.Ground => new GroundTile(position),
             StageCellType.UnderGround => new UnderGroundTile(position),
             StageCellType.Breakable => new BrickTile(position),

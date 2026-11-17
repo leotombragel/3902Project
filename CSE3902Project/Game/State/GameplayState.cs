@@ -179,7 +179,7 @@ public class GameplayState : IGameState
 
         _camera = new Camera(viewport.Width, viewport.Height);
         _hud = new Hud.Hud(_player, viewport.Width);
-        _cameraFollowPlayer = new CameraFollowPlayer(_camera, _player, _stage.Bounds);
+        _cameraFollowPlayer = new CameraFollowPlayer(_camera, _player, _stage.Bounds, _stage.CameraBounds.ToArray());
 
         _enemies.Clear();
         _projectiles.Clear();
