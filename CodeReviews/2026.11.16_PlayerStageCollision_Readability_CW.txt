@@ -1,0 +1,12 @@
+Author: Collin White
+Date: Nov. 16, 2026
+Sprint 4
+CS file: PlayerStageCollision
+CS file authors: Jordan Boogaard
+Number of minutes taken: 9
+
+Comments:
+- All the methods are very nice and easy to follow. Good job!
+- I however am slightly lost on where this is updated - where is update and draw called? This feels oddly detached from all this, as moving left and rigth are fundamental player movements.
+- In addition, checking against every single tile in the stage each frame is defeinitely able to be improved on. Only tiles within ~2m of mario really need to be checked each frame
+- Collision handler helper methods are awesome - everything is done clearly and it really helps with the readability of the file.

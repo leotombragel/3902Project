@@ -1,8 +1,0 @@
-Author: Collin White
-Date: Nov. 16, 2026
-Sprint 4
-CS file: 
-CS authors: 
-Comments:
-
-Hypothetical changes:
